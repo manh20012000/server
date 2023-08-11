@@ -1,0 +1,34 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>update user</title>
+    <base href="/"> // neu 2 file chung 1 css thif dungf
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <div class="UpdateUserContainer">
+        <form action="actionUser" method="POST">
+            <div><!--thẻ b giups viết đậm lên  -->
+            <label for="">fistName :</label>
+              <input type="text" name="fistname"value="<%=dataUser.fistname %>"/>
+            </div>
+            <div>
+              <label for="">lastName :</label>
+              <input type="text" name="lastname" value="<%=dataUser.lastname %>"/>
+            </div>
+            <div>
+              <label for="" >Email :</label>
+              <input type="email"name="email" value="<%=dataUser.email %>"/>
+            </div>
+            <div>
+              <label for="" >Adress :</label>
+              <input type="text"name="adress" value="<%=dataUser.adress %>"/>
+            </div>
+             <input type="text" value="<%=dataUser.id %>" hidden name="id">
+
+            <div> <button type="submit" class="save">save</button></div>
+    </form>
+  </div>
+</body>
+</html>

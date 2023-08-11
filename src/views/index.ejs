@@ -1,0 +1,110 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Node_Basic</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+
+       <!-- <img src="./image/tải xuống.jpg" alt=""> -->
+      
+  <body>
+    <div class="topnav">
+        <a class="active" href="/">Home</a>
+        <a href="#news">News</a>
+        <a href="#contact">Contact</a>
+        <a href="#about">About</a>
+        <a href="/uploadFile">UploadFile</a>
+      </div>
+      
+      <div style="padding-left:16px">
+       
+
+        <%=dataUser%>
+      </div> 
+      
+      <div class="w3-container">
+        <h2>List User</h2>
+       
+        <table class="w3-table-all w3-hoverable">
+          <thead>
+            <tr class="w3-light-grey">
+                <th>Id</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+         
+          <%=dataUser.length %>
+         <%=test %> <!--  truyền từ ctroller sang view -->
+           <% for(let i=0; i < dataUser.length; i++) { %>
+                <tr>
+                 
+                <td><%= dataUser[i].id %></td>
+                <td><%= dataUser[i].fistname %></td>
+                <td><%= dataUser[i].lastname %></td>
+                <td class="act">
+                     <a href="/detail/user/<%= dataUser[i].id %>" target="_blank">Detail</a>
+
+                     <form action="/edit-user/<%= dataUser[i].id %>" method="GET"  >
+                          <button  type="submit">Edit</button>
+                    </form>
+                    
+                     <form action="/delete-user" method="POST">
+                      <button class="btn1" type="submit" onclick="checkinpt()">Delete</button>
+                     <input type="text" hidden value="<%= dataUser[i].id %>" name="userId">
+                    </form>
+
+                     
+                </td>
+            
+            </tr>
+           <% } %>
+              
+        </table>
+      </div>
+      <div class="createUserContainer">
+        <form action="/create_newUser" method="POST"> 
+          <!-- action như thẻ a nó tự đôngj chuyen hường tới đươcng link mà 
+          có thể sảy ra hướng tơis  -->
+          <div> <b>create a new user</b></div>
+           
+          <div><!--thẻ b giups viết đậm lên  -->
+            <label for="">fistName :</label>
+              <input class="txt1" type="text" name="fistname"/>
+            </div>
+            <div>
+              <label for="">lastName :</label>
+              <input type="text" name="lastname"/>
+            </div>
+            <div>
+              <label for="" >Email :</label>
+              <input type="email"name="email"/>
+            </div>
+            <div>
+              <label for="" >Adress :</label>
+              <input type="text"name="adress"/>
+            </div>
+            <div> <button type="submit" class="btn"> submit</button></div>
+        </form>
+       
+       
+      </div>
+<script >function checkInput() {
+  var inputtxt = document.getElementById("txt1");
+  console.log(inputtxt.value+"chdhchdbch");
+  if (inputtxt.value === "") {
+      alert("vui lòng nhập lại thông tin");
+      event.preventDefault();
+  } else {
+      alert("đăng ký thành công");
+      event.preventDefault();
+  }
+}</script>
+
+</body>
+
+</html>
