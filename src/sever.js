@@ -10,6 +10,11 @@ const port = 3000
 app.use(cors( { origin: 'http://localhost:3000', optionsSuccessStatus: 200 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
+
+app.get("/", (req, res) => {
+    res.send("server is running")
+})
+
 //config gữi đa ta client lên sever và lấy 1 cách đơ giản 
 
 // set up view engine 
