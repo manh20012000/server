@@ -9,9 +9,9 @@ import mysql from 'mysql2/promise';
 const pool = mysql.createPool({
   host: 'containers-us-west-142.railway.app',
   user: 'root',
-  database: 'renApp',
   port:'5830',
-  password:'nAyvwubgCLGvwNVFECoM'
+  password:'nAyvwubgCLGvwNVFECoM',
+  database: 'renApp'
 });
 export default pool;
 // simple query

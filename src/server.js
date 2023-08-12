@@ -1,13 +1,13 @@
 import express from 'express';
-import configViewEngine from './src/config/viewEngine.mjs';
+import configViewEngine from './config/viewEngine.mjs';
 
 // import connection from './config/connectBD.js';
-import initAPIRoute from './src/route/api.js';
+import initAPIRoute from './route/api.js';
 import cors from 'cors';
 // const port = process.env.PORT||3000
 const app = express();
-const port = 3000
-app.use(cors( { origin: 'http://localhost:3000', optionsSuccessStatus: 200 }));
+const port = 8080
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
 
