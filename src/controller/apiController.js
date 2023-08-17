@@ -5,7 +5,7 @@ let login = async (req, res) => {
    try {
       const user = await pool.execute('select taikhoan,matkhau from login where taikhoan=? and matkhau=?', [req.body.taikhoan, req.body.matkhau]);
       console.log(user)
-      if (user[0]) {
+      if (user[0].length>0) {
          return res.status(200).json({ data: user[0], msg: "OK", status: 200 })
       } else {
          return res.status(400).json({ msg: "Wrong username or password", status: 400 })
