@@ -12,6 +12,7 @@ let router =express.Router();// khai báo  giúp express hiểu khai báo đươ
 
 const initAPIRoute=(app)=>{
      router.post('/login',apiController.login)
+     router.post('/login',apiController.Sigin)
     return app.use('/api/',router)
     //('/', cái này có thể thêm /abc ... để thêm tiền tố cho wed api( '/api/vesion',routet)
     
