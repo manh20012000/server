@@ -1,6 +1,6 @@
 import express from 'express';
 import configViewEngine from './config/viewEngine.mjs';
-// import connection from './config/connectBD.js';
+import connection from './config/connectBD.js';
 import initAPIRoute from './route/api.js';
 // import files from './controller/files.controller.js';
 import cors from 'cors';
