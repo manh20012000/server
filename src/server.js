@@ -1,16 +1,18 @@
 import express from 'express';
 import configViewEngine from './config/viewEngine.mjs';
-
 // import connection from './config/connectBD.js';
 import initAPIRoute from './route/api.js';
+import files from './controller/files.controller.js';
 import cors from 'cors';
 // const port = process.env.PORT||3000
 const app = express();
 const port = 8080
+
+app.use(express.static('public'))
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
-
+app.use("/files", files)
 app.get("/", (req, res) => {
     res.send("server is running")
 })
