@@ -1,3 +1,4 @@
+/*
 import { Router } from 'express'
 import multer from 'multer'
 
@@ -12,3 +13,5 @@ files.post("/upload", upload.array('photos', 12), function (req, res, next) {
 
   })
   export default files
+
+*/
