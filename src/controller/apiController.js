@@ -21,7 +21,8 @@ let Sigin = async (req, res) => {
          console.log(req.body.taikhoan, req.body.matkhau, req.body.email)
    try {
     
-      const user = await pool.execute('insert into login(taikhoan,matkhau,email) value(?,?,?)', [req.body.taikhoan, req.body.matkhau, req.body.email]);
+      const user = await pool.execute('insert into Login(email,phone,hoten,birth,gender,taikhoan,avata,matkhau,) values(?,?,?,?,?,?,?,?)',
+           [ req.body.email, req.body.phone, req.body.hoten,req.body.birth, req.body.gender,req.body.taikhoan, req.body.avata, req.body.matkhau]);
       return res.status(200).json({ data: user[0], msg: "OK", status: 200 })
    }
    catch (error) {
