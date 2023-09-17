@@ -14,21 +14,21 @@ baiviet.post('/tao_bai_viet', async function (req, res, next) {
     return res.status(200).json({ data: postUpLoad[0], msg: "OK", status: 200 })
 })
 // thuc hiện post ảnh lên server
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null,'public/uploads/')
-    },
-    filename: function (req, file, cb) {
-      cb(null, file.fieldname + '-' + uuid().substring(0,8) + path.extname(file.originalname));
-    }
-  })
-  const imageFilter = function (req, file, cb) {
-    if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
-      req.fileValidationError = 'Only image files are allowed!';
-      return cb(new Error('Only image files are allowed!'), false);
-    }
-    cb(null, true);
-};
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//       cb(null,'public/uploads/')
+//     },
+//     filename: function (req, file, cb) {
+//       cb(null, file.fieldname + '-' + uuid().substring(0,8) + path.extname(file.originalname));
+//     }
+//   })
+//   const imageFilter = function (req, file, cb) {
+//     if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
+//       req.fileValidationError = 'Only image files are allowed!';
+//       return cb(new Error('Only image files are allowed!'), false);
+//     }
+//     cb(null, true);
+// };
 //băt đau thuc hiẹn post
 // baiviet.post('/file', upload.array('uploaded_file', 12), async function (req, res, next) {
 
