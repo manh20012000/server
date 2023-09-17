@@ -6,7 +6,7 @@ import appRoot from 'app-root-path';
 import { uuid } from "uuidv4";
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null,'public/uploads/')
+    cb(null,'uploads/')
   },
   filename: function (req, file, cb) {
     cb(null, file.fieldname + '-' + uuid().substring(0,8) + path.extname(file.originalname));
@@ -24,7 +24,7 @@ const upload = multer({ storage: storage, fileFilter: imageFilter, })
 // console.log(JSON.stringify(upload)+"upload")
 let file = Router();
 file.get('/getfile', async function (req, res, next) {
-  const query = await pool.execute('select linkFile from file where idfile=8')
+  const query = await pool.execute('select linkFile from file where idfile=1')
   return res.json(query)
 })
 file.post('/file', upload.array('uploaded_file', 12), async function (req, res, next) {
