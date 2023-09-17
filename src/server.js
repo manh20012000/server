@@ -5,7 +5,7 @@ import initAPIRoute from './route/api.js';
 // import files from './controller/files.controller.js';
 import file from './controller/files.controller.js';
 import cors from 'cors';
-import  from './route/BaivietPost.js';
+import baiviet from './route/BaivietPost.js';
 // const port = process.env.PORT||3000
 const app = express();
 const port = 8080
