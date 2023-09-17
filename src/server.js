@@ -3,12 +3,13 @@ import configViewEngine from './config/viewEngine.mjs';
 import connection from './config/connectBD.js';
 import initAPIRoute from './route/api.js';
 // import files from './controller/files.controller.js';
+import file from './controller/files.controller.js';
 import cors from 'cors';
 // const port = process.env.PORT||3000
 const app = express();
 const port = 8080
 
-// app.use(express.static('public'))
+app.use(express.static('public'))
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
@@ -17,7 +18,9 @@ app.get("/", (req, res) => {
     res.send("server is running")
 })
 
-//config gữi đa ta client lên sever và lấy 1 cách đơ giản 
+//config gữi đa ta client lên sever và lấy 1 cách đơ giản
+app.use('/upload',file)
+
 
 // set up view engine 
 configViewEngine(app);
@@ -28,6 +31,7 @@ initAPIRoute(app);
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
 })
+
 
 // c2 dùng trực tiếp với này và cấu hình pack.json bỏ type modun đi 
 // const express = require('express')
