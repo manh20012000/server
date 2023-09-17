@@ -5,22 +5,23 @@ import initAPIRoute from './route/api.js';
 // import files from './controller/files.controller.js';
 import file from './controller/files.controller.js';
 import cors from 'cors';
+import  from './route/BaivietPost.js';
 // const port = process.env.PORT||3000
 const app = express();
 const port = 8080
 
 app.use(express.static('public'))
 app.use(cors());
-app.use(express.json());
+app.use(express.jbaivietson());
 app.use(express.urlencoded({ extended: true}));
 // app.use("/files", files)
 app.get("/", (req, res) => {
     res.send("server is running")
 })
-
 //config gữi đa ta client lên sever và lấy 1 cách đơ giản
 app.use('/upload',file)
-
+// gưi ảnh tư reatc native qua server
+app.use('/upload', baiviet);
 
 // set up view engine 
 configViewEngine(app);
