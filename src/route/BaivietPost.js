@@ -7,7 +7,8 @@ import { uuid } from "uuidv4";
 const baiviet = Router();
 baiviet.post('/tao_bai_viet', async function (req, res, next) { 
     const { idLogin,isText,datePost } = req.body
-    const postUpLoad = await pool.execute(`insert into baiviet(status,datePost,idLogin) values(?,?,?)`, [isText, datePost, idLogin]);
+    const postUpLoad = await pool.execute(`insert into baiviet(trangThai,datePost,idLogin)values values(?,?,?)`, [isText, datePost, idLogin]);
+     console.log(postUpLoad)
     return res.status(200).json({ data: postUpLoad[0], msg: "OK", status: 200 })
 })
 
