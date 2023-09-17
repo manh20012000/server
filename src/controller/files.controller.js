@@ -1,14 +1,15 @@
-import { Router } from "express";
+import { Router, query } from "express";
 import multer from "multer";
 import pool from "../config/connectBD.js";
 import path from "path";
 import appRoot from 'app-root-path';
+import { uuid } from "uuidv4";
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null,'public/uploads/')
   },
   filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    cb(null, file.fieldname + '-' + uuid().substring(0,8) + path.extname(file.originalname));
   }
 })
 
@@ -22,13 +23,29 @@ const imageFilter = function (req, file, cb) {
 const upload = multer({ storage: storage, fileFilter: imageFilter, })
 // console.log(JSON.stringify(upload)+"upload")
 let file = Router();
+file.get('/getfile', async function (req, res, next) {
+  const query = await pool.execute('select linkFile from file where idfile=2')
+  return res.json(query)
+})
+ 
+
 file.post('/file', upload.array('uploaded_file', 12), async function (req, res, next) {
+
+  let files = req.files
+  console.log(files)
+  const fileUrls = files.map(file => {
+        return file.destination+file.filename // cộng 2 cái này bằng cái đường dẫn path 
+  })
+  fileUrls.forEach(async url => {
+    const query= await pool.execute(`insert into file(linkFile) values('${url}')`)
+   });
+  // const query= await pool.execute(`insert into file(linkFile) values('')`)
  // chẹk lõi vưới thằng reques gữi lên 
-  if (req.fileValidationError) {
-    console.log('lg1')
-          return res.send(req.fileValidationError);
-      }
-  // else if (!req.file) {
+  // if (req.fileValidationError) {
+  //   console.log('lg1')
+  //         return res.send(req.fileValidationError);
+  //     }
+  // else if (!req.files) {
   //   console.log('log2')
   //   return res.send('Please select an image to upload');
     
@@ -42,17 +59,21 @@ file.post('/file', upload.array('uploaded_file', 12), async function (req, res, 
   //         return res.send(err);
   //    }
         
-  console.log(`vua upload`)
-  let info = {
-    protocol: req.protocol,
-    host: req.get('host'),
-    pathname: req.originalUrl
-  }
-  let link = `${info.protocol}://${info.host}/uploads/${req?.file?.filename}`
-  console.log(link)
-    //  const quuery= await pool.execute(`insert into file(linkFile) values('${link}')`)
-  res.json(link)
+  // console.log(`vua upload`)
+  // let info = {
+  //   protocol: req.protocol,
+  //   host: req.get('host'),
+  //   pathname: req.originalUrl
+  // }
+  // let link = `${info.protocol}://${info.host}/uploads/${req?.file?.filename}`
+  // console.log(link)
+  //   //  const quuery= await pool.execute(`insert into file(linkFile) values('${link}')`)
+  // res.json(link)
 })
+
+
+
+
 export default file;
 // import { Router } from "express";
 // import multer from "multer";
