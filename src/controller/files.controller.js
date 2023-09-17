@@ -6,7 +6,7 @@ import appRoot from 'app-root-path';
 import { uuid } from "uuidv4";
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null,'uploads/')
+    cb(null,'public/uploads/')
   },
   filename: function (req, file, cb) {
     cb(null, file.fieldname + '-' + uuid().substring(0,8) + path.extname(file.originalname));
@@ -32,7 +32,7 @@ file.post('/file', upload.array('uploaded_file', 12), async function (req, res, 
   let files = req.files
   console.log(files)
   const fileUrls = files.map(file => {
-        return file.destination+file.filename // cộng 2 cái này bằng cái đường dẫn path 
+        return '/uploads/'+file.filename // cộng 2 cái này bằng cái đường dẫn path 
   })
   fileUrls.forEach(async url => {
     const query= await pool.execute(`insert into file(linkFile) values('${url}')`)
