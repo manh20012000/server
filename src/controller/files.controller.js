@@ -69,9 +69,6 @@ file.post('/file', upload.array('uploaded_file', 12), async function (req, res, 
   // res.json(link)
 })
 
-
-
-
 export default file;
 // import { Router } from "express";
 // import multer from "multer";
