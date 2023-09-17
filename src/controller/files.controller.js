@@ -24,7 +24,7 @@ const upload = multer({ storage: storage, fileFilter: imageFilter, })
 // console.log(JSON.stringify(upload)+"upload")
 let file = Router();
 file.get('/getfile', async function (req, res, next) {
-  const query = await pool.execute('select linkFile from file where idfile=2')
+  const query = await pool.execute('select linkFile from file where idfile=5')
   return res.json(query)
 })
  
