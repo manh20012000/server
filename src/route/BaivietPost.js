@@ -7,13 +7,12 @@ import { uuid } from "uuidv4";
 const baiviet = Router();
 
 baiviet.post('/tao_bai_viet', async function (req, res, next) { 
-    const {  isText, datePost,idLogin } = req.body
-    console.log( idLogin, isText, datePost)
-    const postUpLoad = await pool.execute(`insert into baiviet(trangThai,datePost,idLogin) values(?,?,?)`, [isText, datePost, idLogin]);
-    console.log(postUpLoad)
+    const {trangThai, datePost,idLogin } = req.body
+    console.log( idLogin, trangThai, datePost)
+    const postUpLoad = await pool.execute(`insert into baiviet(trangThai,datePost,idLogin) values(?,?,?)`, [trangThai, datePost, idLogin]);
+    //  console.log(postUpLoad[0]+'doantexxt')
     return res.status(200).json({ data: postUpLoad[0], msg: "OK", status: 200 })
 })
-
 // thuc hiện post ảnh lên server
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -23,7 +22,6 @@ const storage = multer.diskStorage({
       cb(null, file.fieldname + '-' + uuid().substring(0,8) + path.extname(file.originalname));
     }
   })
-  
   const imageFilter = function (req, file, cb) {
     if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
       req.fileValidationError = 'Only image files are allowed!';
