@@ -12,7 +12,7 @@ const port = 8080
 
 app.use(express.static('public'))
 app.use(cors());
-app.use(express.jbaivietson());
+// app.use(express.jbaivietson());
 app.use(express.urlencoded({ extended: true}));
 // app.use("/files", files)
 app.get("/", (req, res) => {
