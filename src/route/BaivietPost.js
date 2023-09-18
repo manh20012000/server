@@ -9,9 +9,9 @@ const baiviet = Router();
 baiviet.post('/tao_bai_viet', async function (req, res, next) { 
     const {trangThai, datePost,idLogin } = req.body
     console.log( idLogin, trangThai, datePost)
-    const postUpLoad = await pool.execute(`insert into baiviet(trangThai,datePost,idLogin) values(?,?,?)`, [trangThai, datePost, idLogin]);
-    //  console.log(postUpLoad[0]+'doantexxt')
-    return res.status(200).json({ data: postUpLoad[0], msg: "OK", status: 200 })
+    const {postUpLoad} = await pool.execute(`insert into baiviet(trangThai,datePost,idLogin) values(?,?,?)`, [trangThai, datePost, idLogin]);
+     console.log(postUpLoad[0]+'doantexxt')
+    return res.status(200).json({ msg: "OK", status: 200 })
 })
 // thuc hiện post ảnh lên server
 // const storage = multer.diskStorage({
