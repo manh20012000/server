@@ -1,7 +1,6 @@
 import pool from "../config/connectBD.js";
 import appRoot from 'app-root-path';
 let login = async (req, res) => {
-   
    console.log(req.body.taikhoan, req.body.matkhau+' -->>ban da truyen tham o vao ')
    try {
       const user = await pool.execute('select * from Login where taikhoan=? and matkhau=?', [req.body.taikhoan, req.body.matkhau]);
@@ -25,6 +24,7 @@ let Sigin = async (req, res) => {
       return res.status(200).json({ data: user[0], msg: "OK", status: 200 })
    }
    catch (error) {
+      
       return res.status(500).json('loi')
    }
 

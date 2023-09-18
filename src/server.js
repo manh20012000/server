@@ -13,7 +13,8 @@ const port = 8080
 app.use(express.static('public'))
 app.use(cors());
 
-app.use(express.urlencoded({ extended: true}));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 // app.use("/files", files)
 app.get("/", (req, res) => {
     res.send("server is running")
@@ -21,19 +22,20 @@ app.get("/", (req, res) => {
 //config gữi đa ta client lên sever và lấy 1 cách đơ giản
 app.use('/upload',file)
 // gưi ảnh tư reatc native qua server
-app.use('/upload', baiviet);
+app.use('/uploads', baiviet);
 
 // set up view engine 
 configViewEngine(app);
 // innit wed router
 
-// khoit taoj api
+// dung cho login và và đăng ký
+app.use(express.urlencoded({ extended: true }));
 initAPIRoute(app);
+
+
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
 })
-
-
 // c2 dùng trực tiếp với này và cấu hình pack.json bỏ type modun đi 
 // const express = require('express')
 // const app = express()
