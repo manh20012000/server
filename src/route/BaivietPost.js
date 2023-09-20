@@ -9,7 +9,7 @@ baiviet.post('/tao_bai_viet', async function (req, res, next) {
     try {
         const { trangThai, datePost, idLogin, permission, feel, vitri } = req.body
          console.log(trangThai, datePost, idLogin, permission, feel, vitri)
-        const { postUpLoad } = await pool.execute(`insert into baiviet(trangThai,datePost,idLogin) values(?,?,?,?,?,?)`, [trangThai, datePost, idLogin, permission, feel, vitri]);
+        const { postUpLoad } = await pool.execute(`insert into baiviet(trangThai,datePost,idLogin,permission,feel,Location) values(?,?,?,?,?,?)`, [trangThai, datePost, idLogin, permission, feel, vitri]);
         console.log(postUpLoad + 'doantexxt')
         return res.status(200).json({ msg: "OK", status: 200 })
     } catch (err) {
