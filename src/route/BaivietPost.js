@@ -5,21 +5,21 @@ import path from "path";
 import appRoot from 'app-root-path';
 import { uuid } from "uuidv4";
 const baiviet = Router();
-// thuc hien lay bai viet ve du lieu
-// baiviet.get('/getBaiViet', async function (req, res, next) {
-//     try {
-//         const query = await pool.execute('select * from Login,baiviet,listImage where Login.idLogin=baiviet.idLogin 
-//        'and Login.idLogin=listImage.idLogin and listImage.timePost=baiviet.datePost')
-          
-//     } catch (err) {
-//         res.json(err);
-//        }
-//  })
+thuc hien lay bai viet ve du lieu
+baiviet.get('/getBaiViet', async function (req, res, next) {
+    try {
+        const query = await pool.execute('select email,hoten,birth,gender,avata,baiviet.datePost,trangThai,permission,feel,idlistImage,image,Location' +' from Login,baiviet,listImage where Login.idLogin=baiviet.idLogin '
+        + 'and listImage.datePost=baiviet.datePost' ) 
+      
+    } catch (err) {
+        res.json(err);
+       }
+ })
 baiviet.post('/tao_bai_viet', async function (req, res, next) { 
     try {
-        const { trangThai, datePost, idLogin, permission, feel, vitri,image} = req.body
-         console.log(trangThai, datePost, idLogin, permission, feel, vitri,image)
-        const { postUpLoad } = await pool.execute(`insert into baiviet(trangThai,datePost,idLogin,permission,feel,Location,image) values(?,?,?,?,?,?)`, [trangThai, datePost, idLogin, permission, feel, vitri,image]);
+        const { trangThai, datePost, idLogin, permission, feel, vitri} = req.body
+         console.log(trangThai, datePost, idLogin, permission, feel, vitri)
+        const { postUpLoad } = await pool.execute(`insert into baiviet(trangThai,datePost,idLogin,permission,feel,Location) values(?,?,?,?,?,?)`, [trangThai, datePost, idLogin, permission, feel, vitri]);
         console.log(postUpLoad + 'doantexxt')
         return res.status(200).json({ msg: "OK", status: 200 })
     } catch (err) {
