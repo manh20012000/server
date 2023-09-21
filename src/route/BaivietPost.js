@@ -27,40 +27,41 @@ baiviet.post('/tao_bai_viet', async function (req, res, next) {
     }
 })
 //thuc hiện post ảnh lên server
-// const storage = multer.diskStorage({
-//     destination: function (req, file, cb) {
-//       cb(null,'public/uploads/')
-//     },
-//     filename: function (req, file, cb) {
-//       cb(null, file.fieldname + '-' + uuid().substring(0,8) + path.extname(file.originalname));
-//     }
-//   })
-//   const imageFilter = function (req, file, cb) {
-//     if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
-//       req.fileValidationError = 'Only image files are allowed!';
-//       return cb(new Error('Only image files are allowed!'), false);
-//     }
-//     cb(null, true);
-// };
-// //băt đau thuc hiẹn post file
-// const upload = multer({ storage: storage, fileFilter: imageFilter, })
-// baiviet.post('/filePost', upload.array('uploaded_file', 12), async function (req, res, next){
-//     try {
-//         console.log(req.body);
-//         const { idLogin, image, datePost } = req.body;
-//             let files = image;
-//             console.log(files);
-//             const fileUrl = files.map(file => {
-//             return '/uploads' + file.fieldname;
-//         })
-//         fileUrl.forEach( async  url => {
-//             const query = await pool.execute('insert into listImage(image,timePost,idLogin) values(?,?,?)', [url, datePost, idLogin])
-//              return res.json('Capnhat thanh cong')
-//         });
-//      } catch (err) {
-//       return res.status(500);
-//     }
-// })
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null,'public/uploads/')
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.fieldname + '-' + uuid().substring(0,8) + path.extname(file.originalname));
+    }
+  })
+  const imageFilter = function (req, file, cb) {
+    if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
+      req.fileValidationError = 'Only image files are allowed!';
+      return cb(new Error('Only image files are allowed!'), false);
+    }
+    cb(null, true);
+};
+//băt đau thuc hiẹn post file
+const upload = multer({ storage: storage, fileFilter: imageFilter, })
+baiviet.post('/filesPost', upload.array('uploaded_file', 12), async function (req, res, next) {
+    
+    try {
+        console.log(req.body);
+        const {image, datePost } = req.body;
+            let files = image;
+            console.log(files);
+            const fileUrl = files.map(file => {
+            return '/uploads' + file.fieldname;
+        })
+        fileUrl.forEach( async  url => {
+            const query = await pool.execute('insert into listImage(image,timePost,idLogin) values(?,?,?)', [url, datePost, idLogin])
+             return res.json('Capnhat thanh cong')
+        });
+     } catch (err) {
+      return res.status(500);
+    }
+})
 // baiviet.post('/file', upload.array('uploaded_file', 12), async function (req, res, next) {
 
 //     let files = req.files
