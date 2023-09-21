@@ -23,13 +23,13 @@ const imageFilter = function (req, file, cb) {
 const upload = multer({ storage: storage, fileFilter: imageFilter, })
 // console.log(JSON.stringify(upload)+"upload")
 let file = Router();
-file.get('/getfile', async function (req, res, next) {
-  const query = await pool.execute('select linkFile from file where idfile=1')
-  return res.json(query)
-})
+// file.get('/getfile', async function (req, res, next) {
+//   const query = await pool.execute('select linkFile from file where idfile=1')
+//   return res.json(query)
+// })
 file.post('/file', upload.array('uploaded_file', 12), async function (req, res, next) {
   let files = req.files
-  console.log(files)
+  console.log(files)                                             
   const fileUrls = files.map(file => {
         return '/uploads/'+file.filename // cộng 2 cái này bằng cái đường dẫn path 
   })
