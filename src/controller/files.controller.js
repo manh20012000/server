@@ -28,7 +28,6 @@ file.get('/getfile', async function (req, res, next) {
   return res.json(query)
 })
 file.post('/file', upload.array('uploaded_file', 12), async function (req, res, next) {
-
   let files = req.files
   console.log(files)
   const fileUrls = files.map(file => {
@@ -36,7 +35,9 @@ file.post('/file', upload.array('uploaded_file', 12), async function (req, res, 
   })
   fileUrls.forEach(async url => {
     const query= await pool.execute(`insert into file(linkFile) values('${url}')`)
-   });
+  });
+})
+  export default file;
   // const query= await pool.execute(`insert into file(linkFile) values('')`)
  // chẹk lõi vưới thằng reques gữi lên 
   // if (req.fileValidationError) {
@@ -67,9 +68,9 @@ file.post('/file', upload.array('uploaded_file', 12), async function (req, res, 
   // console.log(link)
   //   //  const quuery= await pool.execute(`insert into file(linkFile) values('${link}')`)
   // res.json(link)
-})
 
-export default file;
+
+
 // import { Router } from "express";
 // import multer from "multer";
 // import pool from "../config/connectBD.js";
