@@ -10,7 +10,7 @@ let login = async (req, res) => {
     );
       console.log(
     req.body.taikhoan,
-    req.body.matkhau + " -->>ban da truyen tham o vao "
+    req.body.matkhau + " -->>tham so truyen vao "
   );
     // console.log("consolera user:   "+JSON.stringify(user))
     if (user[0].length > 0) {
