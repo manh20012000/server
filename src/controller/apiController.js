@@ -1,25 +1,23 @@
 import pool from "../config/connectBD.js";
 import appRoot from "app-root-path";
 let login = async (req, res) => {
- 
   try {
-  
     const user = await pool.execute(
       "select * from Login where taikhoan=? and matkhau=?",
       [req.body.taikhoan, req.body.matkhau]
     );
-      console.log(
-    req.body.taikhoan,
-    req.body.matkhau + " -->>tham so truyen vao "
-  );
-    // console.log("consolera user:   "+JSON.stringify(user))
+    console.log(
+      req.body.taikhoan,
+      req.body.matkhau + " -->>tham so truyen vao "
+    );
     if (user[0].length > 0) {
       return res.status(200).json({ data: user[0], msg: "OK", status: 200 });
     } else if (user[0] == 0) {
-      return res.status(404).json({ msg: "Tài khoản hoặc pass không chính sác", status: 404 }); 
+      return res
+        .status(404).json({ msg: "Tài khoản hoặc pass không chính sác", status: 404 });
     }
   } catch (error) {
-     console.log(error);
+    console.log(error);
     return res.status(500);
   }
 };
@@ -39,9 +37,9 @@ let Sigin = async (req, res) => {
         req.body.matkhau,
       ]
     );
-      return res.status(200).json({ data: user[0], msg: "OK", status: 200 });
+    return res.status(200).json({ data: user[0], msg: "OK", status: 200 });
   } catch (error) {
-       return res.status(500).json("loi");
+    return res.status(500).json("loi");
   }
 };
 export default {
