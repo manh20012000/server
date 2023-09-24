@@ -1,9 +1,10 @@
 import pool from "../config/connectBD.js";
-import appRoot from "app-root-path";
+import appRoot from "app-root-path"; 
+import { Router, query } from "express";
+const Taikhoan = Router();
 let login = async (req, res) => {
   try {
-    const user = await pool.execute(
-      "select * from Login where taikhoan=? and matkhau=?",
+    const user = await pool.execute(  "select * from Login where taikhoan=? and matkhau=?",
       [req.body.taikhoan, req.body.matkhau]
     );
     console.log(
@@ -12,7 +13,7 @@ let login = async (req, res) => {
     );
     if (user[0].length > 0) {
       return res.status(200).json({ data: user[0], msg: "OK", status: 200 });
-    } else if (user[0] == 0) {
+    } else if (user[0].length== 0) {
       return res
         .status(404).json({ msg: "Tài khoản hoặc pass không chính sác", status: 404 });
     }
