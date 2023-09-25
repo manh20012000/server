@@ -25,7 +25,16 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage, fileFilter: imageFilter, })
 console.log(upload+'upload')
 baiviet.post('/filesPost', upload.array('ArayImages', 12), async function (req, res, next) {
-   console.log(JSON.stringify(upload)+'thu mục uload')
+  const { trangThai,
+    datePost,
+    idLogin,
+    feel,
+    permission,
+    vitri,
+    ArayImages
+  } = req.body;
+  console.log(datePost, idLogin, feel, permission, vitri, ArayImages);
+console.log(JSON.stringify(upload)+'thu mục uload')
   const Image = [];
     try {
       const files = req.files;
