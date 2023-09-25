@@ -5,7 +5,6 @@ import path from "path";
 import appRoot from 'app-root-path';
 import { uuid } from "uuidv4";
 const baiviet = Router();
-//thuc hien lay bai viet ve du lieu
 baiviet.get('/getBaiViet', async function (req, res, next) {
     try {
         const query = await pool.execute('select email,hoten,birth,gender,avata,baiviet.datePost,trangThai,permission,feel,idlistImage,image,Location' +' from Login,baiviet,listImage where Login.idLogin=baiviet.idLogin '
