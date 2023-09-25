@@ -5,26 +5,6 @@ import path from "path";
 import appRoot from 'app-root-path';
 import { uuid } from "uuidv4";
 const baiviet = Router();
-baiviet.get('/getBaiViet', async function (req, res, next) {
-    try {
-        const query = await pool.execute('select email,hoten,birth,gender,avata,baiviet.datePost,trangThai,permission,feel,idlistImage,image,Location' +' from Login,baiviet,listImage where Login.idLogin=baiviet.idLogin '
-        + 'and listImage.datePost=baiviet.datePost' ) 
-      
-    } catch (err) {
-        res.json(err);
-       }
- })
-baiviet.post('/tao_bai_viet', async function (req, res, next) { 
-    try {
-        const { trangThai, datePost, idLogin, permission, feel, vitri} = req.body
-         console.log(trangThai, datePost, idLogin, permission, feel, vitri)
-        const { postUpLoad } = await pool.execute(`insert into baiviet(trangThai,datePost,idLogin,permission,feel,Location) values(?,?,?,?,?,?)`, [trangThai, datePost, idLogin, permission, feel, vitri]);
-        console.log(postUpLoad + 'doantexxt')
-        return res.status(200).json({ msg: "OK", status: 200 })
-    } catch (err) {
-         return res.status(501).json('Thất bại ')
-    }
-})
 //thuc hiện post ảnh lên server
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -43,23 +23,43 @@ const storage = multer.diskStorage({
 };
 //băt đau thuc hiẹn post file
 const upload = multer({ storage: storage, fileFilter: imageFilter, })
-baiviet.post('/filesPost', upload.array('uploaded_file', 12), async function (req, res, next) {
+console.log(upload+'upload')
+baiviet.post('/filesPost', upload.array('ArayImages', 12), async function (req, res, next) {
+   console.log(JSON.stringify(upload)+'thu mục uload')
+  const Image = [];
     try {
-        console.log(req.body);
-        const {image, datePost } = req.body;
-            let files = image;
-            console.log(files);
-            const fileUrl = files.map(file => {
-            return '/uploads' + file.fieldname;
+      const files = req.files;
+      console.log(files + 'là ');
+      const fileUrl = files.map(file => {
+      Image.push('/uploads' + file.fieldname);
+        //  return '/uploads' + file.fieldname;
+        console.log('trả về Image'+Image)
         })
-        fileUrl.forEach( async  url => {
-            const query = await pool.execute('insert into listImage(image,timePost,idLogin) values(?,?,?)', [url, datePost, idLogin])
-             return res.json('Capnhat thanh cong')
-        });
+        // fileUrl.forEach( async  url => {
+        //     const query = await pool.execute('insert into listImage(image,timePost,idLogin) values(?,?,?)', [url, datePost, idLogin])
+        //      return res.json('Capnhat thanh cong')
+        // });
      } catch (err) {
       return res.status(500);
     }
 })
+export default baiviet
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // baiviet.post('/file', upload.array('uploaded_file', 12), async function (req, res, next) {
 
 //     let files = req.files
@@ -76,4 +76,23 @@ baiviet.post('/filesPost', upload.array('uploaded_file', 12), async function (re
      
 
 // })
-export default baiviet;
+// ;baiviet.get('/getBaiViet', async function (req, res, next) {
+//     try {
+//         const query = await pool.execute('select email,hoten,birth,gender,avata,baiviet.datePost,trangThai,permission,feel,idlistImage,image,Location' +' from Login,baiviet,listImage where Login.idLogin=baiviet.idLogin '
+//         + 'and listImage.datePost=baiviet.datePost' ) 
+      
+//     } catch (err) {
+//         res.json(err);
+//        }
+//  })
+// baiviet.post('/tao_bai_viet', async function (req, res, next) { 
+//     try {
+//         const { trangThai, datePost, idLogin, permission, feel, vitri} = req.body
+//          console.log(trangThai, datePost, idLogin, permission, feel, vitri)
+//         const { postUpLoad } = await pool.execute(`insert into baiviet(trangThai,datePost,idLogin,permission,feel,Location) values(?,?,?,?,?,?)`, [trangThai, datePost, idLogin, permission, feel, vitri]);
+//         console.log(postUpLoad + 'doantexxt')
+//         return res.status(200).json({ msg: "OK", status: 200 })
+//     } catch (err) {
+//          return res.status(501).json('Thất bại ')
+//     }
+// })

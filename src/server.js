@@ -5,10 +5,11 @@ import initAPIRoute from './route/api_Taikhoan.js';
 // import files from './controller/files.controller.js';
 // import file from './controller/files.controller.js';
 import cors from 'cors';
-// import baiviet from './route/BaivietPost.js';
+import baiviet from './route/api_BaiViet.js';
 import db from './config/MongoDb.js'
 // import login from './model/user.js';
 import Taikhoan from './route/api_Taikhoan.js';
+import file from './controller/files.controller.js';
 // const port = process.env.PORT||3000
 const app = express();
 const port = 8080
@@ -23,10 +24,11 @@ app.use(express.json());
 app.get("/", (req, res) => {
     res.send("server is running")
 })
+
 // tao co sơ dũ liêu với login 
 app.use('/',Taikhoan)
-// app.use("/files", files)
-
+// app.use("/", file)
+app.use('/', baiviet);
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
 })

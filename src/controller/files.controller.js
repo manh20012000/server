@@ -12,7 +12,6 @@ const storage = multer.diskStorage({
     cb(null, file.fieldname + '-' + uuid().substring(0,8) + path.extname(file.originalname));
   }
 })
-
 const imageFilter = function (req, file, cb) {
   if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
     req.fileValidationError = 'Only image files are allowed!';
@@ -27,9 +26,10 @@ let file = Router();
 //   const query = await pool.execute('select linkFile from file where idfile=1')
 //   return res.json(query)
 // })
-file.post('/file', upload.array('uploaded_file', 12), async function (req, res, next) {
-  let files = req.files
-  console.log(files)                                             
+
+file.post('/file', upload.array('ArayImages', 12), async function (req, res, next) {
+   const files = req.files
+  console.log(files+'files')                                             
   const fileUrls = files.map(file => {
         return '/uploads/'+file.filename // cộng 2 cái này bằng cái đường dẫn path 
   })
