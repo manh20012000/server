@@ -12,7 +12,7 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     cb(
-      null,file.fieldname + "-" +uuid().substring(0, 8) +path.extname(file.originalname)      
+      null,file.filename + "-" +uuid().substring(0, 8) +path.extname(file.originalname)      
     );
   },
 });
