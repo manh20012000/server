@@ -30,7 +30,7 @@ const imageFilter = function (req, file, cb) {
 const upload = multer({ storage: storage, fileFilter: imageFilter });
 console.log(JSON.stringify(upload) + "upload");
 baiviet.post("/filesPost", upload.array("ArayImages", 12), async function (req, res, next) {
-  console.log(req.files +'cdjncjd')
+  // console.log(req.files +'cdjncjd')
   const { trangThai, datePost, feel, permission, vitri } = req.body;
      const ArayImages = req.files;
      console.log(datePost, idLogin, feel, permission, vitri, ArayImages);
