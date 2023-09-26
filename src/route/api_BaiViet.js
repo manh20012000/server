@@ -31,9 +31,10 @@ const upload = multer({ storage: storage, fileFilter: imageFilter });
 console.log(upload + "upload");
 baiviet.post("/filesPost", upload.array("ArayImages", 12), async function (req, res, next) {
   console.log(req.body +'cdjncjd')
-    const {trangThai, datePost,   feel, permission,vitri, ArayImages} = req.body;
-    console.log(datePost, idLogin, feel, permission, vitri, ArayImages);
-    console.log(JSON.stringify(upload) + "thu mục uload");
+  const { trangThai, datePost, feel, permission, vitri } = req.body;
+     const ArayImages = req.files;
+     console.log(datePost, idLogin, feel, permission, vitri, ArayImages);
+     console.log(JSON.stringify(upload) + "thu mục uload");
     const Image = [];
     try {
       console.log( req.files + "là ");
