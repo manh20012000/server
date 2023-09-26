@@ -7,17 +7,17 @@ import uuid from "react-uuid";
 const baiviet = Router();
 //thuc hiện post ảnh lên server
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
+  destination: function (req, files, cb) {
     cb(null, "public/uploads/");
   },
-  filename: function (req, file, cb) {
+  filename: function (req, files, cb) {
     cb(
-      null,file.filename + "-" +uuid().substring(0, 8) +path.extname(file.originalname)      
+      null,files.filename + "-" +uuid().substring(0, 8) +path.extname(files.originalname)      
     );
   },
 });
-const imageFilter = function (req, file, cb) {
-  if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
+const imageFilter = function (req, files, cb) {
+  if (!files.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
     req.fileValidationError = "Only image files are allowed!";
     return cb(new Error("Only image files are allowed!"), false);
   }
@@ -26,7 +26,9 @@ const imageFilter = function (req, file, cb) {
 //băt đau thuc hiẹn post file
 const upload = multer({ storage: storage, fileFilter: imageFilter });
 console.log(upload + "upload");
-baiviet.post("/filesPost",upload.array("ArayImages", 12), async function (req, res, next) {
+baiviet.post("/filesPost", upload.array("ArayImages", 12), async function (req, res, next) {
+  console.log(req.body +
+      'cdjncjd')
     const {trangThai, datePost,   feel, permission,vitri, ArayImages} = req.body;
     console.log(datePost, idLogin, feel, permission, vitri, ArayImages);
     console.log(JSON.stringify(upload) + "thu mục uload");
