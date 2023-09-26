@@ -8,15 +8,18 @@ const baiviet = Router();
 //thuc hiện post ảnh lên server
 const storage = multer.diskStorage({
   destination: function (req, files, cb) {
+    console.log(req.body+'destination')
     cb(null, "public/uploads/");
   },
   filename: function (req, files, cb) {
+    console.log(req.body+'filenam')
     cb(
       null,files.filename + "-" +uuid().substring(0, 8) +path.extname(files.originalname)      
     );
   },
 });
 const imageFilter = function (req, files, cb) {
+  console.log(req.body+'fimahefiter')
   if (!files.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
     req.fileValidationError = "Only image files are allowed!";
     return cb(new Error("Only image files are allowed!"), false);
