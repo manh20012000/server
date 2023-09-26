@@ -31,9 +31,9 @@ const upload = multer({ storage: storage, fileFilter: imageFilter });
 console.log(JSON.stringify(upload) + "upload");
 baiviet.post("/filesPost2", upload.array("ArayImages", 10), async function (req, res, next) {
   console.log(req.files +'cdjncjd')
-  const { trangThai, datePost, feel, permission, vitri } = req.body;
-     const ArayImages = req.files;
-     console.log(datePost, idLogin, feel, permission, vitri, ArayImages);
+  // const { trangThai, datePost, feel, permission, vitri } = req.body;
+     const ArayImages = req.files;//datePost, idLogin, feel, permission, vitri,
+     console.log( ArayImages);
      console.log(JSON.stringify(upload) + "thu mục uload");
     const Image = [];
     try {
@@ -56,9 +56,9 @@ baiviet.post("/filesPost2", upload.array("ArayImages", 10), async function (req,
 
 
 baiviet.post('/filesPost', async function (req, res, next) {
-    try {
-      const { trangThai, datePost, feel, permission, vitri,ArayImages } = req.body;
-         console.log(trangThai, datePost, feel, permission, vitri,ArayImages)
+    try {//trangThai, datePost, feel, permission, vitri,
+      const { ArayImages } = req.body;
+         console.log(ArayImages)
         const { postUpLoad } = await pool.execute(`insert into baiviet(trangThai,datePost,idLogin,permission,feel,Location) values(?,?,?,?,?,?)`, [trangThai, datePost, idLogin, permission, feel, vitri]);
         console.log(postUpLoad + 'doantexxt')
         return res.status(200).json({ msg: "OK", status: 200 })
