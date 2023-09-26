@@ -39,7 +39,7 @@ baiviet.post("/filesPost", upload.array("ArayImages", 12), async function (req, 
       const fileUrl = req.files.map((file) => {
         Image.push("/uploads" + file.filename);
         console.log("trả về Image" + Image);
-        return "/uploads" + file.fieldname;
+        return "/uploads" + file.filename;
       });
       // fileUrl.forEach( async  url => {
       //     const query = await pool.execute('insert into listImage(image,timePost,idLogin) values(?,?,?)', [url, datePost, idLogin])
