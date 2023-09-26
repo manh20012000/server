@@ -26,7 +26,8 @@ app.get("/", (req, res) => {
 })
 
 // tao co sơ dũ liêu với login 
-app.use('/',Taikhoan)
+app.use('/', Taikhoan)
+app.use('/',file)
 // app.use("/", file)
 app.use('/', baiviet);
 app.listen(port, () => {

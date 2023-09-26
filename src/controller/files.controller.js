@@ -33,9 +33,9 @@ file.post('/file', upload.array('ArayImages', 12), async function (req, res, nex
   const fileUrls = files.map(file => {
         return '/uploads/'+file.filename // cộng 2 cái này bằng cái đường dẫn path 
   })
-  fileUrls.forEach(async url => {
-    const query= await pool.execute(`insert into file(linkFile) values('${url}')`)
-  });
+  // fileUrls.forEach(async url => {
+  //   const query= await pool.execute(`insert into file(linkFile) values('${url}')`)
+  // });
 })
   export default file;
   // const query= await pool.execute(`insert into file(linkFile) values('')`)
