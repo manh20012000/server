@@ -7,20 +7,20 @@ import uuid from "react-uuid";
 const baiviet = Router();
 //thuc hiện post ảnh lên server
 const storage = multer.diskStorage({
-  destination: function (req, files, cb) {
-    console.log(req.body+'destination')
+  destination: function (req, file, cb) {
+    // console.log(req.body+'destination')
     cb(null, "public/uploads/");
   },
-  filename: function (req, files, cb) {
-    console.log(req.body+'filenam')
+  filename: function (req, file, cb) {
+    // console.log(req.body+'filenam')
     cb(
-      null,files.filename + "-" +uuid().substring(0, 8) +path.extname(files.originalname)      
+      null,file.filename + "-" +uuid().substring(0, 8) +path.extname(file.originalname)      
     );
   },
 });
-const imageFilter = function (req, files, cb) {
-  console.log(req.body+'fimahefiter')
-  if (!files.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
+const imageFilter = function (req, file, cb) {
+  // console.log(req.body+'fimahefiter')
+  if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
     req.fileValidationError = "Only image files are allowed!";
     return cb(new Error("Only image files are allowed!"), false);
   }
@@ -30,14 +30,12 @@ const imageFilter = function (req, files, cb) {
 const upload = multer({ storage: storage, fileFilter: imageFilter });
 console.log(upload + "upload");
 baiviet.post("/filesPost", upload.array("ArayImages", 12), async function (req, res, next) {
-  console.log(req.body +
-      'cdjncjd')
+  console.log(req.body +'cdjncjd')
     const {trangThai, datePost,   feel, permission,vitri, ArayImages} = req.body;
     console.log(datePost, idLogin, feel, permission, vitri, ArayImages);
     console.log(JSON.stringify(upload) + "thu mục uload");
     const Image = [];
     try {
-
       console.log( req.files + "là ");
       const fileUrl = req.files.map((file) => {
         Image.push("/uploads" + file.filename);
