@@ -8,11 +8,11 @@ const baiviet = Router();
 //thuc hiện post ảnh lên server
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    // console.log(req.body+'destination')
-    cb(null, "public/uploads/");
+    console.log(req.body+'destination')
+    cb(null, "/uploads/");
   },
   filename: function (req, file, cb) {
-    // console.log(req.body+'filenam')
+    console.log(req.body+'filenam')
     cb(
       null,file.filename + "-" +uuid().substring(0, 8) +path.extname(file.originalname)      
     );
