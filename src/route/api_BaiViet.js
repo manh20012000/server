@@ -28,9 +28,9 @@ const imageFilter = function (req, file, cb) {
 };
 //băt đau thuc hiẹn post file
 const upload = multer({ storage: storage, fileFilter: imageFilter });
-console.log(upload + "upload");
+console.log(JSON.stringify(upload) + "upload");
 baiviet.post("/filesPost", upload.array("ArayImages", 12), async function (req, res, next) {
-  console.log(req.body +'cdjncjd')
+  console.log(req.files +'cdjncjd')
   const { trangThai, datePost, feel, permission, vitri } = req.body;
      const ArayImages = req.files;
      console.log(datePost, idLogin, feel, permission, vitri, ArayImages);
