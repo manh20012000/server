@@ -3,10 +3,10 @@ import multer from "multer";
 import pool from "../config/connectBD.js";
 import path from "path";
 import appRoot from 'app-root-path';
-import { uuid } from "uuidv4";
+import uuid from "react-uuid";
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null,'public/uploads/')
+    cb(null,'./uploads/')
   },
   filename: function (req, file, cb) {
     cb(null, file.fieldname + '-' + uuid().substring(0,8) + path.extname(file.originalname));
