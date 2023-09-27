@@ -4,7 +4,7 @@ import pool from "../config/connectBD.js";
 import path from "path";
 import appRoot from "app-root-path";
 import uuid from "react-uuid";
-// const baiviet = Router();
+const baiviet = Router();
 // //thuc hiện post ảnh lên server
 // const storage = multer.diskStorage({
 //   destination: function (req, file, cb) {
