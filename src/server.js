@@ -4,6 +4,7 @@ import connection from './config/connectBD.js';
 import initAPIRoute from './route/api_Taikhoan.js';
 // import files from './controller/files.controller.js';
 // import file from './controller/files.controller.js';
+import uploadanh from './route/uploadsAnh.js';
 import cors from 'cors';
 import baiviet from './route/api_BaiViet.js';
 import db from './config/MongoDb.js'
@@ -30,6 +31,8 @@ app.get("/", (req, res) => {
 // tao co sơ dũ liêu với login 
 app.use('/', Taikhoan)
 app.use('/', file)
+
+app.use('/', uploadanh);
 const upload = multer({ dest: 'public/uploads/' });
 app.post('/upload', upload.array('ArayImages', 12), (req, res) => {
     console.log(JSON.stringify(req.files))
