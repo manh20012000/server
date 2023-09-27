@@ -10,10 +10,12 @@ import db from './config/MongoDb.js'
 // import login from './model/user.js';
 import Taikhoan from './route/api_Taikhoan.js';
 import file from './controller/files.controller.js';
+import path from "path";
+import multer from "multer";
 // const port = process.env.PORT||3000
 const app = express();
 const port = 8080
-
+const upload = multer({ dest: 'public/' });
 app.use(express.static('public'))
 app.use(cors());
 db.connect();
@@ -27,7 +29,14 @@ app.get("/", (req, res) => {
 
 // tao co sơ dũ liêu với login 
 app.use('/', Taikhoan)
-app.use('/',file)
+app.use('/', file)
+
+app.post('/upload', upload.single('image'), (req, res) => {
+     console.log('req.file:'+req.file)
+ console.log('req.files:'+req.files)
+    const imagePath = path.join(__dirname, 'public', req.files.filename);
+  }
+  )
 // app.use("/", file)
 app.use('/', baiviet);
 app.listen(port, () => {
