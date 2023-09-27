@@ -8,7 +8,7 @@ const uploadanh = Router();
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
       // console.log(req.body+'destination')
-      cb(null, "public/");
+      cb(null, "/uploads");
     },
     filename: function (req, file, cb) {
       // console.log(req.body+'filenam')

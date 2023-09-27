@@ -34,7 +34,7 @@ app.use('/', file)
 
 app.use('/', uploadanh);
 const upload = multer({ dest: 'public/uploads/' });
-app.post('/upload', upload.array('ArayImages', 12), (req, res) => {
+app.post('/uploads', upload.array('ArayImages', 12), (req, res) => {
     console.log(JSON.stringify(req.files))
     const Image = [];
     const fileUrl = req.files.map((file) => {
