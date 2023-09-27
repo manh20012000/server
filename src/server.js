@@ -2,32 +2,25 @@ import express from 'express';
 import configViewEngine from './config/viewEngine.mjs';
 import connection from './config/connectBD.js';
 import initAPIRoute from './route/api_Taikhoan.js';
-// import files from './controller/files.controller.js';
 import file from './controller/files.controller.js';
 import uploadAnh from './route/uploadsAnh.js';
 import cors from 'cors';
 import baiviet from './route/api_BaiViet.js';
 import db from './config/MongoDb.js'
-// import login from './model/user.js';
 import Taikhoan from './route/api_Taikhoan.js';
-
 import path from "path";
 import multer from "multer";
 // const port = process.env.PORT||3000
 const app = express();
 const port = 8080
-
 app.use(express.static('public'))
 app.use(cors());
 db.connect();
-
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
 app.get("/", (req, res) => {
     res.send("server is running")
 })
-
 // tao co sơ dũ liêu với login 
 app.use('/', Taikhoan)
 app.use('/', file)
@@ -85,4 +78,3 @@ app.listen(port, () => {
 // app.use(express.urlencoded({ extended: true }));
 // initAPIRoute(app);
 
-/*
