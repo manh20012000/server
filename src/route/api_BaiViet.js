@@ -53,13 +53,6 @@ import uuid from "react-uuid";
 //   }
 // );
 
-const upload = multer({ dest: 'public/' });
-
-app.post('/upload', upload.single('image'), (req, res) => {
-  // Lưu trữ tệp tin vào thư mục public
-  const imagePath = path.join(__dirname, 'public', req.file.filename);
-}
-)
 baiviet.post('/filesPost', async function (req, res, next) {
     try {//trangThai, datePost, feel, permission, vitri,
       const { ArayImages } = req.body;
