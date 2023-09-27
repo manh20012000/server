@@ -10,6 +10,7 @@ import baiviet from './route/api_BaiViet.js';
 import db from './config/MongoDb.js'
 // import login from './model/user.js';
 import Taikhoan from './route/api_Taikhoan.js';
+
 import path from "path";
 import multer from "multer";
 // const port = process.env.PORT||3000
@@ -32,7 +33,18 @@ app.use('/', Taikhoan)
 app.use('/', file)
 
 app.use('/', uploadAnh);
-// app.use("/", file)
+const upload = multer({ dest: 'public/uploads/' });
+app.post('/uploads', upload.array('ArayImages', 12), async (req, res) => {
+    console.log(JSON.stringify(req.files))
+    const Image = [];
+    const fileUrl = await req.files.map((file) => {
+        Image.push("/uploads" + file.filename);
+        console.log("trả về Image" + Image);
+        return "/uploads/" + file.filename;
+    }
+    )
+}
+)
 app.use('/', baiviet);
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
@@ -73,13 +85,4 @@ app.listen(port, () => {
 // app.use(express.urlencoded({ extended: true }));
 // initAPIRoute(app);
 
-/*const upload = multer({ dest: 'public/uploads/' });
-app.post('/uploads', upload.array('ArayImages', 12), async(req, res) => {
-    console.log(JSON.stringify(req.files))
-    const Image = [];
-    const fileUrl = await req.files.map((file) => {
-        Image.push("/uploads" + file.filename);
-        console.log("trả về Image" + Image);
-        return "/uploads/" + file.filename;
-    }
-    )*/
+/*
