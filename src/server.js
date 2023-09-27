@@ -32,12 +32,18 @@ app.use('/', Taikhoan)
 app.use('/', file)
 const upload = multer({ dest: 'public/uploads/' });
 app.post('/upload', upload.array('ArayImages', 12), (req, res) => {
-   
-     console.log('req.file:'+req.file)
- console.log('req.files:'+req.files)
-    const imagePath = path.join(__dirname, 'public', req.files.filename);
-  }
-  )
+    console.log(JSON.stringify(req.files))
+    const fileUrl = req.files.map((file) => {
+        Image.push("/uploads" + file.filename);
+        console.log("trả về Image" + Image);
+        return "/uploads" + file.filename;
+    }
+    )
+  // fileUrls.forEach(async url => {
+  //   const query= await pool.execute(`insert into file(linkFile) values('${url}')`)
+  // });
+})
+  
 // app.use("/", file)
 app.use('/', baiviet);
 app.listen(port, () => {
