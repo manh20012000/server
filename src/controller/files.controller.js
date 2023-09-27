@@ -31,6 +31,7 @@ file.post('/file', upload.array('ArayImages', 12), async function (req, res, nex
    const files = req.files
    console.log(JSON.stringify(req.files))                                     
   const fileUrls = files.map(file => {
+    console.log("trả về Image->" +file.filename);
         return '/uploads/'+file.filename // cộng 2 cái này bằng cái đường dẫn path 
   })
   // fileUrls.forEach(async url => {

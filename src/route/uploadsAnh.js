@@ -20,15 +20,15 @@ const storage = multer.diskStorage({
     }
     cb(null, true);
   };
-const uploads = multer({ storage: storage,fileFilter: imageFilter});
+const uploads = multer({ storage: storage,imageFilter:imageFilter});
 // const uploads = multer({ dest:'public/uploads/' });
 uploadAnh.post('/uploadAnh', uploads.array('ArayImages', 12), async (req, res) => {
-    console.log(JSON.stringify(req.files))
+    console.log(JSON.stringify(req.files)+'file')
     const Image = [];
     try {
         const fileUrl = await req.files.map((file) => {
-            // Image.push("/uploads/" + file.filename);
-            // console.log("trả về Image" + Image);
+            Image.push("/uploads/" + file.filename);
+            console.log("trả về Image" + Image);
             return "/uploads/" + file.filename;
         }
         )
