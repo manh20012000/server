@@ -7,15 +7,20 @@ import uuid from "react-uuid";
 const uploadAnh = Router();
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, "public/uploads/");
+      cb(null,'public/uploads/')
     },
     filename: function (req, file, cb) {
-      cb(
-        null,file.filename + "-" +uuid().substring(0, 8) +path.extname(file.originalname)      
-      );
-    },
-});
-const uploads = multer({ storage: storage });
+      cb(null, file.fieldname + '-' + uuid().substring(0,8) + path.extname(file.originalname));
+    }
+  })
+  const imageFilter = function (req, file, cb) {
+    if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
+      req.fileValidationError = 'Only image files are allowed!';
+      return cb(new Error('Only image files are allowed!'), false);
+    }
+    cb(null, true);
+  };
+const uploads = multer({ storage: storage,fileFilter: imageFilter});
 // const uploads = multer({ dest:'public/uploads/' });
 uploadAnh.post('/uploadAnh', uploads.array('ArayImages', 12), async (req, res) => {
     console.log(JSON.stringify(req.files))
