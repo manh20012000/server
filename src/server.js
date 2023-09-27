@@ -30,7 +30,7 @@ app.get("/", (req, res) => {
 // tao co sơ dũ liêu với login 
 app.use('/', Taikhoan)
 app.use('/', file)
-const upload = multer({ dest: 'public/' });
+const upload = multer({ dest: 'public/uploads/' });
 app.post('/upload', upload.array('ArayImages', 12), (req, res) => {
    
      console.log('req.file:'+req.file)
