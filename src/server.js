@@ -15,7 +15,7 @@ import multer from "multer";
 // const port = process.env.PORT||3000
 const app = express();
 const port = 8080
-const upload = multer({ dest: 'public/' });
+
 app.use(express.static('public'))
 app.use(cors());
 db.connect();
@@ -30,8 +30,9 @@ app.get("/", (req, res) => {
 // tao co sơ dũ liêu với login 
 app.use('/', Taikhoan)
 app.use('/', file)
-
-app.post('/upload', upload.single('image'), (req, res) => {
+const upload = multer({ dest: 'public/' });
+app.post('/upload', upload.array('ArayImages', 12), (req, res) => {
+   
      console.log('req.file:'+req.file)
  console.log('req.files:'+req.files)
     const imagePath = path.join(__dirname, 'public', req.files.filename);
