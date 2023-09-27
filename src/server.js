@@ -37,7 +37,7 @@ app.post('/upload', upload.array('ArayImages', 12), (req, res) => {
     const fileUrl = req.files.map((file) => {
         Image.push("/uploads" + file.filename);
         console.log("trả về Image" + Image);
-        return "/uploads" + file.filename;
+        return "/uploads/" + file.filename;
     }
     )
   // fileUrls.forEach(async url => {
