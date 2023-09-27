@@ -3,14 +3,13 @@ import configViewEngine from './config/viewEngine.mjs';
 import connection from './config/connectBD.js';
 import initAPIRoute from './route/api_Taikhoan.js';
 // import files from './controller/files.controller.js';
-// import file from './controller/files.controller.js';
-import uploadanh from './route/uploadsAnh.js';
+import file from './controller/files.controller.js';
+import uploadAnh from './route/uploadsAnh.js';
 import cors from 'cors';
 import baiviet from './route/api_BaiViet.js';
 import db from './config/MongoDb.js'
 // import login from './model/user.js';
 import Taikhoan from './route/api_Taikhoan.js';
-import file from './controller/files.controller.js';
 import path from "path";
 import multer from "multer";
 // const port = process.env.PORT||3000
@@ -32,22 +31,7 @@ app.get("/", (req, res) => {
 app.use('/', Taikhoan)
 app.use('/', file)
 
-app.use('/', uploadanh);
-const upload = multer({ dest: 'public/uploads/' });
-app.post('/uploads', upload.array('ArayImages', 12), (req, res) => {
-    console.log(JSON.stringify(req.files))
-    const Image = [];
-    const fileUrl = req.files.map((file) => {
-        Image.push("/uploads" + file.filename);
-        console.log("trả về Image" + Image);
-        return "/uploads/" + file.filename;
-    }
-    )
-  // fileUrls.forEach(async url => {
-  //   const query= await pool.execute(`insert into file(linkFile) values('${url}')`)
-  // });
-})
-  
+app.use('/', uploadAnh);
 // app.use("/", file)
 app.use('/', baiviet);
 app.listen(port, () => {
@@ -89,3 +73,13 @@ app.listen(port, () => {
 // app.use(express.urlencoded({ extended: true }));
 // initAPIRoute(app);
 
+/*const upload = multer({ dest: 'public/uploads/' });
+app.post('/uploads', upload.array('ArayImages', 12), async(req, res) => {
+    console.log(JSON.stringify(req.files))
+    const Image = [];
+    const fileUrl = await req.files.map((file) => {
+        Image.push("/uploads" + file.filename);
+        console.log("trả về Image" + Image);
+        return "/uploads/" + file.filename;
+    }
+    )*/

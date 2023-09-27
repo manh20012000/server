@@ -29,7 +29,7 @@ let file = Router();
 
 file.post('/file', upload.array('ArayImages', 12), async function (req, res, next) {
    const files = req.files
-  console.log(files+'files')                                             
+   console.log(JSON.stringify(req.files))                                     
   const fileUrls = files.map(file => {
         return '/uploads/'+file.filename // cộng 2 cái này bằng cái đường dẫn path 
   })
