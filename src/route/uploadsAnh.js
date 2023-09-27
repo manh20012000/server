@@ -5,7 +5,7 @@ import path from "path";
 import appRoot from "app-root-path";
 import uuid from "react-uuid";
 const uploadanh=Router();
-const upload = multer({ dest: 'public/uploads/' });
+const uploadanh = multer({ dest: 'public/uploads/' });
 uploadanh.post('/uploadAnh', upload.array('ArayImages', 12), async (req, res) => {
     console.log(JSON.stringify(req.files))
     const Image = [];
