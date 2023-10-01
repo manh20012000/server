@@ -25,9 +25,8 @@ const storage = multer.diskStorage({
 const uploads = multer({ storage: storage,imageFilter:imageFilter});
 // const uploads = multer({ dest:'public/uploads/' });
 uploadAnh.post('/uploadAnh', uploads.array('ArayImages', 12), async (req, res) => {
-    console.log(JSON.stringify(req.files)+'file')
-    const Image = [];
-      const imagePaths = await req.files.map((file) => {
+  const imagePaths = await req.files.map((file) => {
+        console.log("trả về Image->" +file.filename);
         return "/uploads/" + file.filename;
       }); 
         console.log(imagePaths)
