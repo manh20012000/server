@@ -5,7 +5,7 @@ import path from "path";
 import appRoot from "app-root-path";
 import db from "../config/MongoDb.js";
 import uuid from "react-uuid";
-import baiviet from "./api_BaiViet.js";
+import baiviet from "../model/baiviet.js";
 const uploadAnh = Router();
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -30,20 +30,23 @@ uploadAnh.post('/uploadAnh', uploads.array('ArayImages', 12), async (req, res) =
         return "/uploads/" + file.filename;
       }); 
         console.log(imagePaths)
-        const newPost ={
+        const newPost ={ 
                 Trangthai: req.body.trangThai,
-                DatePost: req.body.datePost,
+                DatePost: req.body.datePost,    
                 Fell: req.body.feel,
                 Pemission: req.body.permission,
                 Loaction: req.body.vitri,
                 User: req.body.idLogin,
                 Image: imagePaths      
-  };
+            };
   try {
-    const data = await baiviet(newPost).save();
-    return res.status(200).json({ user: data[0], msg: "OK", status: 200 });
-    } catch (err) {
-        return res.status(500).json(err);
+    console.log('vao luwu vao database'+newPost)
+    const data = await new baiviet(newPost).save();
+    console.log('xuong đay')
+    return res.status(200).json({ msg: "OK", status: 200 });
+  } catch (err) {
+    console.log(err)
+        return res.status(501).json(err);
     }
   }
 )

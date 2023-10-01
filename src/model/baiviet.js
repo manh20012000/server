@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema
+
 const baiviet = new Schema({
      Trangthai: { type: String },
      DatePost: { type: String },
