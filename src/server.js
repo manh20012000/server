@@ -24,20 +24,8 @@ app.get("/", (req, res) => {
 // tao co sơ dũ liêu với login 
 app.use('/', Taikhoan)
 app.use('/', file)
-
-app.use('/', uploadAnh);
-const upload = multer({ dest: 'public/uploads/' });
-app.post('/uploads', upload.array('ArayImages', 12), async (req, res) => {
-    console.log(JSON.stringify(req.files)+'file')
-    const Image = [];
-    const fileUrl = await req.files.map((file) => {
-        Image.push("/uploads" + file.filename);
-        console.log("trả về Image" + Image);
-        return "/uploads/" + file.filename;
-    }
-    )
-}
-)
+app.use('/',uploadAnh);
+// 
 app.use('/', baiviet);
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
@@ -78,3 +66,15 @@ app.listen(port, () => {
 // app.use(express.urlencoded({ extended: true }));
 // initAPIRoute(app);
 
+const upload = multer({ dest: 'public/uploads/' });
+// app.post('/uploads', upload.array('ArayImages', 12), async (req, res) => {
+//     console.log(JSON.stringify(req.files)+'file')
+//     const Image = [];
+//     const fileUrl = await req.files.map((file) => {
+//         Image.push("/uploads" + file.filename);
+//         console.log("trả về Image" + Image);
+//         return "/uploads/" + file.filename;
+//     }
+//     )
+// }
+// )

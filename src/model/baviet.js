@@ -1,13 +1,13 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema
 const baiviet = new Schema({
+     Trangthai: { type: String },
      DatePost: { type: String },
-     Trangthai: { type:String },
      Pemission: { type: String },
      Fell: { type: String },
      Loaction: { type: String },
-     Image: { type: Array },
-     User: { type: mongoose.Types.ObjectId, ref: 'user' }
+     User: { type: mongoose.Types.ObjectId, ref: 'user' },
+     Image: { type: Array }
      }
      ,{
           timestamps: true
