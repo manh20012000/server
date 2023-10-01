@@ -35,7 +35,7 @@ uploadAnh.post('/uploadAnh', uploads.array('ArayImages', 12), async (req, res) =
                 DatePost: req.body.datePost,
                 Fell: req.body.feel,
                 Pemission: req.body.permission,
-                Loaction:: req.body.vitri,
+                Loaction: req.body.vitri,
                 User: req.body.idLogin,
                 Image: imagePaths      
   };
