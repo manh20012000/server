@@ -5,11 +5,12 @@ import initAPIRoute from './route/api_Taikhoan.js';
 import file from './controller/files.controller.js';
 import uploadAnh from './route/uploadsAnh.js';
 import cors from 'cors';
-import baiviet from './route/api_BaiViet.js';
 import db from './config/MongoDb.js'
 import Taikhoan from './route/api_Taikhoan.js';
 import path from "path";
 import multer from "multer";
+import Baiviet from './route/api_BaiViet.js';
+import baiviet from './model/baiviet.js';
 // const port = process.env.PORT||3000
 const app = express();
 const port = 8080
@@ -25,8 +26,8 @@ app.get("/", (req, res) => {
 app.use('/', Taikhoan)
 app.use('/', file)
 app.use('/',uploadAnh);
-// 
-app.use('/', baiviet);
+app.use('/',Baiviet)
+
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
 })
