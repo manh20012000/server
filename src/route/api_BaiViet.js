@@ -7,11 +7,10 @@ const Baiviet = Router();
 Baiviet.get('/selectBaiViet', async (req, res) => {
     try {
         const allPosts = await baiviet.find({});
-        console.log(allPosts[0])
-        if (allPosts[0]) {
-             return res.status(200).json({data:"djd"})
+        if (allPosts) {
+            return res.status(200).json({ data: allPosts})
         }else if (!allPosts) {
-            return res.status(404).json({ message: 'Bài viết không tồn tại' });
+            return res.status(404).json({ message: 'Bài viết không tồn tại'});
           }
     } catch (err) {
         return res.status(500).json(err);

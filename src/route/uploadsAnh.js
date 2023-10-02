@@ -24,11 +24,16 @@ const storage = multer.diskStorage({
   };
 const uploads = multer({ storage: storage,imageFilter:imageFilter});
 // const uploads = multer({ dest:'public/uploads/' });
+let info = {
+    protocol: req.protocol,
+    host: req.get('host')
+  }
 uploadAnh.post('/uploadAnh', uploads.array('ArayImages', 12), async (req, res) => {
-  console.log(JSON.stringify(req.files))
+  console.log(JSON.stringify(req.files)+'anh duo tra')
   const imagePaths = await req.files.map((file) => {
-        console.log("trả về Image->" +file.filename);
-        return "/uploads/" + file.filename;
+    console.log("trả về Image->" + file.filename);
+    let link 
+        return = `${info.protocol}://${info.host}`+"/uploads/" + file.filename;
       }); 
         console.log(imagePaths)
         const newPost ={ 

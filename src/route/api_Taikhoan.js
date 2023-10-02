@@ -6,7 +6,8 @@ import user from "../model/user.js";
 let Taikhoan = Router();
 //khai báo  giúp express hiểu khai báo đươcngf link trên web 
     Taikhoan.post('/login',async (req, res) => {
-        try {           // await db.collection('user').findOne({taikhoan:req.body.taikhoan,matkhau: req.body.matkhau})
+      try {
+      // await db.collection('user').findOne({taikhoan:req.body.taikhoan,matkhau: req.body.matkhau})
           const User = await user.findOne({ Taikhoan: req.body.taikhoan, Matkhau: req.body.matkhau })
           console.log(User)
            if (User !=null) {
