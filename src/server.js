@@ -11,6 +11,7 @@ import path from "path";
 import multer from "multer";
 import Baiviet from './route/api_BaiViet.js';
 import baiviet from './model/baiviet.js';
+
 // const port = process.env.PORT||3000
 const app = express();
 const port = 8080
@@ -19,6 +20,7 @@ app.use(cors());
 db.connect();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
 app.get("/", (req, res) => {
     res.send("server is running")
 })
@@ -26,11 +28,24 @@ app.get("/", (req, res) => {
 app.use('/', Taikhoan)
 app.use('/', file)
 app.use('/',uploadAnh);
-app.use('/',Baiviet)
+app.use('/', Baiviet);
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
 // c2 dùng trực tiếp với này và cấu hình pack.json bỏ type modun đi 
 // const express = require('express')
 // const app = express()

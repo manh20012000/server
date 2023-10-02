@@ -6,8 +6,9 @@ import baiviet from "../model/baiviet.js";
 const Baiviet = Router();
 Baiviet.get('/selectBaiViet', async (req, res) => {
     try {
-        const allPosts = await baiviet.find({});
+        const allPosts = await baiviet.find({}).populate('User');
         if (allPosts) {
+            console.log(JSON.stringify(allPosts))
             return res.status(200).json({ data: allPosts})
         }else if (!allPosts) {
             return res.status(404).json({ message: 'Bài viết không tồn tại'});
