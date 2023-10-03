@@ -7,7 +7,7 @@ const binhluan = new Schema({
        ref: "user",
      },
      Content: {
-       type: String,
+       type: String
        },
      createdAt: {
        type: Date,
@@ -20,7 +20,7 @@ const Like= new Schema({
     ref: "user",
   },
   Trangthai: {
-      type:Boolean
+    type: Boolean
   },
   createdAt: {
     type: Date,

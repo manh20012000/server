@@ -36,19 +36,25 @@ uploadAnh.post('/uploadAnh', uploads.array('ArayImages', 12), async (req, res) =
     let link 
         return `${info.protocol}://${info.host}`+"/uploads/" + file.filename;
       }); 
-        console.log(imagePaths)
-        const newPost ={ 
+  console.log(imagePaths)
+          const initialLike = {
+            User: req.body.idLogin,
+            Trangthai: false
+          };
+                const newPost ={ 
                 Trangthai: req.body.trangThai,
                 DatePost: req.body.datePost,    
                 Fell: req.body.feel,
                 Pemission: req.body.permission,
                 Loaction: req.body.vitri,
-                User: req.body.idLogin,
+                User: req.body.idLogin, 
                 Image: imagePaths      
             };
   try {
-    console.log('vao luwu vao database'+newPost)
-    const data = await new baiviet(newPost).save();
+    const createdPost = await Baiviet.create(newPost);
+    createdPost.Like.push(initialLike);
+    console.log('vao luwu vao database' + newPost)
+    const data = await createdPost.save();
     console.log('xuong đay')
     return res.status(200).json({ msg: "OK", status: 200 });
   } catch (err) {
