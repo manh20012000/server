@@ -1,6 +1,31 @@
 import mongoose from 'mongoose';
-const Schema = mongoose.Schema
 
+const Schema = mongoose.Schema
+const binhluan = new Schema({
+  User: {
+       type: mongoose.Types.ObjectId,
+       ref: "user",
+     },
+     Content: {
+       type: String,
+       },
+     createdAt: {
+       type: Date,
+       default: Date.now,
+     }
+});
+const Like= new Schema({
+  User: {
+    type: mongoose.Types.ObjectId,
+    ref: "user",
+  }, Trangthai: {
+      type:Boolean
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  }
+});
 const baiviet = new Schema({
      Trangthai: { type: String },
      DatePost: { type: String },
@@ -8,11 +33,14 @@ const baiviet = new Schema({
      Fell: { type: String },
      Loaction: { type: String },
      User: { type: mongoose.Types.ObjectId, ref: 'user' },
-     Image: { type: Array }
-     }
-     ,{
+     Image: { type: Array },
+     SoluongTym: { type: Number, default: 0 },
+     SoluongCmt: { type: Number default: 0 },
+     Like: [Like],
+     Comment: [binhluan],
+     {
           timestamps: true
      }
-     
+}
 )
 export default mongoose.model('baiViet',baiviet)

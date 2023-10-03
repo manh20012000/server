@@ -7,9 +7,9 @@ const Baiviet = Router();
 Baiviet.get('/selectBaiViet', async (req, res) => {
     try {
         const allPosts = await baiviet.find({}).populate('User');
+        const swappedPosts = allPosts.reverse();
         if (allPosts) {
-            console.log(JSON.stringify(allPosts))
-            return res.status(200).json({ data: allPosts})
+            return res.status(200).json({ data: swappedPosts})
         }else if (!allPosts) {
             return res.status(404).json({ message: 'Bài viết không tồn tại'});
           }
