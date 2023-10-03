@@ -9,7 +9,7 @@ binhluan.post('/binhluanPost', async (req, res) => {
     try {
         const kiemtra = await baiviet.findOneAndUpdate(
             { _id: req.body.idBaiPost, 'binhluan.User': req.body.idUser },
-            { $inc: {SoluongCmt:req.body.SoluongCmt,Content.Trangthai:req.body.Content}}, 
+            { $inc: { SoluongCmt: req.body.SoluongCmt }, $push: { binhluan: { User: req.body.idUser, Content: req.body.Content, } } }, 
             { new: true }//  bai viet được cập nhâtj
         )
         if (!kiemtra) {

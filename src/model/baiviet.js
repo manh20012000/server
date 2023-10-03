@@ -18,7 +18,8 @@ const Like= new Schema({
   User: {
     type: mongoose.Types.ObjectId,
     ref: "user",
-  }, Trangthai: {
+  },
+  Trangthai: {
       type:Boolean
   },
   createdAt: {
@@ -35,12 +36,13 @@ const baiviet = new Schema({
      User: { type: mongoose.Types.ObjectId, ref: 'user' },
      Image: { type: Array },
      SoluongTym: { type: Number, default: 0 },
-     SoluongCmt: { type: Number default: 0 },
+     SoluongCmt: { type: Number,default: 0 },
      Like: [Like],
-     Comment: [binhluan],
-     {
+     Comment: [binhluan]
+     
+},
+  {
           timestamps: true
      }
-}
 )
 export default mongoose.model('baiViet',baiviet)

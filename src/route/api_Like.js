@@ -4,12 +4,12 @@ import { Router, query } from "express";
 import db from "../config/MongoDb.js";
 import user from "../model/user.js";
 import baiviet from "../model/baiviet.js";
-const Like = Router();
-Like.post('/tymPost', async (req, res) => { 
+const like = Router();
+like.post('/tymPost', async (req, res) => { 
     try {
         const kiemtra = await baiviet.findOneAndUpdate(
             { _id: req.body.idBaiPost, 'Like.User': req.body.idUser },
-            { $inc: {SoluongTym:req.body.Soluong,Like.Trangthai:req.body.Trangthai}}, 
+            { $inc: {SoluongTym: req.body.Soluong}, $push: { Like: { User: req.body.idUser, Trangthai: req.body.Trangthai } } }, 
             { new: true }//  bai viet được cập nhâtj
         )
         if (!kiemtra) {
@@ -33,4 +33,4 @@ Like.post('/tymPost', async (req, res) => {
     }
 }
 )
-export default Like;
+export default like;
