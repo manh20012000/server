@@ -31,6 +31,16 @@ like.post('/tymPost', async (req, res) => {
     } catch (err) {
         return res.status(500).json(err);
     }
-}
-)
+})
+    like.post('/selectLike',async (req, res) => {
+        try {
+            console.log(req.body._idBaiviet)
+            const {Like}= await baiviet.findById({ _id: req.body._idBaiviet}).select('Like')
+            console.log(Like);
+            return res.status(200).json({ data: Like, msg: "OK", status: 200 });
+         } catch (ero) {
+            res.status(500).json(ero);
+        }
+    })
+
 export default like;
