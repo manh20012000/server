@@ -21,16 +21,16 @@ like.post('/tymPost', async (req, res) => {
         const existingLike = baiViet.Like.find(like => like.User.equals(idUser));
 
         if (existingLike) {
-          existingLike.Trangthai = isLiked;
+            existingLike.Trangthai = isLiked;
             baiViet.SoluongTym = numberLike;
-            
+
         } else {
-            console.log( isLiked)
+            console.log( isLiked+'trang thai được thêm mơi vào ')
           baiViet.Like.push({ User: idUser, Trangthai: isLiked });
           baiViet.SoluongTym =numberLike;
         }
-
-        const kiemtra = await baiViet.save();
+      console.log(baiViet + "baiviet");
+        const kiemtra = await user(baiViet).save();
         return res.status(200).json({ data: kiemtra, message: 'Thích bài viết thành công.' });
       } catch (error) {
         console.error(error);

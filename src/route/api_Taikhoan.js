@@ -11,8 +11,8 @@ let Taikhoan = Router();
           console.log(User)
            if (User !=null) {
             return res.status(200).json({ data: User, msg: "OK", status: 200 });
-          } else  {
-            return res.status(404).json({ msg: "Tài khoản hoặc pass không chính sác", status: 404 });
+          } else {
+            return res.status(403).json({ msg: "Tài khoản hoặc pass không chính sác", status: 403 });
              
           }
         } catch (error) {
