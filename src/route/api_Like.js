@@ -30,7 +30,7 @@ like.post('/tymPost', async (req, res) => {
           baiViet.SoluongTym =numberLike;
         }
       console.log(baiViet + "baiviet");
-        const kiemtra = await user(baiViet).save();
+        const kiemtra = await baiviet(baiViet).save();
         return res.status(200).json({ data: kiemtra, message: 'Thích bài viết thành công.' });
       } catch (error) {
         console.error(error);
