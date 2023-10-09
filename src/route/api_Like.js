@@ -11,7 +11,7 @@ like.post('/tymPost', async (req, res) => {
         const idBaiPost =  req.body.idBaiPost; // Lấy id của bài viết
         const numberLike = req.body.Soluong; // Lấy số lượng tym
         const isLiked =req.body.Trangthai; // Lấy trạng thái like
-    
+      console.log(idUser, idBaiPost, numberLike, isLiked);
         // Tìm bài viết theo idBaiPost
         const baiViet = await baiviet.findById(idBaiPost);
         if (!baiViet) {
@@ -21,7 +21,7 @@ like.post('/tymPost', async (req, res) => {
         const existingLike = baiViet.Like.find(like => like.User.equals(idUser));
 
       if (existingLike) {
-        console.log("sas vao phnanay");
+       
             existingLike.Trangthai = isLiked;
             baiViet.SoluongTym = numberLike;
 
@@ -29,8 +29,8 @@ like.post('/tymPost', async (req, res) => {
           console.log(isLiked + 'trang thai được thêm mơi vào ');
           baiViet.Like.push({ User: idUser, Trangthai: isLiked });
           baiViet.SoluongTym =numberLike;
-        }
-      console.log(baiViet + "baiviet");
+      }
+      
         const kiemtra = await baiViet.save();
         return res.status(200).json({ data: kiemtra, message: 'Thích bài viết thành công.' });
       } catch (error) {

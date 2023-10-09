@@ -28,4 +28,26 @@ binhluan.post('/binhluanPost', async (req, res) => {
     }
 }
 )
+binhluan.post('/SendBinhluan', async (req, res) => {
+    try {
+        const idUser = req.body.UserCmt; // Lấy id của người dùng
+        const idBaiPost =  req.body.idBaiviet; // Lấy id của bài viết
+        const soluongcmt = req.body.Soluongcmt; // Lấy số lượng tym
+        const Noidung =req.body.Noidung; // Lấy trạng thái like
+        console.log(idUser, idBaiPost, soluongcmt, Noidung);
+        const baiViet = await baiviet.findById(idBaiPost);
+        if (!baiViet) {
+          return res.status(404).json({ message: 'ljonh tim thay binhluan' });
+        }
+      
+          baiViet.Comment.push({ User: idUser,  Content: Noidung });
+          baiViet.SoluongCmt =soluongcmt;
+
+        const kiemtra = await baiViet.save();
+        return res.status(200).json({ data: kiemtra,status:200, message: 'oki.' });
+      } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Lỗi server.' });
+      }
+})
 export default binhluan;
