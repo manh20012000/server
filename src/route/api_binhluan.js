@@ -44,7 +44,7 @@ binhluan.post('/SendBinhluan', async (req, res) => {
           baiViet.SoluongCmt =soluongcmt;
 
         const kiemtra = await baiViet.save();
-        return res.status(200).json({ data: kiemtra,status:200, message: 'oki.' });
+        return res.status(200).json({ data: kiemtra.Comment,status:200, message: 'oki.' });
       } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Lỗi server.' });
