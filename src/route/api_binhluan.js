@@ -28,6 +28,7 @@ binhluan.post('/binhluanPost', async (req, res) => {
     }
 }
 )
+
 binhluan.post('/SendBinhluan', async (req, res) => {
     try {
         const idUser = req.body.UserCmt; // Lấy id của người dùng
@@ -50,4 +51,20 @@ binhluan.post('/SendBinhluan', async (req, res) => {
         return res.status(500).json({ message: 'Lỗi server.' });
       }
 })
+binhluan.post('/selectUser', async (req, res) => {
+
+    try {
+      const allPosts = await user.findById(req.body.idUser)
+      const swappedPosts = allPosts;
+      if (allPosts) {
+        return res.status(200).json({ data: swappedPosts,message:'lấy user thành công'})
+      } else if (!allPosts) {
+        return res.status(404).json({ message: 'Bài viết không tồn tại' });
+      }
+    } catch (err) {
+      return res.status(500).json(err);
+    }
+
+}
+)
 export default binhluan;
