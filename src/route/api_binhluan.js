@@ -85,32 +85,3 @@ binhluan.post("/SendBinhluan", async (req, res) => {
   }
 });
 export default binhluan;
-
-
-
-
-
-
-// binhluan.post('/SelectCmtChildren',async (req, res) => {
-//   const timIdbaiviet = req.body.Idbaiviet;
-//   const timIdCmtcha = req.body.idcmtCha;
-//   const idUser = req.body.UserCmt; // Lấy id của người dùng
-//         const soluongcmt = req.body.Soluongcmt; // Lấy số lượng tym
-//         const Noidung =req.body.Noidung; // Lấy trạng thái like
-//   try {
-//     const allPosts = await baiviet.findById(timIdbaiviet)
-//     if (allPosts) {
-//       const idcommentcha = await allPosts.Comment.findById(timIdCmtcha).populate('User');
-//       if (idcommentcha) {
-//         idcommentcha.CommentChildren.push({ User: idUser, Content: Noidung });
-//         await allPosts.save();
-//         return res.status(200).json({ data:idcommentcha,message: 'Bình luận con đã được thêm' });
-//       }
-//     } else if (!allPosts) {
-//       return res.status(404).json({ message: 'Bài viết không tồn tại' });
-//     }
-//   } catch (err) {
-//     return res.status(500).json(err);
-//   }
-
-// }
