@@ -15,10 +15,21 @@ const binhluan = new Schema({
   SoluongThich: {
     type: Number,
   },
-  CommentChildren: {
-    type: mongoose.Types.ObjectId,
-    ref: 'binhluan', // Tham chiếu đến chính schema của bạn
-  },
+ CommentChildren: [{
+    User: {
+      type: mongoose.Types.ObjectId,
+      ref: "user",
+    },
+    Content: {
+      type: String,
+    },
+    Thich: {
+      type: Boolean,
+    },
+    SoluongThich: {
+      type: Number,
+    }
+  }],
   createdAt: {
     type: Date,
     default: Date.now,
@@ -56,5 +67,4 @@ const baiviet = new Schema(
     timestamps: true,
   }
 );
-export default mongoose.model("baiViet", baiviet)
-  ;
+export default mongoose.model("baiViet", baiviet);
