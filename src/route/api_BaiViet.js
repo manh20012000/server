@@ -7,8 +7,8 @@ const Baiviet = Router();
 Baiviet.get("/selectBaiViet", async (req, res) => {
   try {
     const allPosts = await baiviet
-      .find({})
-      .populate({path: "User" } );
+      .find({}) .populate({ path: "User" });
+      // .populate({ path: "Comment", populate: { path: "User" } });
     const swappedPosts = allPosts.reverse();
     if (allPosts) {
       return res.status(200).json({ data: swappedPosts });
