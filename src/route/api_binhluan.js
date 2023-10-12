@@ -35,14 +35,14 @@ binhluan.post("/binhluanPost", async (req, res) => {
   }
 });
 
-binhluan.post("/SelectCmt", async (req, res) => {
+binhluan.post("/selectUser", async (req, res) => {
   try {
-    let CmtCha = await baiviet.findById({ _id: req.body.idBaiviet }).select('Comment').populate({ path: "Comment", populate: { path: "User" } });
-    console.log(CmtCha)
-    if (CmtCha) {
-      console.log(req.body.idCmt)
-    //  let allPosts = await CmtCha.Comment.findById({_id:req.body.idCmt}).populate({ path: "User" });
-      return res.status(200).json({ data: CmtCha, message: "lấy user thành công" });
+    const allPosts = await user.findById(req.body.idUser).populate("User");
+    const swappedPosts = allPosts;
+    if (allPosts) {
+      return res
+        .status(200)
+        .json({ data: swappedPosts, message: "lấy user thành công" });
     } else if (!allPosts) {
       return res.status(404).json({ message: "Bài viết không tồn tại" });
     }
