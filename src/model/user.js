@@ -1,15 +1,15 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const Schema = mongoose.Schema
+const Schema = mongoose.Schema;
 
 const user = new Schema({
-    Email: { type: String },
-    Phone: { type: Number },
-    Hoten:{ type: String },
-    Birth:{ type: String },
-    Gender: { type: String },
-    Taikhoan: { type: String },
-    Avatar:{ type: String },
-    Matkhau:{ type: String }
-})
-export default mongoose.model('user',user)
+  Email: { type: String },
+  Phone: { type: Number },
+  Hoten: { type: String },
+  Birth: { type: String },
+  Gender: { type: String },
+  Taikhoan: { type: String },
+  Avatar: { type: String },
+  Matkhau: { type: String },
+});
+export default mongoose.model("user", user);

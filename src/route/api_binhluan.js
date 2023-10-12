@@ -35,7 +35,6 @@ binhluan.post("/binhluanPost", async (req, res) => {
   }
 });
 
-
 binhluan.post("/selectUser", async (req, res) => {
   try {
     const allPosts = await user.findById(req.body.idUser).populate("User");
@@ -58,39 +57,53 @@ binhluan.post("/SendBinhluan", async (req, res) => {
   const Noidung = req.body.Noidung; // Lấy trạng thái like
   const IdComment = req.body.idComent;
   try {
-   let baiViet = await baiviet.findById(idBaiPost);
+    let baiViet = await baiviet.findById(idBaiPost);
     if (baiViet) {
-
       if (IdComment) {
         let binhluancha = baiViet.Comment.id(IdComment);
-    
+
         if (binhluancha) {
-           let newComment = {
-             User: idUser,
-             Content: Noidung,
-             Thich: false,
-             SoluongThich: 0 
-          }
+          let newComment = {
+            User: idUser,
+            Content: Noidung,
+            Thich: false,
+            SoluongThich: 0,
+          };
           binhluancha.CommentChildren.push(newComment);
           await baiViet.save();
-          console.log('hahaha')
-          const data = await baiviet.findById(idBaiPost).populate({ path: 'Comment', populate: { path: 'CommentChildren',populate:{path:'User'}} })
-          return res.status(200).json({ data: data.Comment, status: 200, message: "oki." });
+          console.log("hahaha");
+          const data = await baiviet
+            .findById(idBaiPost)
+            .populate({
+              path: "Comment",
+              populate: { path: "CommentChildren", populate: { path: "User" } },
+            });
+          return res
+            .status(200)
+            .json({ data: data.Comment, status: 200, message: "oki." });
         }
       } else {
-
-        baiViet.Comment.push({ User: idUser, Content: Noidung, SoluongThich: 0, CommentChildren: [] });
+        baiViet.Comment.push({
+          User: idUser,
+          Content: Noidung,
+          SoluongThich: 0,
+          CommentChildren: [],
+        });
         baiViet.SoluongCmt = soluongcmt;
         const kiemtra = await baiViet.save();
-        const data = await baiviet.findById(idBaiPost).populate({ path: 'Comment', populate: { path: 'User' } })
-        return res.status(200).json({ data: data.Comment, status: 200, message: "oki." });
+        const data = await baiviet
+          .findById(idBaiPost)
+          .populate({ path: "Comment", populate: { path: "User" } });
+        return res
+          .status(200)
+          .json({ data: data.Comment, status: 200, message: "oki." });
       }
     } else {
       return res.status(500).json({ status: 500, message: "sever lỗi." });
     }
   } catch (err) {
     return res.status(500).json(err);
-  } 
+  }
 });
 export default binhluan;
 
@@ -134,7 +147,7 @@ export default binhluan;
 //             const kiemtra = await baiViet.save();
 //         const data = await baiviet.findById(idBaiPost).populate({ path: 'Comment', populate: { path: 'User',   }  })
 //         return res.status(200).json({ data: data.Comment, status: 200, message: "oki." });
-      
+
 //       } else {
 //         console.log('nhay vào them mơi');
 //         baiViet.Comment.push({ User: idUser, Content: Noidung, SoluongThich: 0, CommentChildren: null });

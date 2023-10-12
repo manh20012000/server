@@ -15,21 +15,23 @@ const binhluan = new Schema({
   SoluongThich: {
     type: Number,
   },
- CommentChildren: [{
-    User: {
-      type: mongoose.Types.ObjectId,
-      ref: "user",
+  CommentChildren: [
+    {
+      User: {
+        type: mongoose.Types.ObjectId,
+        ref: "user",
+      },
+      Content: {
+        type: String,
+      },
+      Thich: {
+        type: Boolean,
+      },
+      SoluongThich: {
+        type: Number,
+      },
     },
-    Content: {
-      type: String,
-    },
-    Thich: {
-      type: Boolean,
-    },
-    SoluongThich: {
-      type: Number,
-    }
-  }],
+  ],
   createdAt: {
     type: Date,
     default: Date.now,
