@@ -35,31 +35,7 @@ binhluan.post("/binhluanPost", async (req, res) => {
   }
 });
 
-binhluan.post("/SendBinhluan", async (req, res) => {
-  try {
-    const idUser = req.body.UserCmt; // Lấy id của người dùng
-    const idBaiPost = req.body.idBaiviet; // Lấy id của bài viết
-    const soluongcmt = req.body.Soluongcmt; // Lấy số lượng tym
-    const Noidung = req.body.Noidung; // Lấy trạng thái like
-    console.log(idUser, idBaiPost, soluongcmt, Noidung);
-    const baiViet = await baiviet.findById(idBaiPost);
 
-    if (!baiViet) {
-      return res.status(404).json({ message: "ljonh tim thay binhluan" });
-    }
-
-    baiViet.Comment.push({ User: idUser, Content: Noidung });
-    baiViet.SoluongCmt = soluongcmt;
-
-    const kiemtra = await baiViet.save();
-    return res
-      .status(200)
-      .json({ data: kiemtra.Comment, status: 200, message: "oki." });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Lỗi server." });
-  }
-});
 binhluan.post("/selectUser", async (req, res) => {
   try {
     const allPosts = await user.findById(req.body.idUser).populate("User");
@@ -75,7 +51,7 @@ binhluan.post("/selectUser", async (req, res) => {
     return res.status(500).json(err);
   }
 });
-binhluan.post("/SelectCmtChildren", async (req, res) => {
+binhluan.post("/SendBinhluan", async (req, res) => {
   const idUser = req.body.UserCmt; // Lấy id của người dùng
   const idBaiPost = req.body.idBaiviet; // Lấy id của bài viết
   const soluongcmt = req.body.Soluongcmt; // Lấy số lượng tym
@@ -98,7 +74,7 @@ binhluan.post("/SelectCmtChildren", async (req, res) => {
           binhluancha.CommentChildren.push(newComment);
           await baiViet.save();
           console.log('hahaha')
-          const data = await baiviet.findById(idBaiPost).populate({ path: 'Comment', populate: { path: 'User' } })
+          const data = await baiviet.findById(idBaiPost).populate({ path: 'Comment', populate: { path: 'CommentChildren',populate:{path:'User'}} })
           return res.status(200).json({ data: data.Comment, status: 200, message: "oki." });
         }
       } else {
@@ -175,3 +151,28 @@ export default binhluan;
 //   }
 // });
 // export default binhluan;
+// binhluan.post("/SendBinhluan", async (req, res) => {
+//   try {
+//     const idUser = req.body.UserCmt; // Lấy id của người dùng
+//     const idBaiPost = req.body.idBaiviet; // Lấy id của bài viết
+//     const soluongcmt = req.body.Soluongcmt; // Lấy số lượng tym
+//     const Noidung = req.body.Noidung; // Lấy trạng thái like
+//     console.log(idUser, idBaiPost, soluongcmt, Noidung);
+//     const baiViet = await baiviet.findById(idBaiPost);
+
+//     if (!baiViet) {
+//       return res.status(404).json({ message: "ljonh tim thay binhluan" });
+//     }
+
+//     baiViet.Comment.push({ User: idUser, Content: Noidung });
+//     baiViet.SoluongCmt = soluongcmt;
+
+//     const kiemtra = await baiViet.save();
+//     return res
+//       .status(200)
+//       .json({ data: kiemtra.Comment, status: 200, message: "oki." });
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).json({ message: "Lỗi server." });
+//   }
+// });
