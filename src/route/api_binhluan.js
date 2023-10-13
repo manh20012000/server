@@ -98,10 +98,10 @@ binhluan.post("/SendBinhluan", async (req, res) => {
         });
         baiViet.SoluongCmt = soluongcmt;
         const kiemtra = await baiViet.save();
-        const data = await baiviet.findById(idBaiPost).populate({ path: "Comment", populate: { path: "User" } });
-        return res
-          .status(200)
-          .json({ data: data.Comment, status: 200, message: "oki." });
+        const data = await baiviet.findById(idBaiPost).select("Comment").populate({ path: "Comment", populate: { path: "User" } })
+          const dataCmt = await baiviet.findById(idBaiPost).select("Comment").populate({path: "Comment",populate: { path: "CommentChildren", populate: { path: "User" } }});
+    
+          return res.status(200).json({ data: data.Comment, data2:dataCmt.Comment.CommentChildren ,status: 200, message: "oki." });
       }
     } else {
       return res.status(500).json({ status: 500, message: "sever lỗi." });
