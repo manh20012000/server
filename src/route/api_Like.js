@@ -11,8 +11,6 @@ like.post('/tymPost', async (req, res) => {
         const idBaiPost =  req.body.idBaiPost; // Lấy id của bài viết
         const numberLike = req.body.Soluong; // Lấy số lượng tym
         const isLiked =req.body.Trangthai; // Lấy trạng thái like
-      console.log(idUser, idBaiPost, numberLike, isLiked);
-        // Tìm bài viết theo idBaiPost
         const baiViet = await baiviet.findById(idBaiPost);
         if (!baiViet) {
           return res.status(404).json({ message: 'Không tìm thấy bài viết.' });
@@ -26,7 +24,6 @@ like.post('/tymPost', async (req, res) => {
             baiViet.SoluongTym = numberLike;
 
         } else {
-          console.log(isLiked + 'trang thai được thêm mơi vào ');
           baiViet.Like.push({ User: idUser, Trangthai: isLiked });
           baiViet.SoluongTym =numberLike;
       }
@@ -39,9 +36,7 @@ like.post('/tymPost', async (req, res) => {
 })
     like.post('/selectLike',async (req, res) => {
         try {
-            console.log(req.body._idBaiviet)
             const {Like}= await baiviet.findById({ _id: req.body._idBaiviet}).select('Like')
-            console.log(Like);
             return res.status(200).json({ data: Like, msg: "OK", status: 200 });
          } catch (ero) {
             res.status(500).json(ero);

@@ -35,30 +35,23 @@ binhluan.post("/binhluanPost", async (req, res) => {
   }
 });
 
+
 binhluan.post("/selectDataCmt", async (req, res) => {
   try {
-    const data = await baiviet.findById(req.body.idbaiviet).select("Comment").populate({path: "Comment",populate: { path: "User" },
-    });
-    return res
-      .status(200)
-      .json({ data: data.Comment, status: 200, message: "oki." });
+    const data = await baiviet.findById(req.body.idbaiviet).select("Comment").populate({ path: "Comment", populate: { path: "User" } })
+    const dataCmt = await baiviet.findById(req.body.idbaiviet).select("Comment").populate({path: "Comment",populate: { path: "CommentChildren", populate: { path: "User" } }});
+    
+    return res.status(200).json({ data: data.Comment, data2:dataCmt.Comment.CommentChildren ,status: 200, message: "oki." });
 
-    // const allPosts = await baiviet.findById(req.body.idbaiviet).select("Comment").populate({ path: "User" });
-    // if (allPosts) {
-    //   return res.status(200).json({ data: allPosts.Comment }); 
-      
-    // } else if (!allPosts) {
-    //   return res.status(404).json({ message: "Bài viết không tồn tại" });
-    // }
   } catch (err) {
     return res.status(500).json(err);
   }
 });
 
+
 binhluan.post("/selectUser", async (req, res) => {
   try {
     const allPosts = await user.findById(req.body.idUser).populate("User");
-
     if (allPosts) {
       return res
         .status(200)
@@ -91,14 +84,10 @@ binhluan.post("/SendBinhluan", async (req, res) => {
           };
           binhluancha.CommentChildren.push(newComment);
           await baiViet.save();
-          console.log("hahaha");
-          const data = await baiviet.findById(idBaiPost).populate({
-            path: "Comment",
-            populate: { path: "CommentChildren", populate: { path: "User" } },
-          });
-          return res
-            .status(200)
-            .json({ data: data.Comment, status: 200, message: "oki." });
+          const data = await baiviet.findById(idBaiPost).select("Comment").populate({ path: "Comment", populate: { path: "User" } })
+          const dataCmt = await baiviet.findById(idBaiPost).select("Comment").populate({path: "Comment",populate: { path: "CommentChildren", populate: { path: "User" } }});
+    
+          return res.status(200).json({ data: data.Comment, data2:dataCmt.Comment.CommentChildren ,status: 200, message: "oki." });
         }
       } else {
         baiViet.Comment.push({
@@ -109,9 +98,7 @@ binhluan.post("/SendBinhluan", async (req, res) => {
         });
         baiViet.SoluongCmt = soluongcmt;
         const kiemtra = await baiViet.save();
-        const data = await baiviet
-          .findById(idBaiPost)
-          .populate({ path: "Comment", populate: { path: "User" } });
+        const data = await baiviet.findById(idBaiPost).populate({ path: "Comment", populate: { path: "User" } });
         return res
           .status(200)
           .json({ data: data.Comment, status: 200, message: "oki." });
