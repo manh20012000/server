@@ -30,7 +30,7 @@ like.post('/tymPost', async (req, res) => {
         const kiemtra = await baiViet.save();
         return res.status(200).json({ data: kiemtra, message: 'Thích bài viết thành công.' });
       } catch (error) {
-        console.error(error);
+      
         return res.status(500).json({ message: 'Lỗi server.' });
       }
 })

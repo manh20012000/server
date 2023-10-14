@@ -11,11 +11,11 @@ const binhluan = Router();
 
 binhluan.post("/selectDataCmt", async (req, res) => {
   try {
-    let myComments = await Comment.find({IdBaiviet: req.body.idBaiPost})
-          .populate({path: 'CommentChildren', populate: { path: 'User'}})
-           .populate({path: 'User'})     
-    
-  return res.status(200).json({ data: myComments, status: 200, message: "oki." });
+    let myComments = await Comment.find({IdBaiviet: req.body.idbaiviet})
+    .populate({path: 'CommentChildren', populate: { path: 'User'}})
+    .populate({path: 'User'})
+      
+return res.status(200).json({ data: myComments, status: 200, message: "oki." });
   } catch (err) {
     return res.status(500).json(err);
   }
