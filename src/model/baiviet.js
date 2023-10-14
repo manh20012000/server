@@ -1,42 +1,7 @@
 import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
-const binhluan = new Schema({
-  User: {
-    type: mongoose.Types.ObjectId,
-    ref: "user",
-  },
-  Content: {
-    type: String,
-  },
-  Thich: {
-    type: Boolean,
-  },
-  SoluongThich: {
-    type: Number,
-  },
-  CommentChildren: [
-    {
-      User: {
-        type: mongoose.Types.ObjectId,
-        ref: "user",
-      },
-      Content: {
-        type: String,
-      },
-      Thich: {
-        type: Boolean,
-      },
-      SoluongThich: {
-        type: Number,
-      },
-    },
-  ],
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+
 const Like = new Schema({
   User: {
     type: mongoose.Types.ObjectId,
@@ -63,7 +28,6 @@ const baiviet = new Schema(
     SoluongTym: { type: Number, default: 0 },
     SoluongCmt: { type: Number, default: 0 },
     Like: [Like],
-    Comment: [binhluan],
   },
   {
     timestamps: true,
