@@ -12,7 +12,7 @@ import multer from "multer";
 import Baiviet from './route/api_BaiViet.js';
 import baiviet from './model/baiviet.js';
 import like from './route/api_Like.js';
-import binhluan from './route/api_binhluan.js';
+import binhluan from './route/api_Comment.js';
 // const port = process.env.PORT||3000
 const app = express();
 const port = 8080

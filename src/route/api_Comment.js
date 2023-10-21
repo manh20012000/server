@@ -76,6 +76,19 @@ binhluan.post("/SendBinhluan", async (req, res) => {
     return res.status(500).json(err);
   }
 });
+binhluan.delete("/deleteComment", async (req, res) => {
+  try {
+    const deletedComment = await Comment.findByIdAndRemove(req.body.idComemnt);
+    
+    if (deletedComment) {
+      return res.status(200).json({ message: 'Bình luận đã được xóa' });
+    } else {
+      return res.status(404).json({ message: 'Không tìm thấy bình luận' });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: 'Lỗi khi xóa bình luận', error: error });
+  }
+})
 export default binhluan;
 
 

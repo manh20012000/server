@@ -4,6 +4,8 @@ import { Router, query } from "express";
 import db from "../config/MongoDb.js";
 import user from "../model/user.js";
 import baiviet from "../model/baiviet.js";
+import Likecmt from "../model/Likecmt.js";
+import Comment from "../model/Comment.js";
 const like = Router();
 like.post('/tymPost', async (req, res) => { 
     try {
@@ -15,7 +17,6 @@ like.post('/tymPost', async (req, res) => {
         if (!baiViet) {
           return res.status(404).json({ message: 'Không tìm thấy bài viết.' });
         }
-
         const existingLike = baiViet.Like.find(like => like.User.equals(idUser));
 
       if (existingLike) {
@@ -42,4 +43,22 @@ like.post('/tymPost', async (req, res) => {
             res.status(500).json(ero);
         }
     })
+like.post('ComentLike', async (req, res) => {
+  try {
+    let Idcomment = await Comment.findById( req.body.idComment)
+    idComment.SoluongThich = req.body.Soluongthich;
+
+    let insertLikeCmt = await new Likecmt({
+      User: req.body.Userlike,
+      Trangthai: req.body.isLike,
+      IdCommnent: req.body.idComment
+    }).save();
+    idComment.idLike.push(insertLikeCmt._id);
+    await Idcomment.save();
+
+    return res.status(200).json({ data: myComments, status: 200, message: "oki." });
+  } catch (err) {
+    res.status.json(err);
+  }
+})
 export default like;
