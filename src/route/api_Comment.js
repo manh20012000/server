@@ -43,6 +43,7 @@ binhluan.post("/SendBinhluan", async (req, res) => {
                       Content: Noidung,
                       CommentChildren: [],
                       IdBaiviet: idBaiPost,
+                      Dinhdanh:"Children",
                       idLike: []
         }).save();
                DadyComment.CommentChildren.push(childComment._id);
@@ -60,6 +61,7 @@ binhluan.post("/SendBinhluan", async (req, res) => {
                 Content: Noidung,
                 CommentChildren: [],
                 IdBaiviet: idBaiPost,
+                Dinhdanh:"Parent",
                 idLike: []
         }).save();
 
@@ -81,6 +83,7 @@ binhluan.delete("/deleteComment", async (req, res) => {
     const deletedComment = await Comment.findByIdAndRemove(req.body.idComemnt);
     
     if (deletedComment) {
+      console.log(deletedComment)
       return res.status(200).json({ message: 'Bình luận đã được xóa' });
     } else {
       return res.status(404).json({ message: 'Không tìm thấy bình luận' });
