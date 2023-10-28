@@ -8,20 +8,19 @@ import Comment from "../model/Comment.js";
 import Like from "../model/Likecmt.js";
 const binhluan = Router();
 
-
 binhluan.post("/selectDataCmt", async (req, res) => {
   try {
-    let myComments = await Comment.find({IdBaiviet: req.body.idbaiviet})
-    .populate({path: 'CommentChildren', populate: { path: 'User'}})
-    .populate({path: 'User'})
-      
-return res.status(200).json({ data: myComments, status: 200, message: "oki." });
+    let myComments = await Comment.find({ IdBaiviet: req.body.idbaiviet })
+      .populate({ path: "CommentChildren", populate: { path: "User" } })
+      .populate({ path: "User" });
+
+    return res
+      .status(200)
+      .json({ data: myComments, status: 200, message: "oki." });
   } catch (err) {
     return res.status(500).json(err);
   }
 });
-
-
 
 binhluan.post("/SendBinhluan", async (req, res) => {
   const idUser = req.body.UserCmt; // Lấy id của người dùng
@@ -30,46 +29,49 @@ binhluan.post("/SendBinhluan", async (req, res) => {
   const Noidung = req.body.Noidung; // Lấy trạng thái like
   const IdComment = req.body.idComent;
   try {
-    let baiViet = await baiviet.findOne({_id: idBaiPost});
+    let baiViet = await baiviet.findOne({ _id: idBaiPost });
 
     if (baiViet) {
-          baiViet.SoluongCmt = soluongcmt;
-      await baiViet.save(); 
-    
-      if (IdComment) {
-        let DadyComment =await Comment.findById(IdComment);
-        let childComment = await new Comment({
-                      User: idUser,
-                      Content: Noidung,
-                      CommentChildren: [],
-                      IdBaiviet: idBaiPost,
-                      Dinhdanh:"Children",
-                      idLike: []
-        }).save();
-               DadyComment.CommentChildren.push(childComment._id);
-               await DadyComment.save(); 
-        
-               let myComments = await Comment.find({IdBaiviet: idBaiPost})
-                    .populate({path: 'CommentChildren', populate: { path: 'User'}})
-                    .populate({path: 'User'})
-                      
-             return res.status(200).json({ data: myComments, status: 200, message: "oki." });
+      baiViet.SoluongCmt = soluongcmt;
+      await baiViet.save();
 
+      if (IdComment) {
+        let DadyComment = await Comment.findById(IdComment);
+        let childComment = await new Comment({
+          User: idUser,
+          Content: Noidung,
+          CommentChildren: [],
+          IdBaiviet: idBaiPost,
+          Dinhdanh: "Children",
+          idLike: [],
+        }).save();
+        DadyComment.CommentChildren.push(childComment._id);
+        await DadyComment.save();
+
+        let myComments = await Comment.find({ IdBaiviet: idBaiPost })
+          .populate({ path: "CommentChildren", populate: { path: "User" } })
+          .populate({ path: "User" });
+
+        return res
+          .status(200)
+          .json({ data: myComments, status: 200, message: "oki." });
       } else {
         let CommentDady = await new Comment({
-                User: idUser,
-                Content: Noidung,
-                CommentChildren: [],
-                IdBaiviet: idBaiPost,
-                Dinhdanh:"Parent",
-                idLike: []
+          User: idUser,
+          Content: Noidung,
+          CommentChildren: [],
+          IdBaiviet: idBaiPost,
+          Dinhdanh: "Parent",
+          idLike: [],
         }).save();
 
-        let myComments = await Comment.find({IdBaiviet: idBaiPost})
-                  .populate({path: 'CommentChildren', populate: { path: 'User'}})
-                  .populate({path: 'User'})
-                    
-      return res.status(200).json({ data: myComments, status: 200, message: "oki." });
+        let myComments = await Comment.find({ IdBaiviet: idBaiPost })
+          .populate({ path: "CommentChildren", populate: { path: "User" } })
+          .populate({ path: "User" });
+
+        return res
+          .status(200)
+          .json({ data: myComments, status: 200, message: "oki." });
       }
     } else {
       return res.status(500).json({ status: 500, message: "sever lỗi." });
@@ -80,99 +82,74 @@ binhluan.post("/SendBinhluan", async (req, res) => {
 });
 binhluan.delete("/deleteComment", async (req, res) => {
   try {
-    const deletedComment = await Comment.findByIdAndRemove(req.body.idComemnt);
+    const commentId = req.body.idComment;
+    const childCommentIdToRemove = req.body.idCommentChildren;
+      
+    if (req.body.Dinhdanh == "Children") {
+      const deletedChildrenComment = await Comment.findByIdAndRemove(childCommentIdToRemove);
+      const deletedParentComment = await Comment.findById( commentId )           
+      deletedParentComment.CommentChildren = deletedParentComment.CommentChildren.filter(item => {
+        return item._id.toString() !== deletedChildrenComment._id.toString()
+      })
+          await deletedParentComment.save();
+            return res.status(200).json({ message: "đã được cập nhật ", data:deletedParentComment });  
     
-    if (deletedComment) {
-      console.log(deletedComment)
-      return res.status(200).json({ message: 'Bình luận đã được xóa' });
-    } else {
-      return res.status(404).json({ message: 'Không tìm thấy bình luận' });
+    } else if (req.body.Dinhdanh == "Parent") {
+      const deletedComment = await Comment.findByIdAndRemove(commentId);
+         
+      console.log(deletedComment);
+      if (deletedComment) {
+        return res.status(200).json({ data:deletedComment,message: "Bình luận đã được xóa" });
+      }
+      else {
+        return res.status(404).json({ message: "Không tìm thấy bình luận" });
+      }
     }
   } catch (error) {
-    return res.status(500).json({ message: 'Lỗi khi xóa bình luận', error: error });
+    return res
+      .status(500)
+      .json({ message: "Lỗi khi xóa bình luận", error: error });
   }
-})
+});
 export default binhluan;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// try {
+//     const deletedComment = await Comment.findByIdAndRemove(req.body.idComemnt);
+
+//     if (deletedComment) {
+//       console.log(deletedComment)
+//       return res.status(200).json({ message: 'Bình luận đã được xóa' });
+//     } else {
+//       return res.status(404).json({ message: 'Không tìm thấy bình luận' });
+//     }
+//   } catch (error) {
+//     return res.status(500).json({ message: 'Lỗi khi xóa bình luận', error: error });
+//   }
+
+// Comment.findOneAndUpdate(
+//       { _id: commentId },
+//       { $pull: { CommentChildren: childCommentIdToRemove } },
+//       (err, updatedComment) => {
+//         if (err) {
+//           console.error('Lỗi khi cập nhật comment:', err);
+//         } else {
+//           return res.status(200).json({ message: 'đã được cập nhật ',updatedComment });
+//         }
+//       }
+//     );
+//     Comment.updateMany(
+//       { CommentChildren: childCommentIdToRemove },
+//       { $pull: { CommentChildren: childCommentIdToRemove } },
+//       (err, result) => {
+//         if (err) {
+//           return res.status(404).json({ message: 'Không tìm thấy bình luận' });
+//         } else {
+//           return res.status(200).json({ message: 'Bình luận đã được xóa',data=result });
+//         }
+//       }
+//     );
+//   } catch (error) {
+//     return res.status(500).json({ message: 'Lỗi khi xóa bình luận', error: error });
 
 // binhluan.post("/selectUser", async (req, res) => {
 //   try {

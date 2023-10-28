@@ -28,7 +28,8 @@ like.post('/tymPost', async (req, res) => {
           baiViet.Like.push({ User: idUser, Trangthai: isLiked });
           baiViet.SoluongTym =numberLike;
       }
-        const kiemtra = await baiViet.save();
+      const kiemtra = await baiViet.save();
+      
         return res.status(200).json({ data: kiemtra, message: 'Thích bài viết thành công.' });
       } catch (error) {
       
