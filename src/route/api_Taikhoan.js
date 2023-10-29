@@ -86,15 +86,14 @@ protocol: req.protocol,
 host: req.get("host"),
   }; 
   const _id = req.body.iduser;
-  
+  console.log(_id)
 const avatarUrl = `${info.protocol}://${info.host}` + "/upload/" + req.file.filename;
  console.log(avatarUrl)
 const User = await user.findByIdAndUpdate(_id, { Avatar: avatarUrl }, { new: true });
-res.status(200).json({ status: 200, data:User });
-console.log(User)
+  console.log(User)
+  return res.status(200).json({ status: 200, data: User });
 } catch (error) {
-console.error(error);
-res.status(500).json({ success: false, message: 'Lỗi cập nhật ảnh đại diện.' });
+return res.status(500).json({ success: false, message: 'Lỗi cập nhật ảnh đại diện.'+error});
 }
 })
 export default Taikhoan;
