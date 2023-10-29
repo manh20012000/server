@@ -26,8 +26,8 @@ app.get("/", (req, res) => {
     res.send("server is running")
 })
 // tao co sơ dũ liêu với login 
-app.use('/', Taikhoan)
-app.use('/', file)
+app.use('/',Taikhoan)
+app.use('/',file)
 app.use('/',uploadAnh);
 app.use('/', Baiviet);
 app.use('/', like);

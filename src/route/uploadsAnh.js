@@ -1,10 +1,11 @@
 import { Router, query } from "express";
-import multer from "multer";
 import pool from "../config/connectBD.js";
 import path from "path";
+import multer from "multer";
+import uuid from "react-uuid";
 import appRoot from "app-root-path";
 import db from "../config/MongoDb.js";
-import uuid from "react-uuid";
+
 import baiviet from "../model/baiviet.js";
 const uploadAnh = Router();
 const storage = multer.diskStorage({
@@ -31,8 +32,7 @@ const imageFilter = function (req, file, cb) {
 const uploads = multer({ storage: storage, imageFilter: imageFilter });
 // const uploads = multer({ dest:'public/uploads/' });
 
-uploadAnh.post(
-  "/uploadAnh",
+uploadAnh.post( "/uploadAnh",
   uploads.array("ArayImages", 12),
   async (req, res) => {
     let info = {
@@ -73,4 +73,6 @@ uploadAnh.post(
     }
   }
 );
+// upaload ảnh
+ 
 export default uploadAnh;
