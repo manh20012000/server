@@ -13,7 +13,7 @@ const Comment = new Schema({
     type: Number,
   },
   Dinhdanh: { type: String },
-  
+  idParentComment: { type: Schema.Types.ObjectId, ref: 'Comment' },
   CommentChildren: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
   IdBaiviet: { type: Schema.Types.ObjectId, ref: 'baiviet' },
   idLike: [{ type: Schema.Types.ObjectId, ref: 'Like' }],

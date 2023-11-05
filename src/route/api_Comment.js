@@ -23,11 +23,13 @@ binhluan.post("/selectDataCmt", async (req, res) => {
 });
 
 binhluan.post("/SendBinhluan", async (req, res) => {
+   console.log('hay vào dya ')
   const idUser = req.body.UserCmt; // Lấy id của người dùng
   const idBaiPost = req.body.idBaiviet; // Lấy id của bài viết
   const soluongcmt = req.body.Soluongcmt; // Lấy số lượng tym
   const Noidung = req.body.Noidung; // Lấy trạng thái like
   const IdComment = req.body.idComent;
+  const idParentComment=req.body.idParentComment
   try {
     let baiViet = await baiviet.findOne({ _id: idBaiPost });
 
@@ -36,6 +38,7 @@ binhluan.post("/SendBinhluan", async (req, res) => {
       await baiViet.save();
 
       if (IdComment) {
+        
         let DadyComment = await Comment.findById(IdComment);
         let childComment = await new Comment({
           User: idUser,
@@ -43,11 +46,12 @@ binhluan.post("/SendBinhluan", async (req, res) => {
           CommentChildren: [],
           IdBaiviet: idBaiPost,
           Dinhdanh: "Children",
+          idParentComment: IdComment,
           idLike: [],
         }).save();
         DadyComment.CommentChildren.push(childComment._id);
         await DadyComment.save();
-
+        console.log('da nbab')
         let myComments = await Comment.find({ IdBaiviet: idBaiPost })
           .populate({ path: "CommentChildren", populate: { path: "User" } })
           .populate({ path: "User" });
@@ -63,6 +67,7 @@ binhluan.post("/SendBinhluan", async (req, res) => {
           IdBaiviet: idBaiPost,
           Dinhdanh: "Parent",
           idLike: [],
+          idParentComment: null,
         }).save();
 
         let myComments = await Comment.find({ IdBaiviet: idBaiPost })
@@ -81,20 +86,23 @@ binhluan.post("/SendBinhluan", async (req, res) => {
   }
 });
 binhluan.delete("/deleteComment", async (req, res) => {
-  try {
-    const commentId = req.body.idComment;
-    const childCommentIdToRemove = req.body.idCommentChildren;
+console.log('nhay vao dya')
+  try {     
+    const commentId = req.body.idComemnt;
+    const idCmtChildrenInArr = req.body.idPerent;
+     console.log(req.body.idPerent)
+      console.log(req.body.DinhDanh+' dinhdanh')
+    if (req.body.DinhDanh == "Children") {
       
-    if (req.body.Dinhdanh == "Children") {
-      const deletedChildrenComment = await Comment.findByIdAndRemove(childCommentIdToRemove);
-      const deletedParentComment = await Comment.findById( commentId )           
+      const deletedChildrenComment = await Comment.findByIdAndRemove(commentId);
+      const deletedParentComment = await Comment.findById( idCmtChildrenInArr )           
       deletedParentComment.CommentChildren = deletedParentComment.CommentChildren.filter(item => {
         return item._id.toString() !== deletedChildrenComment._id.toString()
       })
           await deletedParentComment.save();
             return res.status(200).json({ message: "đã được cập nhật ", data:deletedParentComment });  
     
-    } else if (req.body.Dinhdanh == "Parent") {
+    } else if (req.body.DinhDanh == "Parent") {
       const deletedComment = await Comment.findByIdAndRemove(commentId);
          
       console.log(deletedComment);
