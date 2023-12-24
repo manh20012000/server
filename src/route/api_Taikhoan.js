@@ -7,14 +7,16 @@ import path from "path";
 import multer from "multer";
 import uuid from "react-uuid";
 import appRoot from "app-root-path";
+import  bcrypt from'bcrypt';
 let Taikhoan = Router();
+const saltRounds = 10;
 //khai báo  giúp express hiểu khai báo đươcngf link trên web
 Taikhoan.post("/login", async (req, res) => {
   try {
-    // await db.collection('user').findOne({taikhoan:req.body.taikhoan,matkhau: req.body.matkhau})
+    const password = await bcrypt.hash(matkhau, saltRounds);
     const User = await user.findOne({
       Taikhoan: req.body.taikhoan,
-      Matkhau: req.body.matkhau,
+      Matkhau: password,
     });
     console.log(User);
     if (User != null) {
@@ -30,18 +32,18 @@ Taikhoan.post("/login", async (req, res) => {
 });
 //tạo tai khoanr đăng ký
 Taikhoan.post("/sigin", async (req, res) => {
+  const { email, phone, hoten, birth, gender, taikhoan, avatar, matkhau } = req.body;
+  const password = await bcrypt.hash(matkhau, saltRounds);
   const User = await user.findOne({
-    Taikhoan: req.body.taikhoan,
-    Matkhau: req.body.matkhau,
+    Taikhoan: taikhoan,
+      Matkhau: password,
   });
   console.log(User + "  ->usser");
   if (User != null) {
     console.log("va0 ko");
     return res.status(404).json({ msg: "tài khoản đã tồn tại", status: 404 });
   }
-  console.log("haaha");
-  const { email, phone, hoten, birth, gender, taikhoan, avatar, matkhau } =
-    req.body;
+  
   const Register = {
     Email: email,
     Phone: phone,
@@ -50,7 +52,7 @@ Taikhoan.post("/sigin", async (req, res) => {
     Gender: gender,
     Taikhoan: taikhoan,
     Avatar: avatar,
-    Matkhau: matkhau,
+    Matkhau: password,
   };
   try {
     const data = await new user(Register).save();
@@ -78,6 +80,7 @@ const storag = multer.diskStorage({
   }
   cb(null, true);
 };
+
 let upload = multer({ storage: storag,imageFilter:imageFilter});
 Taikhoan.post("/UpadateAvatar", upload.single('Avatar'), async (req, res) => { 
 try {

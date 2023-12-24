@@ -19,12 +19,13 @@ Baiviet.get("/selectBaiViet", async (req, res) => {
     return res.status(500).json(err);
   }
 });
-Baiviet.get("/selectPost_inUser", async (req, res) => {
+Baiviet.post("/selectPost_inUser", async (req, res) => {
   try {
     const userId = req.body.userId;
+    console.log(userId)
     const userPosts = await baiviet.find({ User: userId }).populate("User");
-      // .populate({ path: "Comment", populate: { path: "User" } });
     if (userPosts) {
+      // console.log(userPosts)
       return res.status(200).json({ data: userPosts });
     } else if (!userPosts) {
       return res.status(404).json({ message: "Bài viết không tồn tại" });
