@@ -7,24 +7,27 @@ import path from "path";
 import multer from "multer";
 import uuid from "react-uuid";
 import appRoot from "app-root-path";
-import  bcrypt from'bcrypt';
+import bcrypt from "bcrypt";
 let Taikhoan = Router();
 const saltRounds = 10;
 //khai báo  giúp express hiểu khai báo đươcngf link trên web
 Taikhoan.post("/login", async (req, res) => {
   try {
-    const password = await bcrypt.hash(matkhau, saltRounds);
-    const User = await user.findOne({
-      Taikhoan: req.body.taikhoan,
-      Matkhau: password,
-    });
-    console.log(User);
-    if (User != null) {
-      return res.status(200).json({ data: User, msg: "OK", status: 200 });
+    const User = await user.findOne({ Taikhoan: req.body.taikhoan});
+    if (User) {
+      const match = await bcrypt.compare(req.body.matkhau, User.Matkhau);
+
+      if (match) {
+        return res.status(200).json({ data: User, msg: "OK", status: 200 });
+      } else {
+        return res
+          .status(403)
+          .json({ msg: "Tài khoản hoặc mật khẩu không chính xác", status: 403 });
+      }
     } else {
       return res
         .status(403)
-        .json({ msg: "Tài khoản hoặc pass không chính sác", status: 403 });
+        .json({ msg: "Tài khoản hoặc mật khẩu không chính xác", status: 403 });
     }
   } catch (error) {
     return res.status(500).json(error);
@@ -32,25 +35,24 @@ Taikhoan.post("/login", async (req, res) => {
 });
 //tạo tai khoanr đăng ký
 Taikhoan.post("/sigin", async (req, res) => {
-  const { email, phone, hoten, birth, gender, taikhoan, avatar, matkhau } = req.body;
+  const { email, phone, hoten, birth, gender, avatar, matkhau } =
+    req.body;
   const password = await bcrypt.hash(matkhau, saltRounds);
   const User = await user.findOne({
-    Taikhoan: taikhoan,
-      Matkhau: password,
+    Taikhoan: email,
   });
   console.log(User + "  ->usser");
   if (User != null) {
     console.log("va0 ko");
     return res.status(404).json({ msg: "tài khoản đã tồn tại", status: 404 });
   }
-  
   const Register = {
     Email: email,
     Phone: phone,
     Hoten: hoten,
     Birth: birth,
     Gender: gender,
-    Taikhoan: taikhoan,
+    Taikhoan: email,
     Avatar: avatar,
     Matkhau: password,
   };
@@ -68,12 +70,16 @@ const storag = multer.diskStorage({
     cb(null, "public/upload/");
   },
   filename: function (req, file, cb) {
-      cb(
-        null,file.fieldname +"-" +uuid().substring(0, 8) +path.extname(file.originalname)
-      );
-    },
- })
- const imageFilter = function (req, file, cb) {
+    cb(
+      null,
+      file.fieldname +
+        "-" +
+        uuid().substring(0, 8) +
+        path.extname(file.originalname)
+    );
+  },
+});
+const imageFilter = function (req, file, cb) {
   if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
     req.fileValidationError = "Only image files are allowed!";
     return cb(new Error("Only image files are allowed!"), false);
@@ -81,22 +87,49 @@ const storag = multer.diskStorage({
   cb(null, true);
 };
 
-let upload = multer({ storage: storag,imageFilter:imageFilter});
-Taikhoan.post("/UpadateAvatar", upload.single('Avatar'), async (req, res) => { 
-try {
-let info = {
-protocol: req.protocol,
-host: req.get("host"),
-  }; 
-  const _id = req.body.iduser;
-  console.log(_id)
-const avatarUrl = `${info.protocol}://${info.host}` + "/upload/" + req.file.filename;
- console.log(avatarUrl)
-const User = await user.findByIdAndUpdate(_id, { Avatar: avatarUrl }, { new: true });
-  console.log(User)
-  return res.status(200).json({ status: 200, data: User });
-} catch (error) {
-return res.status(500).json({ success: false, message: 'Lỗi cập nhật ảnh đại diện.'+error});
-}
-})
+let upload = multer({ storage: storag, imageFilter: imageFilter });
+Taikhoan.post("/UpadateAvatar", upload.single("Avatar"), async (req, res) => {
+  try {
+    let info = {
+      protocol: req.protocol,
+      host: req.get("host"),
+    };
+    const _id = req.body.iduser;
+    console.log(_id);
+    const avatarUrl =
+      `${info.protocol}://${info.host}` + "/upload/" + req.file.filename;
+    console.log(avatarUrl);
+    const User = await user.findByIdAndUpdate(
+      _id,
+      { Avatar: avatarUrl },
+      { new: true }
+    );
+    console.log(User);
+    return res.status(200).json({ status: 200, data: User });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: "Lỗi cập nhật ảnh đại diện." + error });
+  }
+});
 export default Taikhoan;
+// Taikhoan.post("/login", async (req, res) => {
+//   try {
+//     const password = await bcrypt.hash(req.body.matkhau, saltRounds);
+//     console.log(password);
+//     const User = await user.findOne({
+//       Taikhoan: req.body.taikhoan,
+//       Matkhau: password,
+//     });
+//     console.log(User);
+//     if (User != null) {
+//       return res.status(200).json({ data: User, msg: "OK", status: 200 });
+//     } else {
+//       return res
+//         .status(403)
+//         .json({ msg: "Tài khoản hoặc pass không chính sác", status: 403 });
+//     }
+//   } catch (error) {
+//     return res.status(500).json(error);
+//   }
+// });
