@@ -1,6 +1,10 @@
 import express from "express";
 import mongoose from "mongoose";
 import { Router, query } from "express";
+import path from "path";
+import multer from "multer";
+import uuid from "react-uuid";
+import appRoot from "app-root-path";
 import db from "../config/MongoDb.js";
 import user from "../model/user.js";
 import baiviet from "../model/baiviet.js";
@@ -21,24 +25,53 @@ binhluan.post("/selectDataCmt", async (req, res) => {
     return res.status(500).json(err);
   }
 });
+// send du lieu voi comment
+const storag = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "public/upload/");
+  },
+  filename: function (req, file, cb) {
+    cb(
+      null,
+      file.fieldname +
+        "-" +
+        uuid().substring(0, 8) +
+        path.extname(file.originalname)
+    );
+  },
+});
+const imageFilter = function (req, file, cb) {
+  if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
+    req.fileValidationError = "Only image files are allowed!";
+    return cb(new Error("Only image files are allowed!"), false);
+  }
+  cb(null, true);
+};
 
-binhluan.post("/SendBinhluan", async (req, res) => {
-   console.log('hay vào dya ')
-  const idUser = req.body.UserCmt; // Lấy id của người dùng
-  const idBaiPost = req.body.idBaiviet; // Lấy id của bài viết
-  const soluongcmt = req.body.Soluongcmt; // Lấy số lượng tym
-  const Noidung = req.body.Noidung; // Lấy trạng thái like
-  const IdComment = req.body.idComent;
-  const idParentComment=req.body.idParentComment
+let upload = multer({ storage: storag, imageFilter: imageFilter });
+ binhluan.post("/SendComment", upload.single("imageCmt"), async (req, res) => {
+ // binhluan.post("/SendComment", async (req, res) => {
+
   try {
-    let baiViet = await baiviet.findOne({ _id: idBaiPost });
+    const idUser = req.body.UserCmt;
+    const idBaiPost = req.body.idBaiviet;
+    const soluongcmt = req.body.Soluongcmt;
+    const Noidung = req.body.Noidung;
+    const parentIdString = req.body.parentId; // Lấy chuỗi từ FormData
+    const IdComment = JSON.parse(parentIdString);
+    console.log(idBaiPost, IdComment, Noidung, " properties");
+    let info = {
+      protocol: req.protocol,
+      host: req.get("host"),
+    };
+      const avatarUrl = req.file ? `${info.protocol}://${info.host}` + "/upload/" + req.file.filename : null;
 
+    let baiViet = await baiviet.findOne({ _id: idBaiPost });
     if (baiViet) {
       baiViet.SoluongCmt = soluongcmt;
       await baiViet.save();
-
+      console.log("nhày vào đay đàu tiên " ,IdComment,typeof(IdComment))
       if (IdComment) {
-        
         let DadyComment = await Comment.findById(IdComment);
         let childComment = await new Comment({
           User: idUser,
@@ -48,18 +81,19 @@ binhluan.post("/SendBinhluan", async (req, res) => {
           Dinhdanh: "Children",
           idParentComment: IdComment,
           idLike: [],
+          Image:avatarUrl,
         }).save();
         DadyComment.CommentChildren.push(childComment._id);
         await DadyComment.save();
-        console.log('da nbab')
+        console.log("da nbab");
         let myComments = await Comment.find({ IdBaiviet: idBaiPost })
           .populate({ path: "CommentChildren", populate: { path: "User" } })
           .populate({ path: "User" });
-
         return res
           .status(200)
           .json({ data: myComments, status: 200, message: "oki." });
       } else {
+        console.log("nhày vào đay 1 ")
         let CommentDady = await new Comment({
           User: idUser,
           Content: Noidung,
@@ -67,9 +101,8 @@ binhluan.post("/SendBinhluan", async (req, res) => {
           IdBaiviet: idBaiPost,
           Dinhdanh: "Parent",
           idLike: [],
-          idParentComment: null,
+          Image: avatarUrl,
         }).save();
-
         let myComments = await Comment.find({ IdBaiviet: idBaiPost })
           .populate({ path: "CommentChildren", populate: { path: "User" } })
           .populate({ path: "User" });
@@ -82,34 +115,40 @@ binhluan.post("/SendBinhluan", async (req, res) => {
       return res.status(500).json({ status: 500, message: "sever lỗi." });
     }
   } catch (err) {
+    console.log(err, "loi da catch");
     return res.status(500).json(err);
   }
 });
+
+
+
 binhluan.delete("/deleteComment", async (req, res) => {
-console.log('nhay vao dya')
-  try {     
+  console.log("nhay vao dya");
+  try {
     const commentId = req.body.idComemnt;
     const idCmtChildrenInArr = req.body.idPerent;
-     console.log(req.body.idPerent)
-      console.log(req.body.DinhDanh+' dinhdanh')
+    console.log(req.body.idPerent);
+    console.log(req.body.DinhDanh + " dinhdanh");
     if (req.body.DinhDanh == "Children") {
-      
       const deletedChildrenComment = await Comment.findByIdAndRemove(commentId);
-      const deletedParentComment = await Comment.findById( idCmtChildrenInArr )           
-      deletedParentComment.CommentChildren = deletedParentComment.CommentChildren.filter(item => {
-        return item._id.toString() !== deletedChildrenComment._id.toString()
-      })
-          await deletedParentComment.save();
-            return res.status(200).json({ message: "đã được cập nhật ", data:deletedParentComment });  
-    
+      const deletedParentComment = await Comment.findById(idCmtChildrenInArr);
+      deletedParentComment.CommentChildren =
+        deletedParentComment.CommentChildren.filter((item) => {
+          return item._id.toString() !== deletedChildrenComment._id.toString();
+        });
+      await deletedParentComment.save();
+      return res
+        .status(200)
+        .json({ message: "đã được cập nhật ", data: deletedParentComment });
     } else if (req.body.DinhDanh == "Parent") {
       const deletedComment = await Comment.findByIdAndRemove(commentId);
-         
+
       console.log(deletedComment);
       if (deletedComment) {
-        return res.status(200).json({ data:deletedComment,message: "Bình luận đã được xóa" });
-      }
-      else {
+        return res
+          .status(200)
+          .json({ data: deletedComment, message: "Bình luận đã được xóa" });
+      } else {
         return res.status(404).json({ message: "Không tìm thấy bình luận" });
       }
     }

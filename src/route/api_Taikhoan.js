@@ -20,14 +20,10 @@ Taikhoan.post("/login", async (req, res) => {
       if (match) {
         return res.status(200).json({ data: User, msg: "OK", status: 200 });
       } else {
-        return res
-          .status(403)
-          .json({ msg: "Tài khoản hoặc mật khẩu không chính xác", status: 403 });
+        return res.status(403).json({ msg: "Tài khoản hoặc mật khẩu không chính xác", status: 403 });
       }
     } else {
-      return res
-        .status(403)
-        .json({ msg: "Tài khoản hoặc mật khẩu không chính xác", status: 403 });
+      return res.status(403).json({ msg: "Tài khoản hoặc mật khẩu không chính xác", status: 403 });
     }
   } catch (error) {
     return res.status(500).json(error);
@@ -63,8 +59,7 @@ Taikhoan.post("/sigin", async (req, res) => {
     return res.status(500).json("loi");
   }
 });
-// câp nhayt anh cho firebase
-
+// câp nhayt anh 
 const storag = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "public/upload/");
