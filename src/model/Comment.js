@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-
 const Schema = mongoose.Schema;
 const Comment = new Schema({
   User: {
@@ -20,7 +19,7 @@ const Comment = new Schema({
   idParentComment: { type: Schema.Types.ObjectId, ref: 'Comment' },
   CommentChildren: [{ type: Schema.Types.ObjectId, ref: 'Comment',default:null}],
   IdBaiviet: { type: Schema.Types.ObjectId, ref: 'baiviet' },
-  idLike: [{ type: Schema.Types.ObjectId, ref: 'Like' }],
+  idLike: [{ type: Schema.Types.ObjectId, ref: 'Likecmt' }],
   createdAt: {
     type: Date,
     default: Date.now,

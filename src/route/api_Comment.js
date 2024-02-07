@@ -51,7 +51,7 @@ const imageFilter = function (req, file, cb) {
 let upload = multer({ storage: storag, imageFilter: imageFilter });
  binhluan.post("/SendComment", upload.single("imageCmt"), async (req, res) => {
  // binhluan.post("/SendComment", async (req, res) => {
-
+   
   try {
     const idUser = req.body.UserCmt;
     const idBaiPost = req.body.idBaiviet;
@@ -122,12 +122,12 @@ let upload = multer({ storage: storag, imageFilter: imageFilter });
 
 
 
-binhluan.delete("/deleteComment", async (req, res) => {
+binhluan.post("/deleteComment", async (req, res) => {
   console.log("nhay vao dya");
   try {
     const commentId = req.body.idComemnt;
     const idCmtChildrenInArr = req.body.idPerent;
-    console.log(req.body.idPerent);
+    console.log(req.body.idPerent,idCmtChildrenInArr,commentId);
     console.log(req.body.DinhDanh + " dinhdanh");
     if (req.body.DinhDanh == "Children") {
       const deletedChildrenComment = await Comment.findByIdAndRemove(commentId);

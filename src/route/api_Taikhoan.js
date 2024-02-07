@@ -100,7 +100,7 @@ Taikhoan.post("/UpadateAvatar", upload.single("Avatar"), async (req, res) => {
       { new: true }
     );
     console.log(User);
-    return res.status(200).json({ status: 200, data: User });
+    return res.status(200).json({ status: 200, data: User ,mess:'sussesful'});
   } catch (error) {
     return res
       .status(500)
@@ -108,23 +108,15 @@ Taikhoan.post("/UpadateAvatar", upload.single("Avatar"), async (req, res) => {
   }
 });
 export default Taikhoan;
-// Taikhoan.post("/login", async (req, res) => {
-//   try {
-//     const password = await bcrypt.hash(req.body.matkhau, saltRounds);
-//     console.log(password);
-//     const User = await user.findOne({
-//       Taikhoan: req.body.taikhoan,
-//       Matkhau: password,
-//     });
-//     console.log(User);
-//     if (User != null) {
-//       return res.status(200).json({ data: User, msg: "OK", status: 200 });
-//     } else {
-//       return res
-//         .status(403)
-//         .json({ msg: "Tài khoản hoặc pass không chính sác", status: 403 });
-//     }
-//   } catch (error) {
-//     return res.status(500).json(error);
-//   }
-// });
+Taikhoan.post("/SearchMention", async (req, res) => {
+  try {
+    const searchTerm = req.body.Textseach;
+    // Sử dụng biểu thức chính quy để tạo mẫu tìm kiếm gần đúng
+    const regexPattern = new RegExp(searchTerm, 'i'); // 'i' để không phân biệt hoa thường
+    // Sử dụng MongoDB để tìm kiếm dữ liệu gần đúng
+    const searchResults = await user.find({ Hoten: { $regex: regexPattern } });
+    res.status(200).json({ data: searchResults, msg: "OK", status: 200 });
+  } catch (error) {
+    res.status(500).json({ msg: "Internal Server Error", error: error });
+  }
+});

@@ -13,6 +13,15 @@ import Baiviet from './route/api_BaiViet.js';
 import baiviet from './model/baiviet.js';
 import like from './route/api_Like.js';
 import binhluan from './route/api_Comment.js';
+import VideoPost from './route/api_PostVideo.js';
+import VideoSelect from './route/api_SlectVideo.js';
+import LikeVideo from './route/api_LikeVideo.js';
+import api_CommentVideo from './route/api_CommentVideo.js';
+import http from 'http';
+import { Server } from 'socket.io';
+import SendNotification from './route/Notification.js';
+import StoryVideo from './route/Story.js';
+
 // const port = process.env.PORT||3000
 const app = express();
 const port = 8080
@@ -32,14 +41,15 @@ app.use('/',uploadAnh);
 app.use('/', Baiviet);
 app.use('/', like);
 app.use('/',binhluan);
-
-
+app.use('/',VideoPost);
+app.use('/', VideoSelect);
+app.use('/', LikeVideo);
+app.use('/', api_CommentVideo);
+app.use('/', SendNotification);
+app.use('/',StoryVideo );
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
 })
-
-
-
 
 
 
