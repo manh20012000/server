@@ -8,22 +8,43 @@ import multer from "multer";
 import uuid from "react-uuid";
 import appRoot from "app-root-path";
 import bcrypt from "bcrypt";
+import gennerateTokenAndsetCookie from "../ultils/generateToke.js";
 let Taikhoan = Router();
 const saltRounds = 10;
 //khai báo  giúp express hiểu khai báo đươcngf link trên web
 Taikhoan.post("/login", async (req, res) => {
   try {
-    const User = await user.findOne({ Taikhoan: req.body.taikhoan});
+    console.log(typeof req.body.taikhoan, typeof req.body.matkhau);
+    const User = await user.findOne({ Taikhoan: req.body.taikhoan });
     if (User) {
+      console.log("có user");
       const match = await bcrypt.compare(req.body.matkhau, User.Matkhau);
-
+      let token = "";
       if (match) {
-        return res.status(200).json({ data: User, msg: "OK", status: 200 });
+        console.log("login sussess", token);
+        token = gennerateTokenAndsetCookie(User._id, res);
+        console.log("login sussess", token);
+        return res.status(200).json({
+          data: {
+            _id: User._id,
+            Hoten: User.Hoten,
+            Avatar: User.Avatar,
+            email: User.email,
+            accessToken: token,
+          },
+          msg: "OK",
+          status: 200,
+        });
       } else {
-        return res.status(403).json({ msg: "Tài khoản hoặc mật khẩu không chính xác", status: 403 });
+        return res.status(403).json({
+          msg: "Tài khoản hoặc mật khẩu không chính xác",
+          status: 403,
+        });
       }
     } else {
-      return res.status(403).json({ msg: "Tài khoản hoặc mật khẩu không chính xác", status: 403 });
+      return res
+        .status(403)
+        .json({ msg: "Tài khoản hoặc mật khẩu không chính xác", status: 403 });
     }
   } catch (error) {
     return res.status(500).json(error);
@@ -31,8 +52,7 @@ Taikhoan.post("/login", async (req, res) => {
 });
 //tạo tai khoanr đăng ký
 Taikhoan.post("/sigin", async (req, res) => {
-  const { email, phone, hoten, birth, gender, avatar, matkhau } =
-    req.body;
+  const { email, phone, hoten, birth, gender, avatar, matkhau } = req.body;
   const password = await bcrypt.hash(matkhau, saltRounds);
   const User = await user.findOne({
     Taikhoan: email,
@@ -42,24 +62,40 @@ Taikhoan.post("/sigin", async (req, res) => {
     console.log("va0 ko");
     return res.status(404).json({ msg: "tài khoản đã tồn tại", status: 404 });
   }
-  const Register = {
+  const Register = new user({
     Email: email,
     Phone: phone,
     Hoten: hoten,
     Birth: birth,
-    Gender: gender,
+    Gender: gender ?? " ",
     Taikhoan: email,
     Avatar: avatar,
     Matkhau: password,
-  };
+  });
   try {
-    const data = await new user(Register).save();
-    return res.status(200).json({ user: data[0], msg: "OK", status: 200 });
+    let token = " ";
+    if (Register) {
+      token = gennerateTokenAndsetCookie(Register._id, res);
+    }
+
+    // const data = await new user(Register).save();
+    await Register.save();
+
+    return res.status(200).json({
+      data: {
+        email: Register.email,
+        _id: Register._id,
+        userName: Register.Hoten,
+        accesstoken: token,
+      },
+      msg: "OK",
+      status: 200,
+    });
   } catch (error) {
     return res.status(500).json("loi");
   }
 });
-// câp nhayt anh 
+// câp nhayt anh
 const storag = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "public/upload/");
@@ -100,19 +136,24 @@ Taikhoan.post("/UpadateAvatar", upload.single("Avatar"), async (req, res) => {
       { new: true }
     );
     console.log(User);
-    return res.status(200).json({ status: 200, data: User ,mess:'sussesful'});
+    return res.status(200).json({ status: 200, data: User, mess: "sussesful" });
   } catch (error) {
     return res
       .status(500)
       .json({ success: false, message: "Lỗi cập nhật ảnh đại diện." + error });
   }
 });
-export default Taikhoan;
+Taikhoan.post("/logout", async (req, res) => {
+  try {
+    req.cookie("jwt", "", { maxAge: 0 });
+    res.status(200).json({ message: "logout success" });
+  } catch (error) {}
+});
 Taikhoan.post("/SearchMention", async (req, res) => {
   try {
     const searchTerm = req.body.Textseach;
     // Sử dụng biểu thức chính quy để tạo mẫu tìm kiếm gần đúng
-    const regexPattern = new RegExp(searchTerm, 'i'); // 'i' để không phân biệt hoa thường
+    const regexPattern = new RegExp(searchTerm, "i"); // 'i' để không phân biệt hoa thường
     // Sử dụng MongoDB để tìm kiếm dữ liệu gần đúng
     const searchResults = await user.find({ Hoten: { $regex: regexPattern } });
     res.status(200).json({ data: searchResults, msg: "OK", status: 200 });
@@ -120,3 +161,4 @@ Taikhoan.post("/SearchMention", async (req, res) => {
     res.status(500).json({ msg: "Internal Server Error", error: error });
   }
 });
+export default Taikhoan;

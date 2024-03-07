@@ -15,16 +15,23 @@ const binhluan = Router();
 binhluan.post("/selectDataCmt", async (req, res) => {
   try {
     let myComments = await Comment.find({ IdBaiviet: req.body.idbaiviet })
-      .populate({ path: "CommentChildren", populate: { path: "User" } })
-      .populate({ path: "User" });
+      .populate({
+        path: "comments",
+        populate: { path: "User" } // Populate toàn bộ object của comment con
+      })
+      .populate("User");
+
+    console.log(myComments, 'hahaobdh');
 
     return res
       .status(200)
-      .json({ data: myComments, status: 200, message: "oki." });
+      .json({ data: myComments, status: 200, message: "Success." });
   } catch (err) {
+    console.log(err, 'Error log');
     return res.status(500).json(err);
   }
 });
+
 // send du lieu voi comment
 const storag = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -49,85 +56,81 @@ const imageFilter = function (req, file, cb) {
 };
 
 let upload = multer({ storage: storag, imageFilter: imageFilter });
- binhluan.post("/SendComment", upload.single("imageCmt"), async (req, res) => {
- // binhluan.post("/SendComment", async (req, res) => {
-   
-  try {
-    const idUser = req.body.UserCmt;
-    const idBaiPost = req.body.idBaiviet;
-    const soluongcmt = req.body.Soluongcmt;
-    const Noidung = req.body.Noidung;
-    const parentIdString = req.body.parentId; // Lấy chuỗi từ FormData
-    const IdComment = JSON.parse(parentIdString);
-    console.log(idBaiPost, IdComment, Noidung, " properties");
-    let info = {
-      protocol: req.protocol,
-      host: req.get("host"),
-    };
-      const avatarUrl = req.file ? `${info.protocol}://${info.host}` + "/upload/" + req.file.filename : null;
+binhluan.post(
+  "/SendCommentArticles",
+  upload.single("imageCmt"),
+  async (req, res) => {
+    // binhluan.post("/SendComment", async (req, res) => {
 
-    let baiViet = await baiviet.findOne({ _id: idBaiPost });
-    if (baiViet) {
-      baiViet.SoluongCmt = soluongcmt;
-      await baiViet.save();
-      console.log("nhày vào đay đàu tiên " ,IdComment,typeof(IdComment))
-      if (IdComment) {
-        let DadyComment = await Comment.findById(IdComment);
-        let childComment = await new Comment({
-          User: idUser,
-          Content: Noidung,
-          CommentChildren: [],
-          IdBaiviet: idBaiPost,
-          Dinhdanh: "Children",
-          idParentComment: IdComment,
-          idLike: [],
-          Image:avatarUrl,
-        }).save();
-        DadyComment.CommentChildren.push(childComment._id);
-        await DadyComment.save();
-        console.log("da nbab");
-        let myComments = await Comment.find({ IdBaiviet: idBaiPost })
-          .populate({ path: "CommentChildren", populate: { path: "User" } })
-          .populate({ path: "User" });
-        return res
-          .status(200)
-          .json({ data: myComments, status: 200, message: "oki." });
+    try {
+      const idUser = req.body.UserCmt;
+      const idBaiPost = req.body.idBaiviet;
+      const soluongcmt = req.body.Soluongcmt;
+      const Noidung = req.body.Noidung;
+      const parentIdString = req.body.parentId; // Lấy chuỗi từ FormData
+      const IdComment = JSON.parse(parentIdString);
+      console.log(idBaiPost, IdComment, Noidung, " properties");
+      let info = {
+        protocol: req.protocol,
+        host: req.get("host"),
+      };
+      const avatarUrl = req.file
+        ? `${info.protocol}://${info.host}` + "/upload/" + req.file.filename
+        : null;
+      let baiViet = await baiviet.findOne({ _id: idBaiPost });
+      if (baiViet) {
+        baiViet.SoluongCmt = soluongcmt;
+        await baiViet.save();
+        console.log("nhày vào đay đàu tiên ", IdComment, typeof IdComment);
+        if (IdComment) {
+          console.log("nhày vào đay đàu tiên11 ", IdComment, typeof IdComment);
+          let DadyComment = await Comment.findById(IdComment);
+          let childComment = await new Comment({
+            _id: req.body._id,
+            User: idUser,
+            Content: Noidung,
+            idLike: [],
+            Image: avatarUrl,
+          }).save();
+          DadyComment.comments.push(req.body._id);
+          await DadyComment.save();
+          console.log("da nbab");
+          
+          return res
+            .status(200)
+            .json({  status: 200, message: "oki." });
+        } else {
+          console.log("nhày vào đay 1 ");
+          let CommentDady = await new Comment({
+            _id: req.body._id,
+            User: idUser,
+            Content: Noidung,
+            comments: [],
+            IdBaiviet: idBaiPost,
+            idLike: [],
+            Image: avatarUrl,
+          }).save();
+          
+          return res
+            .status(200)
+            .json({ status: 200, message: "oki." });
+        }
       } else {
-        console.log("nhày vào đay 1 ")
-        let CommentDady = await new Comment({
-          User: idUser,
-          Content: Noidung,
-          CommentChildren: [],
-          IdBaiviet: idBaiPost,
-          Dinhdanh: "Parent",
-          idLike: [],
-          Image: avatarUrl,
-        }).save();
-        let myComments = await Comment.find({ IdBaiviet: idBaiPost })
-          .populate({ path: "CommentChildren", populate: { path: "User" } })
-          .populate({ path: "User" });
-
-        return res
-          .status(200)
-          .json({ data: myComments, status: 200, message: "oki." });
+        return res.status(500).json({ status: 500, message: "sever lỗi." });
       }
-    } else {
-      return res.status(500).json({ status: 500, message: "sever lỗi." });
+    } catch (err) {
+      console.log(err, "loi da catch");
+      return res.status(500).json(err);
     }
-  } catch (err) {
-    console.log(err, "loi da catch");
-    return res.status(500).json(err);
   }
-});
-
-
+);
 
 binhluan.post("/deleteComment", async (req, res) => {
   console.log("nhay vao dya");
   try {
     const commentId = req.body.idComemnt;
     const idCmtChildrenInArr = req.body.idPerent;
-    console.log(req.body.idPerent,idCmtChildrenInArr,commentId);
+    console.log(req.body.idPerent, idCmtChildrenInArr, commentId);
     console.log(req.body.DinhDanh + " dinhdanh");
     if (req.body.DinhDanh == "Children") {
       const deletedChildrenComment = await Comment.findByIdAndRemove(commentId);
