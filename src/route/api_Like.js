@@ -8,9 +8,11 @@ import Likecmt from "../model/Likecmt.js";
 import Comment from "../model/Comment.js";
 import CommentVideo from "../model/CommentVideo.js";
 import CommentVideoChildrent from "../model/CommentVideoChildrent.js";
+import protectRoute from "../middlewere/protectRoute.js";
 const like = Router();
-like.post("/tymPost", async (req, res) => {
+like.post("/tymPost",protectRoute, async (req, res) => {
   try {
+    console.log('nhay vào tym ')
     const idUser = req.body.idUser; // Lấy id của người dùng
     const idBaiPost = req.body.idBaiPost; // Lấy id của bài viết
     const numberLike = req.body.Soluong; // Lấy số lượng tym
@@ -19,26 +21,23 @@ like.post("/tymPost", async (req, res) => {
     if (!baiViet) {
       return res.status(404).json({ message: "Không tìm thấy bài viết." });
     }
-    console.log("nhày vào tupos này ")
-    const existingLike = baiViet.Like.find((like) => like.User.equals(idUser));
-    console.log("like");
+    const existingLike = baiViet.Like.find(like => like.User && like.User.equals(idUser));
     if (existingLike) {
-      existingLike.Trangthai = isLiked;
-      baiViet.SoluongTym = numberLike;
+        existingLike.Trangthai = isLiked;
+        baiViet.SoluongTym = numberLike;
     } else {
+    
       baiViet.Like.push({ User: idUser, Trangthai: isLiked });
-      baiViet.SoluongTym = numberLike;
+      baiViet.SoluongTym =numberLike;
     }
-    const kiemtra = await baiViet.save();
 
-    return res
-      .status(200)
-      .json({ data: kiemtra, message: "Thích bài viết thành công." });
+    const kiemtra = await baiViet.save();
+    return res.status(200).json({ data: kiemtra, message: 'Thích bài viết thành công.' });
   } catch (error) {
-    return res.status(500).json({ message: "Lỗi server." });
+    return res.status(500).json({ message: "Lỗi server."+error});
   }
 });
-like.post("/selectLike", async (req, res) => {
+like.post("/selectLike",protectRoute, async (req, res) => {
   try {
     const { Like } = await baiviet
       .findById({ _id: req.body._idBaiviet })

@@ -36,9 +36,14 @@
     "react-uuid": "^2.0.0",
     "socket.io": "^4.7.4",
     "socket.io-client": "^4.7.4",
-    "uuidv4": "^6.2.13"
+    "uuidv4": "^6.2.13",
+    "ws": "^8.16.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.12"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^4.0.8",
+    "utf-8-validate": "^5.0.10"
   }
 }

@@ -17,15 +17,13 @@ import VideoPost from "./route/api_PostVideo.js";
 import VideoSelect from "./route/api_SlectVideo.js";
 import LikeVideo from "./route/api_LikeVideo.js";
 import api_CommentVideo from "./route/api_CommentVideo.js";
-// import http from "http";
-// import { Server } from "socket.io";
 import SendNotification from "./route/Notification.js";
 import StoryVideo from "./route/Story.js";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import MessageChat from "./route/api_Message.js";
 import routerUser from "./route/user_router.js";
-import { app, server }from"./socket/socket.js"
+import { app, server, } from "./socket/socket.js";
 dotenv.config();
 const port = process.env.PORT || 3000;
 app.use(express.static("public"));
@@ -37,7 +35,6 @@ app.use(cookieParser());
 app.get("/", (req, res) => {
   res.send("server is running");
 });
-
 // tao co sơ dũ liêu với login
 app.use("/", Taikhoan);
 app.use("/", file);
@@ -54,24 +51,9 @@ app.use("/", StoryVideo);
 app.use("/", MessageChat);
 app.use("/", routerUser);
 
-
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // c2 dùng trực tiếp với này và cấu hình pack.json bỏ type modun đi
 // const express = require('express')
@@ -109,7 +91,7 @@ app.listen(port, () => {
 // app.use(express.urlencoded({ extended: true }));
 // initAPIRoute(app);
 
-const upload = multer({ dest: "public/uploads/" });
+//const upload = multer({ dest: "public/uploads/" });
 // app.post('/uploads', upload.array('ArayImages', 12), async (req, res) => {
 //     console.log(JSON.stringify(req.files)+'file')
 //     const Image = [];
