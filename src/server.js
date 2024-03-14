@@ -51,7 +51,12 @@ app.use("/", StoryVideo);
 app.use("/", MessageChat);
 app.use("/", routerUser);
 
+<<<<<<< HEAD
 app.listen(port, () => {
+=======
+
+server.listen(port, () => {
+>>>>>>> 40e4bc88480dd1e5efe29b3a2a1cf6715bfe6c0b
   console.log(`Example app listening at http://localhost:${port}`);
 });
 
