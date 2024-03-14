@@ -51,14 +51,10 @@ app.use("/", StoryVideo);
 app.use("/", MessageChat);
 app.use("/", routerUser);
 
-<<<<<<< HEAD
-app.listen(port, () => {
-=======
-
-server.listen(port, () => {
->>>>>>> 40e4bc88480dd1e5efe29b3a2a1cf6715bfe6c0b
-  console.log(`Example app listening at http://localhost:${port}`);
-});
+app.listen(port,()=>{
+    console.log(`Example app listening at http://localhost:${port}`);
+ });
+  
 
 // c2 dùng trực tiếp với này và cấu hình pack.json bỏ type modun đi
 // const express = require('express')

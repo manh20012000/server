@@ -21,7 +21,7 @@ like.post("/tymPost",protectRoute, async (req, res) => {
     if (!baiViet) {
       return res.status(404).json({ message: "Không tìm thấy bài viết." });
     }
-    const existingLike = baiViet.Like.find(like => like.User && like.User.equals(idUser));
+    const existingLike = baiViet.Like.find(like => like.User && like.User===idUser);
     if (existingLike) {
         existingLike.Trangthai = isLiked;
         baiViet.SoluongTym = numberLike;
