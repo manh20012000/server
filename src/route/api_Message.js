@@ -3,7 +3,7 @@ import { Router, query } from "express";
 import protectRoute from "../middlewere/protectRoute.js";
 import ConverStation from "../model/converStationModel.js";
 import messageShamec from "../model/messageShamec.js";
-// import { getReciverSocketId } from "../socket/socket.js";
+import { getReciverSocketId } from "../socket/socket.js";
 let MessageChat = Router();
 MessageChat.post("/send/:id", protectRoute, async (req, res) => {
   try {
@@ -39,11 +39,11 @@ MessageChat.post("/send/:id", protectRoute, async (req, res) => {
 
     //   await newMessage.save();\
     await Promise.all([converstation.save(), newMessage.save()]);
-    // const receiverSocketId = getReciverSocketId(receiverId);
-    // if (receiverSocketId) {
-    //   ///io.to(<socket_id></socket_id>).emit() used to send envernt to specific client
-    //   io.to(receiverSocketId).emit("newMessage", newMessage);
-    // }
+    const receiverSocketId = getReciverSocketId(receiverId);
+    if (receiverSocketId) {
+      ///io.to(<socket_id></socket_id>).emit() used to send envernt to specific client
+      io.to(receiverSocketId).emit("newMessage", newMessage);
+    }
   
     res.status(200).json({ data: newMessage });
     // console.log("hahah item", req.params.userId,);

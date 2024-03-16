@@ -1,4 +1,3 @@
-
 import {Server} from "socket.io";
 import http from "http";
 import express from "express";
@@ -56,37 +55,7 @@ io.on("connection", (socket) => {
         });
       }
     }
-
   });
-
-  ws.send("Hello, client!");
 });
 
-
-// const io = new Server(server, {
-//   cors: { origin: "*" },
-//   transports: ['websocket']
-// });
-// const userSocketMap = {};
-// io.on("connection", (socket) => {
-//   console.log("connected", socket.id);
-//   socket.on("chat message", (msg) => {
-//     console.log("message: " + msg);
-//   });
-//   const userId = socket.handshake.query.userId;
-//   if (userId !== "undefined") userSocketMap[userId] = socket.id;
-//   //io.emit () is used to send events to all  the connenct client
-//   io.emit(" CreateNewChat", Object.keys(userSocketMap));
-//   userSocketMap[socket.id] = true;
-
-//   // //   // Gửi thông báo cho tất cả client về trạng thái hoạt động
-//   io.emit("getOnlineUser", { userId: socket.id, active: true });
-//   socket.on("disconnect", () => {
-//     console.log("user disconnected");
-//     socket.disconnect();
-//     delete userSocketMap[userId];
-//     io.emit(" getOnlineUser", Object.keys(userSocketMap));
-//   });
-// });
-export { app, server };
-
+export { app, io, server };

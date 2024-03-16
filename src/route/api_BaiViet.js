@@ -3,9 +3,8 @@ import mongoose from "mongoose";
 import { Router, query } from "express";
 import db from "../config/MongoDb.js";
 import baiviet from "../model/baiviet.js";
-import protectRoute from "../middlewere/protectRoute.js";
 const Baiviet = Router();
-Baiviet.get("/selectBaiViet",protectRoute, async (req, res) => {
+Baiviet.get("/selectBaiViet", async (req, res) => {
   try {
     const allPosts = await baiviet
       .find({}).sort({ createdAt: -1 }).populate({ path: "User" });
@@ -20,10 +19,10 @@ Baiviet.get("/selectBaiViet",protectRoute, async (req, res) => {
     return res.status(500).json(err);
   }
 });
-Baiviet.post("/selectPost_inUser",protectRoute, async (req, res) => {
+Baiviet.post("/selectPost_inUser", async (req, res) => {
   try {
     const userId = req.body.userId;
-    console.log(userId,'selectPost_inUser')
+    console.log(userId)
     const userPosts = await baiviet.find({ User: userId }).populate("User");
     if (userPosts) {
       // console.log(userPosts)

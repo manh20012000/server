@@ -163,10 +163,10 @@ Taikhoan.post("/SearchMention", async (req, res) => {
     res.status(500).json({ msg: "Internal Server Error", error: error });
   }
 });
-Taikhoan.get("/userInfor", protectRoute, async (req, res) => {
+Taikhoan.post("/userInfor", protectRoute, async (req, res) => {
   try {
     const loggerInUserId = req.user._id;
-    console.log(loggerInUserId);
+    console.log(loggerInUserId,'offf');
     // Sử dụng MongoDB để tìm kiếm dữ liệu gần đúng
     const searchResults = await user.findById({ _id: loggerInUserId });
 
