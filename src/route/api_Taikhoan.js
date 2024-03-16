@@ -9,27 +9,28 @@ import uuid from "react-uuid";
 import appRoot from "app-root-path";
 import bcrypt from "bcrypt";
 import gennerateTokenAndsetCookie from "../ultils/generateToke.js";
+import protectRoute from "../middlewere/protectRoute.js";
 let Taikhoan = Router();
 const saltRounds = 10;
 //khai báo  giúp express hiểu khai báo đươcngf link trên web
 Taikhoan.post("/login", async (req, res) => {
   try {
-    console.log(typeof req.body.taikhoan, typeof req.body.matkhau);
+    console.log('vào login')
+    
     const User = await user.findOne({ Taikhoan: req.body.taikhoan });
     if (User) {
-      console.log("có user");
+   
       const match = await bcrypt.compare(req.body.matkhau, User.Matkhau);
       let token = "";
       if (match) {
-        console.log("login sussess", token);
         token = gennerateTokenAndsetCookie(User._id, res);
-        console.log("login sussess", token);
+
         return res.status(200).json({
           data: {
             _id: User._id,
             Hoten: User.Hoten,
             Avatar: User.Avatar,
-            email: User.email,
+            email: User.Email,
             accessToken: token,
           },
           msg: "OK",
@@ -121,21 +122,22 @@ const imageFilter = function (req, file, cb) {
 let upload = multer({ storage: storag, imageFilter: imageFilter });
 Taikhoan.post("/UpadateAvatar", upload.single("Avatar"), async (req, res) => {
   try {
+    console.log("UpadateAvatar");
     let info = {
       protocol: req.protocol,
       host: req.get("host"),
     };
     const _id = req.body.iduser;
-    console.log(_id);
+    // console.log(_id);
     const avatarUrl =
       `${info.protocol}://${info.host}` + "/upload/" + req.file.filename;
-    console.log(avatarUrl);
+    // console.log(avatarUrl);
     const User = await user.findByIdAndUpdate(
       _id,
       { Avatar: avatarUrl },
       { new: true }
     );
-    console.log(User);
+  
     return res.status(200).json({ status: 200, data: User, mess: "sussesful" });
   } catch (error) {
     return res
@@ -156,6 +158,18 @@ Taikhoan.post("/SearchMention", async (req, res) => {
     const regexPattern = new RegExp(searchTerm, "i"); // 'i' để không phân biệt hoa thường
     // Sử dụng MongoDB để tìm kiếm dữ liệu gần đúng
     const searchResults = await user.find({ Hoten: { $regex: regexPattern } });
+    res.status(200).json({ data: searchResults, msg: "OK", status: 200 });
+  } catch (error) {
+    res.status(500).json({ msg: "Internal Server Error", error: error });
+  }
+});
+Taikhoan.get("/userInfor", protectRoute, async (req, res) => {
+  try {
+    const loggerInUserId = req.user._id;
+    console.log(loggerInUserId);
+    // Sử dụng MongoDB để tìm kiếm dữ liệu gần đúng
+    const searchResults = await user.findById({ _id: loggerInUserId });
+
     res.status(200).json({ data: searchResults, msg: "OK", status: 200 });
   } catch (error) {
     res.status(500).json({ msg: "Internal Server Error", error: error });

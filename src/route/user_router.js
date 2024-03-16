@@ -6,37 +6,50 @@ import converStation from "../model/converStationModel.js";
 const routerUser = Router();
 routerUser.get("/UserRouter", protectRoute, async (req, res) => {
   try {
-    const loggerInUserId = req.user._id; // user login
-    console.log("loggerInUserId",);
+    const loggerInUserId = req.user._id;
     const conversations = await converStation
-    .find({
-      participants:loggerInUserId,
-    })
-    .populate({
-      path: "participants",
-      model: "user",
-      select: "_id Email Hoten Avatar", // Loại trừ mật khẩu
-      match: { _id: { $ne: loggerInUserId } },
-    })
-    .populate({
-      path: "messages",
-      model: "messageShamec",
-      options: { sort: { createdAt: -1 }, limit: 1 }, // Lấy tin nhắn gần đây nhất
-    });
-
+      .find({
+        participants: loggerInUserId,
+      })
+      .populate({
+        path: "participants",
+        model: "user",
+        select: "_id Email Hoten Avatar",
+        match: { _id: { $ne: loggerInUserId } },
+      })
+      .populate({
+        path: "messages",
+        model: "messageShamec",
+        options: { sort: { createdAt: -1 }, limit: 10 },
+        populate: {
+          path: "senderId",
+          model: "user",
+        },
+      });
 
     const filteredConversations = conversations.map((conversation) => ({
-      messages: conversation.messages[0],
+      messages: conversation.messages.map((message) => ({
+        _id: message._id,
+        text: message.message,
+        createdAt: message.createdAt,
+        user: {
+          _id: message.senderId._id,
+          name: message.senderId.Hoten,
+          avatar: message.senderId.Avatar,
+          // Thêm các thông tin khác của user nếu cần
+        },
+      })),
       participants: conversation.participants.find(
         (participant) => participant._id.toString() !== loggerInUserId
       ),
     }));
-    console.log(filteredConversations);
+
     res.status(200).json(filteredConversations);
   } catch (error) {
-    res.status(500).json({ err: " inernal server error" });
+    res.status(500).json({ err: " internal server error" });
   }
 });
+
 routerUser.get("/UserSelelectchat", protectRoute, async (req, res) => {
   try {
     const loggerInUserId = req.user._id;
