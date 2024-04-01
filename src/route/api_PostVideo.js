@@ -55,7 +55,6 @@ VideoPost.post(
     console.log(JSON.stringify(filePath) + "anh duo tra");
     const videoPath =
       `${info.protocol}://${info.host}` + "/uploadVideos/" + filePath;
-
     const hlsOutputPath = "public/hls";
     if (videoPath) {
       const formData = new FormData();

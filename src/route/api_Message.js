@@ -5,15 +5,15 @@ import ConverStation from "../model/converStationModel.js";
 import messageShamec from "../model/messageShamec.js";
 import { getReciverSocketId } from "../socket/socket.js";
 let MessageChat = Router();
-MessageChat.post("/send/:id", protectRoute, async (req, res) => {
+import { io } from "../socket/socket.js";
+MessageChat.post("/send/:_id", protectRoute, async (req, res) => {
   try {
     // console.log(req.params);
     const senderId = req.user._id;
-    const { id: receiverId } = req.params;
-
+    const { _id: receiverId } = req.params;
     const { message } = req.body;
 
-    const converstation = await ConverStation.findOne({
+    let converstation = await ConverStation.findOne({
       participants: { $all: [senderId, receiverId] },
     });
     if (!converstation) {
@@ -21,32 +21,41 @@ MessageChat.post("/send/:id", protectRoute, async (req, res) => {
         participants: [senderId, receiverId],
       });
     }
-
+    console.log(message);
     // console.log("hahah item2", req.params.userId, id);
     const newMessage = new messageShamec({
       senderId,
       receiverId,
-      message,
+      message: message.text,
     });
-    console.log(message);
+    // console.log(message,'tin nhăn được gưi từ client');
     if (newMessage) {
-      console.log(newMessage.message);
-
-      converstation.messages.push(newMessage._id);
+      // console.log(newMessage.message);
+      // console.log(newMessage, "tin nhăn được gưi từ client");
+      // converstation.messages.push(newMessage._id);
     }
     // socket io funcition will go here
     //   await converstation.save();
 
     //   await newMessage.save();\
-    await Promise.all([converstation.save(), newMessage.save()]);
+    // await Promise.all([converstation.save(), newMessage.save()]);
     const receiverSocketId = getReciverSocketId(receiverId);
     if (receiverSocketId) {
+      console.log("nhay vao socket ");
       ///io.to(<socket_id></socket_id>).emit() used to send envernt to specific client
-      io.to(receiverSocketId).emit("newMessage", newMessage);
+      receiverSocketId.forEach((socketId) => {
+        const nesMess = {
+          _id: newMessage._id,
+          text: message.text,
+          createdAt: message.createdAt,
+          user: message.user,
+        };
+        // console.log(newMessage, "scpketIs", nesMess);
+        io.to(socketId).emit("newMessage", nesMess);
+      });
     }
-  
     res.status(200).json({ data: newMessage });
-    // console.log("hahah item", req.params.userId,);
+    // console.log("hahah item", req.params._id);
   } catch (error) {
     console.log(error.message, "loi say ra");
     res.status(500).json({ message: error });
@@ -59,14 +68,16 @@ MessageChat.get("/getMessage/:id", protectRoute, async (req, res) => {
 
     const converstation = await ConverStation.findOne({
       participants: { $all: [senderId, userToChatId] },
-    }).populate({
-      path: "messages",
-      options: { sort: { createdAt:-1 } },  // Sắp xếp theo thời gian tạo tăng dần (1) hoặc giảm dần (-1)
-      populate: {
-        path: "senderId",
-        model: "user",
-      },
-    });
+    })
+      .populate({
+        path: "messages",
+        options: { sort: { createdAt: -1 } }, // Sắp xếp theo thời gian tạo tăng dần (1) hoặc giảm dần (-1)
+        populate: {
+          path: "senderId",
+          model: "user",
+        },
+      })
+      .limit(10);
 
     if (!converstation) {
       return res.status(200).json([]);

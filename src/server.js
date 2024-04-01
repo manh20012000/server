@@ -25,7 +25,8 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import MessageChat from "./route/api_Message.js";
 import routerUser from "./route/user_router.js";
-import { app, server }from"./socket/socket.js"
+import { app, server } from "./socket/socket.js"
+import AddFriend from "./route/api_AddFrrind.js";
 dotenv.config();
 const port = process.env.PORT || 3000;
 app.use(express.static("public"));
@@ -53,7 +54,7 @@ app.use("/", SendNotification);
 app.use("/", StoryVideo);
 app.use("/", MessageChat);
 app.use("/", routerUser);
-
+app.use("/", AddFriend);
 
 server.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);

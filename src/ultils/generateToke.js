@@ -7,12 +7,10 @@
 // };
 
 // export default gennerateTokenAndsetCookie;
-
-
 import jwt from "jsonwebtoken";
 const gennerateTokenAndsetCookie = (userId, res) => {
   const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
-    expiresIn: "365d", 
+    expiresIn: "15d", 
   });
   // console.log(userId, token, "kog id gennera");
   res.cookie("jwt", token, {
