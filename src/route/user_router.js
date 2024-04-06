@@ -3,10 +3,10 @@ import { Router, query } from "express";
 import protectRoute from "../middlewere/protectRoute.js";
 import user from "../model/user.js";
 import converStation from "../model/converStationModel.js";
+import authenTokenMiddle from "../middlewere/MiddleRoute.js";
 const routerUser = Router();
 routerUser.get("/UserRouter", protectRoute, async (req, res) => {
   try {
-  
     const loggerInUserId = req.user._id;
     const conversations = await converStation
       .find({
@@ -31,7 +31,9 @@ routerUser.get("/UserRouter", protectRoute, async (req, res) => {
     const filteredConversations = conversations.map((conversation) => ({
       messages: conversation.messages.map((message) => ({
         _id: message._id,
-        text: message.message,
+        text: message.text,
+        video: message.video,
+        image: message.image,
         createdAt: message.createdAt,
         user: {
           _id: message.senderId._id,

@@ -1,8 +1,6 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 const Notification = new mongoose.Schema(
-    
-    
       {
         User: {
             type: mongoose.Types.ObjectId,
@@ -11,12 +9,13 @@ const Notification = new mongoose.Schema(
           
         Conten: {
             type: String,
+        
         },
         createdAt: {
             type: Date,
             default: Date.now,
         },
-        dinhdang: {
+        title: {
             type:String,
         }
       }

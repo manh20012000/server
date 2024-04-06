@@ -10,9 +10,17 @@ const messageShamec = new Schema({
     ref: "user",
     require: true,
   },
-  message: {
+  text: {
     type: String,
-    required: true,
+    required: false,
+  },
+  video: {
+    type: String,
+    required: false,
+  },
+  image: {
+    type: [String], 
+    required: false,
   },
   createdAt: {
     type: Date,

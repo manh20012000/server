@@ -27,6 +27,7 @@ import MessageChat from "./route/api_Message.js";
 import routerUser from "./route/user_router.js";
 import { app, server } from "./socket/socket.js"
 import AddFriend from "./route/api_AddFrrind.js";
+import bodyParser  from "body-parser";
 dotenv.config();
 const port = process.env.PORT || 3000;
 app.use(express.static("public"));
@@ -38,7 +39,8 @@ app.use(cookieParser());
 app.get("/", (req, res) => {
   res.send("server is running");
 });
-
+app.use(bodyParser.json()); // for JSON data
+app.use(bodyParser.urlencoded({ extended: true })); 
 // tao co sơ dũ liêu với login
 app.use("/", Taikhoan);
 app.use("/", file);

@@ -55,11 +55,13 @@ VideoPost.post(
     console.log(JSON.stringify(filePath) + "anh duo tra");
     const videoPath =
       `${info.protocol}://${info.host}` + "/uploadVideos/" + filePath;
+    console.log(info.host)
+    const localhostX = info.host.split(':')[0];
     const hlsOutputPath = "public/hls";
     if (videoPath) {
       const formData = new FormData();
       formData.append("Video", videoPath);
-      const pythonServerUrl = `http://192.168.188.136:5000/processVideo`;
+      const pythonServerUrl = `http://${localhostX}:5000/processVideo`;
       const response = await axios.post(pythonServerUrl, formData, {
         headers: {
           "Content-Type": "multipart/form-data",

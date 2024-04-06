@@ -33,7 +33,7 @@ const uploads = multer({ storage: storage, imageFilter: imageFilter });
 // const uploads = multer({ dest:'public/uploads/' });
 
 uploadAnh.post( "/uploadAnh",
-  uploads.array("ArayImages", 12),
+  uploads.array("ArayImages", 15),
   async (req, res) => {
     let info = {
       protocol: req.protocol,
@@ -46,7 +46,6 @@ uploadAnh.post( "/uploadAnh",
       return `${info.protocol}://${info.host}` + "/uploads/" + file.filename;
     });
     console.log(imagePaths);
-   
     const newPost = {
       Trangthai: req.body.trangThai,
       DatePost: req.body.datePost,
