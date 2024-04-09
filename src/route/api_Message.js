@@ -272,7 +272,6 @@ const imageFilter = function (req, file, cb) {
   cb(null, true);
 };
 const uploads = multer({ storage: storageImage, imageFilter: imageFilter });
-// const uploads = multer({ dest:'public/uploads/' });
 
 MessageChat.post(
   "/ChatImage/:_id",
