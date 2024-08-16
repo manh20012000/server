@@ -1,7 +1,7 @@
 import express from "express";
 import { Router, query } from "express";
 import protectRoute from "../middlewere/protectRoute.js";
-import converStationModel from "../model/converStationModel.js";
+import converStation from "../model/converStationModel.js";
 import messageShamec from "../model/messageShamec.js";
 import { getReciverSocketId } from "../socket/socket.js";
 import { io } from "../socket/socket.js";
@@ -19,11 +19,11 @@ MessageChat.post("/send/:_id", protectRoute, async (req, res) => {
     const { _id: receiverId } = req.params;
     const { message } = req.body;
     console.log(message);
-    let converstations = await converStationModel.findOne({
+    let converstations = await converStation.findOne({
       participants: { $all: [senderId, receiverId] },
     });
     if (!converstations) {
-      converstations = await converStationModel.create({
+      converstations = await converStation.create({
         participants: [senderId, receiverId],
       });
     }
@@ -156,11 +156,11 @@ MessageChat.post(
           const { _id: receiverId } = req.params;
           const { video, text, username, userId, avatar, createdAt } = req.body;
 
-          let converstations = await converStationModel.findOne({
+          let converstations = await converStation.findOne({
             participants: { $all: [senderId, receiverId] },
           });
           if (!converstations) {
-            converstations = await converStationModel.create({
+            converstations = await converStation.create({
               participants: [senderId, receiverId],
             });
           }
@@ -305,11 +305,11 @@ MessageChat.post(
         avatar,
         "immgae tr+ddiwpck trar ra "
       );
-      let converstations = await converStationModel.findOne({
+      let converstations = await converStation.findOne({
         participants: { $all: [senderId, receiverId] },
       });
       if (!converstations) {
-        converstations = await converStationModel.create({
+        converstations = await converStation.create({
           participants: [senderId, receiverId],
         });
       }
@@ -385,7 +385,7 @@ MessageChat.get("/getMessage/:id", protectRoute, async (req, res) => {
     const { id: userToChatId } = req.params;
     const senderId = req.user._id;
 
-    const converstations = await converStationModel
+    const converstations = await converStation
       .findOne({
         participants: { $all: [senderId, userToChatId] },
       })
