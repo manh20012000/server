@@ -2,7 +2,6 @@ import express from "express";
 import { Router, query } from "express";
 import protectRoute from "../middlewere/protectRoute.js";
 import converStationModel from "../model/converStationModel.js";
-
 import messageShamec from "../model/messageShamec.js";
 import { getReciverSocketId } from "../socket/socket.js";
 import { io } from "../socket/socket.js";
@@ -20,11 +19,11 @@ MessageChat.post("/send/:_id", protectRoute, async (req, res) => {
     const { _id: receiverId } = req.params;
     const { message } = req.body;
     console.log(message);
-    let converStation = await converStation.findOne({
+    let converstations = await converStationModel.findOne({
       participants: { $all: [senderId, receiverId] },
     });
-    if (!converStation) {
-      converStation = await converStation.create({
+    if (!converstations) {
+      converstations = await converStationModel.create({
         participants: [senderId, receiverId],
       });
     }
@@ -38,13 +37,13 @@ MessageChat.post("/send/:_id", protectRoute, async (req, res) => {
       text: message.text,
     });
     if (newMessage) {
-      converStation.messages.push(newMessage._id);
+      converstations.messages.push(newMessage._id);
     }
     // socket io funcition will go here
-    //   await converStation.save();
+    //   await converstation.save();
 
     //   await newMessage.save();\
-    await Promise.all([converStation.save(), newMessage.save()]);
+    await Promise.all([converstations.save(), newMessage.save()]);
     const receiverSocketId = getReciverSocketId(receiverId);
     const senderSocketId = getReciverSocketId(senderId);
     if (receiverSocketId) {
@@ -157,11 +156,11 @@ MessageChat.post(
           const { _id: receiverId } = req.params;
           const { video, text, username, userId, avatar, createdAt } = req.body;
 
-          let converStation = await converStation.findOne({
+          let converstations = await converStationModel.findOne({
             participants: { $all: [senderId, receiverId] },
           });
-          if (!converStation) {
-            converstation = await converStation.create({
+          if (!converstations) {
+            converstations = await converStationModel.create({
               participants: [senderId, receiverId],
             });
           }
@@ -174,9 +173,9 @@ MessageChat.post(
             )}/ChatVideos/${path2}.m3u8`,
           });
           if (newMessage) {
-            converstation.messages.push(newMessage._id);
+            converstations.messages.push(newMessage._id);
           }
-          await Promise.all([converstation.save(), newMessage.save()]);
+          await Promise.all([converstations.save(), newMessage.save()]);
           const receiverSocketId = getReciverSocketId(receiverId);
           const senderSocketId = getReciverSocketId(senderId);
           if (receiverSocketId) {
@@ -306,11 +305,11 @@ MessageChat.post(
         avatar,
         "immgae tr+ddiwpck trar ra "
       );
-      let converstation = await ConverStation.findOne({
+      let converstations = await converStationModel.findOne({
         participants: { $all: [senderId, receiverId] },
       });
-      if (!converstation) {
-        converstation = await ConverStation.create({
+      if (!converstations) {
+        converstations = await converStationModel.create({
           participants: [senderId, receiverId],
         });
       }
@@ -321,13 +320,13 @@ MessageChat.post(
         image: imagePaths,
       });
       if (newMessage) {
-        converstation.messages.push(newMessage._id);
+        converstations.messages.push(newMessage._id);
       }
       // socket io funcition will go here
       //   await converstation.save();
 
       //   await newMessage.save();\
-      await Promise.all([converstation.save(), newMessage.save()]);
+      await Promise.all([converstations.save(), newMessage.save()]);
       const receiverSocketId = getReciverSocketId(receiverId);
       const senderSocketId = getReciverSocketId(senderId);
       if (receiverSocketId) {
@@ -386,9 +385,10 @@ MessageChat.get("/getMessage/:id", protectRoute, async (req, res) => {
     const { id: userToChatId } = req.params;
     const senderId = req.user._id;
 
-    const converstation = await ConverStation.findOne({
-      participants: { $all: [senderId, userToChatId] },
-    })
+    const converstations = await converStationModel
+      .findOne({
+        participants: { $all: [senderId, userToChatId] },
+      })
       .populate({
         path: "messages",
         options: { sort: { createdAt: -1 } }, // Sắp xếp theo thời gian tạo tăng dần (1) hoặc giảm dần (-1)
@@ -399,11 +399,11 @@ MessageChat.get("/getMessage/:id", protectRoute, async (req, res) => {
       })
       .limit(10);
 
-    if (!converstation) {
+    if (!converstations) {
       return res.status(200).json([]);
     }
 
-    const messages = converstation.messages.map((message) =>
+    const messages = converstations.messages.map((message) =>
       // console.log(message),
       ({
         _id: message._id,
