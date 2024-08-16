@@ -1,7 +1,8 @@
 import express from "express";
 import { Router, query } from "express";
 import protectRoute from "../middlewere/protectRoute.js";
-import ConverStation from "../model/converStationModel.js";
+import converStationModel from "../model/converStationModel.js";
+
 import messageShamec from "../model/messageShamec.js";
 import { getReciverSocketId } from "../socket/socket.js";
 import { io } from "../socket/socket.js";
@@ -19,11 +20,11 @@ MessageChat.post("/send/:_id", protectRoute, async (req, res) => {
     const { _id: receiverId } = req.params;
     const { message } = req.body;
     console.log(message);
-    let converstation = await ConverStation.findOne({
+    let converStation = await converStation.findOne({
       participants: { $all: [senderId, receiverId] },
     });
-    if (!converstation) {
-      converstation = await ConverStation.create({
+    if (!converStation) {
+      converStation = await converStation.create({
         participants: [senderId, receiverId],
       });
     }
@@ -37,13 +38,13 @@ MessageChat.post("/send/:_id", protectRoute, async (req, res) => {
       text: message.text,
     });
     if (newMessage) {
-      converstation.messages.push(newMessage._id);
+      converStation.messages.push(newMessage._id);
     }
     // socket io funcition will go here
-    //   await converstation.save();
+    //   await converStation.save();
 
     //   await newMessage.save();\
-    await Promise.all([converstation.save(), newMessage.save()]);
+    await Promise.all([converStation.save(), newMessage.save()]);
     const receiverSocketId = getReciverSocketId(receiverId);
     const senderSocketId = getReciverSocketId(senderId);
     if (receiverSocketId) {
@@ -156,11 +157,11 @@ MessageChat.post(
           const { _id: receiverId } = req.params;
           const { video, text, username, userId, avatar, createdAt } = req.body;
 
-          let converstation = await ConverStation.findOne({
+          let converStation = await converStation.findOne({
             participants: { $all: [senderId, receiverId] },
           });
-          if (!converstation) {
-            converstation = await ConverStation.create({
+          if (!converStation) {
+            converstation = await converStation.create({
               participants: [senderId, receiverId],
             });
           }
@@ -168,7 +169,9 @@ MessageChat.post(
           const newMessage = new messageShamec({
             senderId,
             receiverId,
-            video: `${req.protocol}://${req.get("host")}/ChatVideos/${path2}.m3u8`,
+            video: `${req.protocol}://${req.get(
+              "host"
+            )}/ChatVideos/${path2}.m3u8`,
           });
           if (newMessage) {
             converstation.messages.push(newMessage._id);
@@ -222,7 +225,7 @@ MessageChat.post(
               Hoten: username,
             },
           });
-         
+
           // console.log("hahah item", req.params._id);
           const originalVideoPath = path.join("public/ChatVideos", filePath);
           fs.unlink(originalVideoPath, (err) => {
