@@ -3,8 +3,11 @@ import user from "../model/user.js";
 import dotenv from "dotenv";
 const authenTokenMiddle = async (req, res, next) => {
   try {
-    const authorizationHeader = req.cookies.jwt;
-    console.log(authorizationHeader);
+    // const authorizationHeader = req.cookies.jwt; // gưi theo như này vẫn được nha mà bên client ko cần truyền theo headers như bên dưới
+    const authHeader = req.headers["Authorization"]; // tacks  lấy key object ra để thực hiện cho việc xác thực
+    const authorizationHeader = authHeader.split(" ")[1];
+
+    console.log(authorizationHeader, "kết quả sau khi ddung vơi middwave");
     if (authorizationHeader) {
     }
     const token = authorizationHeader;

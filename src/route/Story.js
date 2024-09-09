@@ -49,7 +49,6 @@ StoryVideo.post(
     const filePath = req.file.filename;
     let info = {
       protocol: req.protocol,
-
       host: req.get("host"),
     };
 
@@ -57,17 +56,17 @@ StoryVideo.post(
       `${info.protocol}://${info.host}` + "/Story/" + filePath;
     console.log(videoPath, req.body.resizeMode);
     const hlsOutputPath = "public/hls";
-    if (videoPath) {
-      const formData = new FormData();
-      formData.append("Video", videoPath);
-      const pythonServerUrl = "http://192.168.188.136:5000/processVideo";
-      const response = await axios.post(pythonServerUrl, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      console.log("Result from Python server:", response.data.hasHuman);
-    }
+    // if (videoPath) {
+    //   const formData = new FormData();
+    //   formData.append("Video", videoPath);
+    //   const pythonServerUrl = "http://192.168.188.136:5000/processVideo";
+    //   const response = await axios.post(pythonServerUrl, formData, {
+    //     headers: {
+    //       "Content-Type": "multipart/form-data",
+    //     },
+    //   });
+    //   console.log("Result from Python server:", response.data.hasHuman);
+    // }
     const path2 = uuid().substring(0, 8);
     ffmpeg(videoPath)
       .inputFormat("mp4")

@@ -8,30 +8,37 @@ import multer from "multer";
 import uuid from "react-uuid";
 import appRoot from "app-root-path";
 import bcrypt from "bcrypt";
-import gennerateTokenAndsetCookie from "../ultils/generateToke.js";
+import {
+  gennerateTokenAndsetCookie,
+  genneratefreshTokenAndsetCookie,
+} from "../ultils/generateToke.js";
 import protectRoute from "../middlewere/protectRoute.js";
 let Taikhoan = Router();
 const saltRounds = 10;
 //khai báo  giúp express hiểu khai báo đươcngf link trên web
 Taikhoan.post("/login", async (req, res) => {
   try {
-    console.log('vào login')
-    
+    console.log("vào login");
+
     const User = await user.findOne({ Taikhoan: req.body.taikhoan });
     if (User) {
-   
+      console.log(User.Hoten, "usrtname");
       const match = await bcrypt.compare(req.body.matkhau, User.Matkhau);
       let token = "";
+      let freshtoken = "";
       if (match) {
         token = gennerateTokenAndsetCookie(User._id, res);
-
+        freshtoken = genneratefreshTokenAndsetCookie(User._id, res);
+        console.log("hahahahah", match);
         return res.status(200).json({
           data: {
             _id: User._id,
             Hoten: User.Hoten,
             Avatar: User.Avatar,
             email: User.Email,
+            expoPushToken: User.fcmToken,
             accessToken: token,
+            refreshToken: freshtoken,
           },
           msg: "OK",
           status: 200,
@@ -63,25 +70,29 @@ Taikhoan.post("/sigin", async (req, res) => {
     console.log("va0 ko");
     return res.status(404).json({ msg: "tài khoản đã tồn tại", status: 404 });
   }
+
   const Register = new user({
     Email: email,
     Phone: phone,
     Hoten: hoten,
     Birth: birth,
     Gender: gender ?? " ",
+    friendRequests: [],
     Taikhoan: email,
     Avatar: avatar,
     Matkhau: password,
+    fcmToken: [],
   });
   try {
+    console.log("thêm mới ", Register._id);
     let token = " ";
     if (Register) {
       token = gennerateTokenAndsetCookie(Register._id, res);
     }
-
+    console.log("thanh công");
     // const data = await new user(Register).save();
     await Register.save();
-
+    console.log("thanh côn2222g");
     return res.status(200).json({
       data: {
         email: Register.email,
@@ -93,6 +104,7 @@ Taikhoan.post("/sigin", async (req, res) => {
       status: 200,
     });
   } catch (error) {
+    console.log("loi", error);
     return res.status(500).json("loi");
   }
 });
@@ -137,7 +149,7 @@ Taikhoan.post("/UpadateAvatar", upload.single("Avatar"), async (req, res) => {
       { Avatar: avatarUrl },
       { new: true }
     );
-  
+
     return res.status(200).json({ status: 200, data: User, mess: "sussesful" });
   } catch (error) {
     return res
@@ -157,7 +169,11 @@ Taikhoan.post("/SearchMention", async (req, res) => {
     // Sử dụng biểu thức chính quy để tạo mẫu tìm kiếm gần đúng
     const regexPattern = new RegExp(searchTerm, "i"); // 'i' để không phân biệt hoa thường
     // Sử dụng MongoDB để tìm kiếm dữ liệu gần đúng
-    const searchResults = await user.find({ Hoten: { $regex: regexPattern } });
+    const searchResults = await user
+      .find({ Hoten: { $regex: regexPattern } })
+      .select(
+        "-Matkhau -fcmToken -userFriends -friendRequests -userFollowing -idVideoLike -Email -Phone -Gender"
+      );
     res.status(200).json({ data: searchResults, msg: "OK", status: 200 });
   } catch (error) {
     res.status(500).json({ msg: "Internal Server Error", error: error });
@@ -166,7 +182,6 @@ Taikhoan.post("/SearchMention", async (req, res) => {
 Taikhoan.post("/userInfor", protectRoute, async (req, res) => {
   try {
     const loggerInUserId = req.user._id;
-    console.log(loggerInUserId,'offf');
     // Sử dụng MongoDB để tìm kiếm dữ liệu gần đúng
     const searchResults = await user.findById({ _id: loggerInUserId });
 
@@ -175,4 +190,89 @@ Taikhoan.post("/userInfor", protectRoute, async (req, res) => {
     res.status(500).json({ msg: "Internal Server Error", error: error });
   }
 });
+Taikhoan.post("user/refreshToken", async (req, res) => {
+  const { refreshToken } = req.body;
+  const freshtoken = refreshToken;
+  if (freshtoken)
+    return res.status(401).json({ err: "No refresh token provided" });
+  const decoded = jwt.verify(freshtoken, process.env.JWT_SECRET);
+  if (!decoded) {
+    return res.status(404).json({ err: "authorized- invalid Token" });
+  }
+  const users = await user.findById(decoded.userId).select("-Matkhau");
+  if (!users) {
+    return res.status(404).json({ err: "user Notfound" });
+  }
+  let token = gennerateTokenAndsetCookie(User._id, res);
+  return res.status(200).json({
+    data: {
+      _id: User._id,
+      Hoten: User.Hoten,
+      Avatar: User.Avatar,
+      email: User.Email,
+      accessToken: token,
+      refreshToken: refreshToken,
+    },
+    msg: "OK",
+    status: 200,
+  });
+});
+Taikhoan.put("/user/upadateFCMtoken/:id", async (req, res) => {
+  const User_id = req.params.id;
+  const fcmtoken = req.body.expoPushToken;
+  console.log(fcmtoken, "gias tri fcmtoken", User_id);
+  try {
+    const User = await user.findByIdAndUpdate(
+      User_id,
+      { fcmToken: fcmtoken },
+      { new: true, select: "-password" }
+    );
+    if (!user) return res.status(404).json({ msg: "User not found" });
+    console.log("User " + User._id + " updated fcmToken successfully");
+    return res.status(200).json({ data: User });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ msg: "Internal Server Error" });
+  }
+});
+// Taikhoan.get("/user/checkAcceptFriend/:id", async (req, res) => {
+//   const User_id = req.params.id;
+//   try {
+//     const user = await user.findById(User_id).select("AcceptFriend");
+//     if (!user) {
+//       return res.status(404).json({ msg: "User not found" });
+//     }
+//     const acceptFriendStatus = user.AcceptFriend.map((friend) => ({
+//       friendId: friend._id,
+//       statusAfriend: friend.statusAfriend,
+//     }));
+//     return res.status(200).json({ data: acceptFriendStatus });
+//   } catch (e) {
+//     console.log(e);
+//     return res.status(500).json({ msg: "Internal Server Error" });
+//   }
+// });
+// Taikhoan.put("/user/upadateFCMtoken/:id", async (req, res) => {
+//   const User_id = req.params.id;
+//   const fcmtoken = req.body.expoPushToken;
+//   console.log(fcmtoken, "gias tri fcmtoken", User_id);
+//   try {
+//     await user.findByIdAndUpdate(
+//       User_id,
+//       { fcmToken: fcmtoken },
+//       { new: true, select: "-password" },
+//       function (err, docs) {
+//         console.log(docs);
+//         if (err) {
+//           return res.status(400).json({ msg: "server not found user" });
+//         } else {
+//           return res.status(200).json({ data: docs });
+//         }
+//       }
+//     );
+//   } catch (e) {
+//     console.log(e);
+//     return res.status(500).json({ msg: "Internal Server Error" });
+//   }
+// });
 export default Taikhoan;

@@ -1,11 +1,19 @@
+// bản chất là tạo ra 1 dạng dictionary với kiéne trức là với khi khới tạo 1 dang
+//clinet = {} là dạng mà các key là iduser không được trùng nhau
+// và sau đó thực thi kiểm tra nếu như có rồi thì mình truyền clients[userID] thì lấy được mảng [idsocket ]để có thể lấy được danh sách value
+// để lấy được toàn bộ id hoặc toàn bộ value thì dùng Object.keys(clients); hoặc Object.value(clients);
+// và dạng của nó sẻ clients;{ '66db170ed33fd38e5c9ad154': ['IseSQGRIGEiT8NLNAAAB'] }
+//// nó sẻ clients;{ 'id user:[idsocker]}
+
 export let pushSocketIDToArray = (clients, userID, socketID) => {
+  console.log(clients[userID],'lất được giá trị khi có id truyền vào ')
   if (clients[userID]) {
-    // console.log('ciemt',clients, userID, socketID)
+    console.log(clients[userID],"ciemt", clients, userID, socketID);
     clients[userID].push(socketID);
   } else {
-    // console.log('ciemt222',clients, userID, socketID)
+    console.log("ciemt222", clients, userID, socketID);
     clients[userID] = [socketID];
-    // console.log(clients,clients[userID])
+    console.log(clients, clients[userID],'hhhhaaaa');
   }
   return clients;
 };

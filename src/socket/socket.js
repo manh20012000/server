@@ -35,7 +35,6 @@ io.use((socket, next) => {
   return next();
 });
 
-
 // userId: [socketId,...]
 io.on("connection", (socket) => {
   console.log(`⚡: ${socket.id} user just connected`);
@@ -63,6 +62,7 @@ io.on("connection", (socket) => {
   //   }
   // });
   let listUserIdOnline = Object.keys(clients);
+  console.log(listUserIdOnline,'hhhhh')
   socket.emit("UserOnline", listUserIdOnline);
   // Gửi id người dùng vừa online có tất cả user khác
   socket.broadcast.emit("server-send-when-has-user-online", listUserIdOnline);
