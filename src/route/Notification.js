@@ -27,7 +27,7 @@ SendNotification.post("/SenNotification", async (req, res) => {
        ' Authorization': "Bearer ya29.ElqKBGN2Ri_Uz...HnS_uNreA", // Thay thế bằng khóa máy chủ FCM của bạn
       },
     });
-    console.log("FCM Response:", response.data);
+    // console.log("FCM Response:", response.data);
     res.status(200).send("Notification sent successfully.");
   } catch (error) {
     console.error("Error sending message:", error);

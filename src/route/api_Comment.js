@@ -21,7 +21,7 @@ binhluan.post("/selectDataCmt", async (req, res) => {
       })
       .populate("User");
 
-    console.log(myComments, 'hahaobdh');
+    // console.log(myComments, 'hahaobdh');
 
     return res
       .status(200)
@@ -69,7 +69,7 @@ binhluan.post(
       const Noidung = req.body.Noidung;
       const parentIdString = req.body.parentId; // Lấy chuỗi từ FormData
       const IdComment = JSON.parse(parentIdString);
-      console.log(idBaiPost, IdComment, Noidung, " properties");
+      // console.log(idBaiPost, IdComment, Noidung, " properties");
       let info = {
         protocol: req.protocol,
         host: req.get("host"),
@@ -81,9 +81,9 @@ binhluan.post(
       if (baiViet) {
         baiViet.SoluongCmt = soluongcmt;
         await baiViet.save();
-        console.log("nhày vào đay đàu tiên ", IdComment, typeof IdComment);
+        // console.log("nhày vào đay đàu tiên ", IdComment, typeof IdComment);
         if (IdComment) {
-          console.log("nhày vào đay đàu tiên11 ", IdComment, typeof IdComment);
+          // console.log("nhày vào đay đàu tiên11 ", IdComment, typeof IdComment);
           let DadyComment = await Comment.findById(IdComment);
           let childComment = await new Comment({
             _id: req.body._id,

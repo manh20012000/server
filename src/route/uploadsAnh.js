@@ -32,13 +32,15 @@ const imageFilter = function (req, file, cb) {
 const uploads = multer({ storage: storage, imageFilter: imageFilter });
 // const uploads = multer({ dest:'public/uploads/' });
 
-uploadAnh.post( "/uploadAnh",
+uploadAnh.post(
+  "/uploadAnh",
   uploads.array("ArayImages", 15),
   async (req, res) => {
     let info = {
       protocol: req.protocol,
       host: req.get("host"),
     };
+
     console.log(JSON.stringify(req.files) + "anh duo tra");
     const imagePaths = await req.files.map((file) => {
       console.log("trả về Image->" + file.filename);
@@ -56,8 +58,8 @@ uploadAnh.post( "/uploadAnh",
       Like: [
         {
           User: req.body.idLogin,
-          Trangthai: false
-        }
+          Trangthai: false,
+        },
       ],
       Image: imagePaths,
     };
@@ -73,5 +75,5 @@ uploadAnh.post( "/uploadAnh",
   }
 );
 // upaload ảnh
- 
+
 export default uploadAnh;

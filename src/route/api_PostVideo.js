@@ -11,16 +11,15 @@ import fs from "fs";
 import ffmpeg from "fluent-ffmpeg";
 import HLS from "hls-server";
 const VideoPost = Router();
-ffmpeg.setFfmpegPath(
-  "C:\\Users\\levan\\ffmpeg-2024-01-24-git-00b288da73-essentials_build\\ffmpeg-2024-01-24-git-00b288da73-essentials_build\\bin\\ffmpeg.exe"
-);
+import protectRoute from "../middlewere/protectRoute.js";
+ffmpeg.setFfmpegPath("C:\\Users\\levan\\ffmpeg\\bin\\ffmpeg.exe");
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     console.log(file, req.body, "ahhahah");
     cb(null, "public/uploadVideos/");
   },
   filename: function (req, file, cb) {
-    console.log(file, req.body, "ahhahah2222");
+    // console.log(file, req.body, "ahhahah2222");
     cb(
       null,
       file.fieldname +
@@ -37,7 +36,7 @@ const uploadsVideo = multer({
   },
   fileFilter(req, file, cb) {
     // upload only mp4 and mkv format
-    console.log(file, "hahahaha", req.body);
+    // console.log(file, "hahahaha", req.body);
     if (!file.originalname.match(/\.(mp4|MPEG-4|mkv)$/)) {
       return cb(new Error("Please upload a video"));
     }
@@ -47,41 +46,35 @@ const uploadsVideo = multer({
 
 VideoPost.post(
   "/uploadVideo",
+  protectRoute,
   uploadsVideo.single("Video"),
   async (req, res) => {
-    console.log(req.files, "gái trị", req.body);
-    return res.status(200);
-    //   const filePath = req.file.filename ?? " ";
-    //   let info = {
-    //     protocol: req.protocol,
+    // console.log("gái trị", req.file);
 
-    //     host: req.get("host"),
-    //   };
-    //   console.log(JSON.stringify(filePath) + "anh duo tra");
-    //   const videoPath =
-    //     `${info.protocol}://${info.host}` + "/uploadVideos/" + filePath;
-    //   console.log(info.host);
-    //   const localhostX = info.host.split(":")[0];
+    const filePath = req.file ?? " ";
+    console.log("req", req.file);
+    let info = {
+      protocol: req.protocol,
+
+      host: req.get("host"),
+    };
+    const videoPath =
+      `${info.protocol}://${info.host}` + "/uploadVideos/" + filePath;
+
+    const localhostX = info.host.split(":")[0];
+    return res.status(200).json(filePath);
+    // try {
     //   const hlsOutputPath = "public/hls";
-    //   // if (videoPath) {
-    //   //   const formData = new FormData();
-    //   //   formData.append("Video", videoPath);
-    //   //   const pythonServerUrl = `http://${localhostX}:5000/processVideo`;
-    //   //   const response = await axios.post(pythonServerUrl, formData, {
-    //   //     headers: {
-    //   //       "Content-Type": "multipart/form-data",
-    //   //     },
-    //   //   });
-    //   //   console.log("Result from Python server:", response.data.hasHuman);
-    //   // }
     //   const path2 = uuid().substring(0, 8);
-    //   ffmpeg(videoPath)
+    //   const fullVideoPath = await path.join("public/uploadVideos", filePath);
+    //   console.log(fullVideoPath);
+    //   ffmpeg(fullVideoPath)
     //     .inputFormat("mp4")
     //     .outputFormat("hls")
     //     .outputOptions([
     //       "-start_number 0", // Số bắt đầu cho tên file segment
     //       "-hls_time 6", // Độ dài của mỗi phần video (tính bằng giây)
-    //       "-hls_list_size 0", // Số lượng file segment trong playlist. 0 để không giới hạn.
+    //       "-hls_list_size 4", // Số lượng file segment trong playlist. 0 để không giới hạn.
     //       "-vf scale=-2:1080", // Scale video đến độ phân giải 1080p, giữ tỷ lệ khung hình.
     //       "-hls_flags single_file", // Tạo một tệp m3u8 và không xoay vòng tên file segment
     //     ])
@@ -105,29 +98,36 @@ VideoPost.post(
     //           },
     //         ],
     //       };
-    //       try {
-    //         const data = await new Video(newPostVideo).save();
-    //         const originalVideoPath = path.join("public/uploadVideos", filePath);
-    //         fs.unlink(originalVideoPath, (err) => {
-    //           if (err) {
-    //             console.error("Lỗi khi xóa video gốc:", err);
-    //           } else {
-    //             console.log("Đã xóa video gốc thành công");
-    //           }
-    //         });
-    //         return res
-    //           .status(200)
-    //           .json({ msg: "OK", status: 200, message: "susseful" });
-    //       } catch (err) {
-    //         console.log(err);
-    //         return res.status(501).json(err);
-    //       }
+
+    //       const data = await new Video(newPostVideo).save();
+    //       const originalVideoPath = path.join("public/uploadVideos", filePath);
+    //       fs.unlink(originalVideoPath, (err) => {
+    //         if (err) {
+    //           console.error("Lỗi khi xóa video gốc:", err);
+    //         } else {
+    //           console.log("Đã xóa video gốc thành công");
+    //         }
+    //       });
+    //       return res
+    //         .status(200)
+    //         .json({ msg: "OK", status: 200, message: "susseful" });
     //     })
-    //     .on("error", (err) => {
+    //     .on("error", (err, stdout, stderr) => {
+    //       // console.log("stdout:\n" + stdout);
+    //       // console.log("stderr:\n" + stderr);
     //       console.error("Lỗi trong quá trình chuyển đổi sang HLS:", err);
-    //       return res.status(500).json({ error: "Chuyển đổi sang HLS thất bại" });
+    //       return res
+    //         .status(500)
+    //         .json({ error: "Chuyển đổi sang HLS thất bại" + err });
     //     })
     //     .run();
+    // } catch (err) {
+    //   console.log(err, "loi chuyen doi");
+    //   return res
+    //     .status(501)
+    //     .json({ error: "Chuyển đổi sang HLS thất bại" + err });
+    //   //   );
+    // }
   }
 );
 export default VideoPost;
@@ -190,20 +190,17 @@ VideoPost.post(
       `${info.protocol}://${info.host}` + "/uploadVideos/" + filePath;
    
     const hlsOutputPath = "public/hls";
-    if (videoPath) {
-      const formData = new FormData();
-       formData.append('Video', videoPath);
-      const pythonServerUrl =`http://192.168.188.136:5000/processVideo`;
-      const response = await axios.post(pythonServerUrl, formData, 
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        
-      })
-      console.log('Result from Python server:', response.data.hasHuman);
-    
-    }
+    // if (videoPath) {
+      //   const formData = new FormData();
+      //   formData.append("Video", videoPath);
+      //   const pythonServerUrl = `http://${localhostX}:5000/processVideo`;
+      //   const response = await axios.post(pythonServerUrl, formData, {
+      //     headers: {
+      //       "Content-Type": "multipart/form-data",
+      //     },
+      //   });
+      //   console.log("Result from Python server:", response.data.hasHuman);
+      // }
     const newPostVideo = {
       DatePost: req.body.datePost,
       Pemission: req.body.privacy,

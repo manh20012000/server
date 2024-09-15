@@ -1,8 +1,8 @@
 import { Router } from "express";
 import protectRoute from "../middlewere/protectRoute.js";
 import user from "../model/user.js";
-import fetch from "node-fetch"; // Đảm bảo bạn đã cài đặt node-fetch
-
+import fetch from "node-fetch"; // Ensure you have installed node-fetch
+import handlerFunction from "./api_functionNotification.js";
 const AddFriend = Router();
 
 AddFriend.post("/Addfriend", protectRoute, async (req, res) => {
@@ -15,38 +15,17 @@ AddFriend.post("/Addfriend", protectRoute, async (req, res) => {
     if (!friendUser) {
       return res.status(404).json({ message: "User not found" });
     }
-
-    // Kiểm tra nếu người dùng có Expo Push Token
-    if (friendUser.fcmToken && friendUser.fcmToken.length > 0) {
-      const notifications = friendUser.fcmToken.map((itemtoken) => {
-        const message = {
-          to: itemtoken,
-          sound: "default",
-          title: "Lời mời kết bạn",
-          body: `${
-            friendUser.Hoten || "Người dùng"
-          } gửi cho bạn một lời mời kết bạn!`,
-          data: {
-            type: "friend_request",
-            from: senderId,
-            someData: "goes here",
-          },
-        };
-
-        // Gửi thông báo qua API của Expo
-        return fetch("https://exp.host/--/api/v2/push/send", {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(message),
-        });
-      });
-
-      // Chạy tất cả các thông báo đồng thời
-      await Promise.all(notifications);
-    }
+    // thực hiện cho việc gữi thông báo 
+    handlerFunction(
+      friendUser.fcmToken,
+      "Lời mời kết bạn",
+      `${friendUser.Hoten || "Người dùng"} gửi cho bạn một lời mời kết bạn!`,
+      {
+        type: "friend_request",
+        from: senderId,
+        someData: "goes here",
+      }
+    );
 
     // Kiểm tra xem lời mời kết bạn đã tồn tại chưa
     /*Cụ thể, nó duyệt qua từng phần tử (request) trong mảng friendRequests,
@@ -79,3 +58,34 @@ AddFriend.post("/Addfriend", protectRoute, async (req, res) => {
 });
 
 export default AddFriend;
+// Kiểm tra nếu người dùng có Expo Push Token
+// if (friendUser.fcmToken && friendUser.fcmToken.length > 0) {
+//   const notifications = friendUser.fcmToken.map((itemtoken) => {
+//     const message = {
+//       to: itemtoken,
+//       sound: "default",
+//       title: "Lời mời kết bạn",
+//       body: `${
+//         friendUser.Hoten || "Người dùng"
+//       } gửi cho bạn một lời mời kết bạn!`,
+//       data: {
+//         type: "friend_request",
+//         from: senderId,
+//         someData: "goes here",
+//       },
+//     };
+
+//     // Gửi thông báo qua API của Expo
+//     return fetch("https://exp.host/--/api/v2/push/send", {
+//       method: "POST",
+//       headers: {
+//         Accept: "application/json",
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify(message),
+//     });
+//   });
+
+//   // Chạy tất cả các thông báo đồng thời
+//   await Promise.all(notifications);
+// }

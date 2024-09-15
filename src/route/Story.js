@@ -12,9 +12,7 @@ import fs from "fs";
 import ffmpeg from "fluent-ffmpeg";
 import HLS from "hls-server";
 const StoryVideo = Router();
-ffmpeg.setFfmpegPath(
-  "C:\\Users\\levan\\ffmpeg-2024-01-24-git-00b288da73-essentials_build\\ffmpeg-2024-01-24-git-00b288da73-essentials_build\\bin\\ffmpeg.exe"
-);
+ffmpeg.setFfmpegPath("C:\\Users\\levan\\ffmpeg\\bin\\ffmpeg.exe");
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "public/Story/");
@@ -42,6 +40,7 @@ const uploadsVideo = multer({
     cb(undefined, true);
   },
 });
+
 StoryVideo.post(
   "/uploadStory",
   uploadsVideo.single("Story"),
@@ -52,9 +51,8 @@ StoryVideo.post(
       host: req.get("host"),
     };
 
-    const videoPath =
-      `${info.protocol}://${info.host}` + "/Story/" + filePath;
-    console.log(videoPath, req.body.resizeMode);
+    const videoPath = `${info.protocol}://${info.host}` + "/Story/" + filePath;
+    // console.log(videoPath, req.body.resizeMode);
     const hlsOutputPath = "public/hls";
     // if (videoPath) {
     //   const formData = new FormData();
@@ -67,8 +65,10 @@ StoryVideo.post(
     //   });
     //   console.log("Result from Python server:", response.data.hasHuman);
     // }
+    const fullVideoPath = await path.join("public/Story", filePath);
+    console.log("Full video path:", fullVideoPath);
     const path2 = uuid().substring(0, 8);
-    ffmpeg(videoPath)
+    await ffmpeg(fullVideoPath)
       .inputFormat("mp4")
       .outputFormat("hls")
       .outputOptions(["-start_number 0", "-hls_time 2"])
@@ -85,7 +85,9 @@ StoryVideo.post(
           height: req.body.Height,
           width: req.body.widthV,
           inputText: req.body.textinLocation,
-          VideoOrImage: `${req.protocol}://${req.get("host")}/hls/${path2}.m3u8`,
+          VideoOrImage: `${req.protocol}://${req.get(
+            "host"
+          )}/hls/${path2}.m3u8`,
           resizeMode: req.body.resizeMode,
           Like: [
             {

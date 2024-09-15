@@ -62,7 +62,7 @@ api_CommentVideo.post("/api_CommentVideoPost", async (req, res) => {
     if (video) {
       video.SoluongCmt = soluongcmt;
       await video.save();
-      console.log("nhày vào đay đàu tiên ", IdComment, typeof IdComment);
+      // console.log("nhày vào đay đàu tiên ", IdComment, typeof IdComment);
       if (IdComment) {
     
         let DadyComment = await CommentVideo.findById(IdComment);
@@ -76,7 +76,7 @@ api_CommentVideo.post("/api_CommentVideoPost", async (req, res) => {
           soluonglike: 0,
         }).save();
         DadyComment.SoluongCommentChildrent += 1;
-        console.log(DadyComment.SoluongCommentChildrent + "hahaha");
+        // console.log(DadyComment.SoluongCommentChildrent + "hahaha");
         await DadyComment.save();
      
         let myComments = await CommentVideo.find({ idVideo: idVideo }).populate(
@@ -127,7 +127,7 @@ api_CommentVideo.delete(
       });
       const video = await Video.findById(idVideo);
       video.SoluongCmt -= QualityComment;
-      console.log("so lcmt" + video.SoluongCmt);
+      // console.log("so lcmt" + video.SoluongCmt);
       await video.save();
       await CommentVideo.findByIdAndDelete(commentId);
       const remainingComments = await CommentVideo.find({
@@ -159,10 +159,10 @@ api_CommentVideo.delete(
       await existingComment.save();
       const video = await Video.findById(idVideo);
       video.SoluongCmt -= 1;
-      console.log("so lcmt" + video.SoluongCmt);
+      // console.log("so lcmt" + video.SoluongCmt);
       await video.save();
       await CommentVideoChildrent.findByIdAndDelete(commentIdChildrent);
-      console.log(commentId, idVideo, commentIdChildrent);
+      // console.log(commentId, idVideo, commentIdChildrent);
       const remainingComments = await CommentVideo.find({
         idVideo: idVideo,
       }).populate({ path: "User" });

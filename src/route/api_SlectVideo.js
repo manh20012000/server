@@ -7,7 +7,7 @@ import Story from "../model/Story.js";
 const VideoSelect = Router();
 VideoSelect.post("/selectVideo", async (req, res) => {
   try {
-    console.log(req.body.limiteds,req.body.skip)
+    // console.log(req.body.limiteds,req.body.skip)
     // Sử dụng limit trong truy vấn để giới hạn số lượng video trả về
     const videos = await Video.find().limit(req.body.limiteds).skip( req.body.skip).sort({ createdAt: -1 }).populate({ path: "User" });
     const datavideo = videos.reverse();
@@ -18,7 +18,7 @@ VideoSelect.post("/selectVideo", async (req, res) => {
 });
 VideoSelect.post("/selectedVideoId", async (req, res) => {
   try {
-    console.log('hahaha')
+    // console.log('hahaha')
     const videos = await Video.find({User:req.body.id}).limit(req.body.limiteds).skip( req.body.skip).sort({ createdAt: -1 }).populate({ path: "User" });
     return res.status(200).json({ data: videos, status: 200, message: "OK." });
   } catch (err) {

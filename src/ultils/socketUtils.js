@@ -6,14 +6,14 @@
 //// nó sẻ clients;{ 'id user:[idsocker]}
 
 export let pushSocketIDToArray = (clients, userID, socketID) => {
-  console.log(clients[userID],'lất được giá trị khi có id truyền vào ')
+  // console.log(clients[userID],'lất được giá trị khi có id truyền vào ')
   if (clients[userID]) {
-    console.log(clients[userID],"ciemt", clients, userID, socketID);
+    // console.log(clients[userID],"ciemt", clients, userID, socketID);
     clients[userID].push(socketID);
   } else {
-    console.log("ciemt222", clients, userID, socketID);
+    // console.log("ciemt222", clients, userID, socketID);
     clients[userID] = [socketID];
-    console.log(clients, clients[userID],'hhhhaaaa');
+    // console.log(clients, clients[userID],'hhhhaaaa');
   }
   return clients;
 };

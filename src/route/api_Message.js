@@ -18,7 +18,7 @@ MessageChat.post("/send/:_id", protectRoute, async (req, res) => {
     const senderId = req.user._id;
     const { _id: receiverId } = req.params;
     const { message } = req.body;
-    console.log(message);
+    // console.log(message);
     let converStation = await converStationModel.findOne({
       participants: { $all: [senderId, receiverId] },
     });
@@ -64,11 +64,11 @@ MessageChat.post("/send/:_id", protectRoute, async (req, res) => {
             Hoten: message.user.name,
           },
         };
-        console.log("scpketIs", nesMess);
+        // console.log("scpketIs", nesMess);
         io.to(socketId).emit("newMessage", nesMess);
       });
     }
-    console.log(senderSocketId, "sockey ngyowi giư");
+    // console.log(senderSocketId, "sockey ngyowi giư");
     io.to(senderSocketId).emit("newMessage", {
       messages: {
         _id: newMessage._id,
@@ -93,9 +93,7 @@ MessageChat.post("/send/:_id", protectRoute, async (req, res) => {
 });
 
 // thuc hien gui video leen tu react native va nha tu form data
-ffmpeg.setFfmpegPath(
-  "C:\\Users\\levan\\ffmpeg-2024-01-24-git-00b288da73-essentials_build\\ffmpeg-2024-01-24-git-00b288da73-essentials_build\\bin\\ffmpeg.exe"
-);
+ffmpeg.setFfmpegPath("C:\\Users\\levan\\ffmpeg\\bin\\ffmpeg.exe");
 const strongeVideo = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "public/ChatVideos/");
@@ -133,7 +131,7 @@ MessageChat.post(
       protocol: req.protocol,
       host: req.get("host"),
     };
-    console.log(JSON.stringify(filePath) + "anh duo tra");
+    // console.log(JSON.stringify(filePath) + "anh duo tra");
     const videoPath =
       `${info.protocol}://${info.host}` + "/ChatVideos/" + filePath;
     const hlsOutputPath = "public/ChatVideos";
@@ -200,11 +198,11 @@ MessageChat.post(
                   Hoten: username,
                 },
               };
-              console.log("scpketIs", nesMess);
+              // console.log("scpketIs", nesMess);
               io.to(socketId).emit("newMessage", nesMess);
             });
           }
-          console.log(senderSocketId, "sockey ngyowi giư");
+          // console.log(senderSocketId, "sockey ngyowi giư");
           io.to(senderSocketId).emit("newMessage", {
             messages: {
               _id: newMessage._id,
@@ -349,7 +347,7 @@ MessageChat.post(
               Hoten: username,
             },
           };
-          console.log("scpketIs", nesMess);
+          // console.log("scpketIs", nesMess);
           io.to(socketId).emit("newMessage", nesMess);
         });
       }
@@ -383,6 +381,7 @@ MessageChat.post(
 MessageChat.get("/getMessage/:id", protectRoute, async (req, res) => {
   try {
     const { id: userToChatId } = req.params;
+    console.log(userToChatId);
     const senderId = req.user._id;
 
     const converstation = await converStationModel
@@ -400,7 +399,7 @@ MessageChat.get("/getMessage/:id", protectRoute, async (req, res) => {
       .limit(10);
 
     if (!converstation) {
-      return res.status(200).json([]);
+      return res.status(200).json({ data: [] });
     }
 
     const messages = converstation.messages.map((message) =>

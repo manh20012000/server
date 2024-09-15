@@ -72,7 +72,7 @@ routerUser.get("/UserSelelectchat", protectRoute, async (req, res) => {
     const filterUser = await user
       .find({ _id: { $ne: loggerInUserId } })
       .select("_id Email Hoten Avatar ");
-    console.log("ffileter");
+    // console.log("ffileter");
     res.status(200).json(filterUser);
   } catch (error) {
     res.status(500).json({ err: " inernal server error" });

@@ -10,7 +10,7 @@ LikeVideo.post('/LikeVideo', async (req, res) => {
         const idUser = req.body.idUser; // Lấy id của người dùng
         const idVideo =  req.body.IdVideo; // Lấy id của bài viết
     const numberLike = req.body.Soluong; // Lấy số lượng tym
-    console.log(numberLike)
+    // console.log(numberLike)
         const isLiked =req.body.Trangthai; // Lấy trạng thái like
         const pVideo = await Video.findById(idVideo);
         if (!pVideo) {

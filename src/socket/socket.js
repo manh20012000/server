@@ -8,6 +8,11 @@ import {
   removeSocketIDFromArray,
 } from "../ultils/socketUtils.js";
 import user from "../model/user.js";
+// import inspector from "@inspector-apm/inspector-nodej";
+
+// const inspectors = inspector({
+//   ingestionKey: "a75765de2257c3905e55ade29131e6ed46a65582",
+// });
 const app = express();
 const server = http.createServer(app);
 
@@ -18,10 +23,9 @@ const io = new Server(server, {
 });
 let clients = {};
 export const getReciverSocketId = (receiverId) => {
- 
   return clients[receiverId];
 };
- const userSocketMap = {}; // {userId:socketId}
+const userSocketMap = {}; // {userId:socketId}
 
 io.use((socket, next) => {
   const token = socket.handshake.auth.token;
@@ -43,7 +47,7 @@ io.on("connection", (socket) => {
     clients = removeSocketIDFromArray(clients, socket?.userId, socket);
     let listUserIdOnline = Object.keys(clients);
     socket.broadcast.emit("server-send-when-has-user-online", listUserIdOnline);
-    console.log('ngat ket noi')
+    console.log("ngat ket noi");
   });
 
   if (!socket?.userId) {
@@ -62,7 +66,7 @@ io.on("connection", (socket) => {
   //   }
   // });
   let listUserIdOnline = Object.keys(clients);
-  console.log(listUserIdOnline,'hhhhh')
+  // console.log(listUserIdOnline,'hhhhh')
   socket.emit("UserOnline", listUserIdOnline);
   // Gửi id người dùng vừa online có tất cả user khác
   socket.broadcast.emit("server-send-when-has-user-online", listUserIdOnline);
