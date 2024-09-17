@@ -10,6 +10,8 @@ import user from "../model/user.js";
 import baiviet from "../model/baiviet.js";
 import Comment from "../model/Comment.js";
 import Like from "../model/Likecmt.js";
+import handlerFunction from "./api_functionNotification.js";
+import protectRoute from "../middlewere/protectRoute.js";
 const binhluan = Router();
 
 binhluan.post("/selectDataCmt", async (req, res) => {
@@ -17,7 +19,7 @@ binhluan.post("/selectDataCmt", async (req, res) => {
     let myComments = await Comment.find({ IdBaiviet: req.body.idbaiviet })
       .populate({
         path: "comments",
-        populate: { path: "User" } // Populate toàn bộ object của comment con
+        populate: { path: "User" }, // Populate toàn bộ object của comment con
       })
       .populate("User");
 
@@ -27,7 +29,7 @@ binhluan.post("/selectDataCmt", async (req, res) => {
       .status(200)
       .json({ data: myComments, status: 200, message: "Success." });
   } catch (err) {
-    console.log(err, 'Error log');
+    console.log(err, "Error log");
     return res.status(500).json(err);
   }
 });
@@ -58,6 +60,7 @@ const imageFilter = function (req, file, cb) {
 let upload = multer({ storage: storag, imageFilter: imageFilter });
 binhluan.post(
   "/SendCommentArticles",
+
   upload.single("imageCmt"),
   async (req, res) => {
     // binhluan.post("/SendComment", async (req, res) => {
@@ -67,6 +70,7 @@ binhluan.post(
       const idBaiPost = req.body.idBaiviet;
       const soluongcmt = req.body.Soluongcmt;
       const Noidung = req.body.Noidung;
+      const nameComemnt = req.body.nameComemnt;
       const parentIdString = req.body.parentId; // Lấy chuỗi từ FormData
       const IdComment = JSON.parse(parentIdString);
       // console.log(idBaiPost, IdComment, Noidung, " properties");
@@ -77,10 +81,31 @@ binhluan.post(
       const avatarUrl = req.file
         ? `${info.protocol}://${info.host}` + "/upload/" + req.file.filename
         : null;
+
       let baiViet = await baiviet.findOne({ _id: idBaiPost });
+      if (!baiViet) {
+        return res.status(404).json({ message: "Không tìm thấy bài viết." });
+      }
       if (baiViet) {
         baiViet.SoluongCmt = soluongcmt;
         await baiViet.save();
+        const userAtical = await user.findById(baiViet.User);
+        if (!userAtical) return res.status(403);
+        try {
+          await handlerFunction(
+            userAtical.fcmToken,
+            "bình luận bài viết ",
+            `${userAtical.Hoten || "Người dùng"} bình luận bài viết!`,
+            {
+              type: "thả tim video ",
+              from: nameComemnt,
+              someData: "goes here",
+            }
+          );
+        } catch (e) {
+          console.error("L��i gửi thông báo: ", e);
+        }
+        console.log("gữi thông báo thành công với đoạn mã này ");
         // console.log("nhày vào đay đàu tiên ", IdComment, typeof IdComment);
         if (IdComment) {
           // console.log("nhày vào đay đàu tiên11 ", IdComment, typeof IdComment);
@@ -95,10 +120,8 @@ binhluan.post(
           DadyComment.comments.push(req.body._id);
           await DadyComment.save();
           console.log("da nbab");
-          
-          return res
-            .status(200)
-            .json({  status: 200, message: "oki." });
+
+          return res.status(200).json({ status: 200, message: "oki." });
         } else {
           console.log("nhày vào đay 1 ");
           let CommentDady = await new Comment({
@@ -110,10 +133,8 @@ binhluan.post(
             idLike: [],
             Image: avatarUrl,
           }).save();
-          
-          return res
-            .status(200)
-            .json({ status: 200, message: "oki." });
+
+          return res.status(200).json({ status: 200, message: "oki." });
         }
       } else {
         return res.status(500).json({ status: 500, message: "sever lỗi." });

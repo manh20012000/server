@@ -14,14 +14,16 @@ import Notification from "../model/Notification.js";
 const like = Router();
 like.post("/tymPost", protectRoute, async (req, res) => {
   try {
-    console.log("nhay vào tym ");
+    // console.log("nhay vào tym ", req);
     const idUser = req.body.idUser; // Lấy id của người dùng like bài viết này
     const idBaiPost = req.body.idBaiPost; // Lấy id của bài viết
     const numberLike = req.body.Soluong; // Lấy số lượng tym
     const isLiked = req.body.Trangthai; // Trạng thái like hay chưa like (true / false)
     const nameLike = req.body.nameLike;
     const screen = req.body.screen;
+    // console.log(idUser, idBaiPost, numberLike, isLiked, nameLike, screen);
     const baiViet = await baiviet.findById(idBaiPost);
+    console.log(!!baiViet);
     if (!baiViet) {
       return res.status(404).json({ message: "Không tìm thấy bài viết." });
     }
@@ -29,7 +31,7 @@ like.post("/tymPost", protectRoute, async (req, res) => {
     const existingLikeIndex = baiViet.Like.findIndex(
       (like) => like.User && like.User === idUser
     );
-
+    console.log("kiểm tr");
     if (existingLikeIndex !== -1) {
       // Nếu trạng thái like là false, tức là người dùng bỏ like, thì xóa khỏi danh sách
       if (!isLiked) {
@@ -62,8 +64,10 @@ like.post("/tymPost", protectRoute, async (req, res) => {
         }
         console.log("gữi thông báo thành công với đoạn mã này ");
 
-        // baiViet.Like.push({ User: idUser, Trangthai: isLiked });
-        // baiViet.SoluongTym = numberLike;
+        baiViet.Like.push({ User: idUser, Trangthai: isLiked });
+        baiViet.SoluongTym = numberLike;
+        await userAtical.userlikeAtical.push(idUser);
+        await userAtical.save();
         const notification = await new Notification({
           reciveId: userAtical._id,
           sendId: idUser,
@@ -80,7 +84,7 @@ like.post("/tymPost", protectRoute, async (req, res) => {
     }
     // Lưu thay đổi vào cơ sở dữ liệu
     const kiemtra = await baiViet.save();
-
+    console.log("like thành công hihi");
     return res
       .status(200)
       .json({ data: kiemtra, message: "Cập nhật thích bài viết thành công." });

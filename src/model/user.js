@@ -14,7 +14,7 @@ const FriendRequestSchema = new Schema({
     ref: "user",
     required: true,
   },
-  
+
   status: {
     type: String,
     enum: ["pending", "accepted", "rejected"],
@@ -59,10 +59,16 @@ const UserSchema = new Schema(
       type: Number,
       default: 0,
     },
-    idVideoLike: [
+    userlikeAtical: [
       {
         type: mongoose.Types.ObjectId,
-        ref: "Video",
+        ref: "user",
+      },
+    ],
+    userlikeVideo: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "user",
       },
     ],
   },
