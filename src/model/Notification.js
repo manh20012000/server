@@ -1,44 +1,42 @@
+import { Timestamp } from "firebase-admin/firestore";
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
-const Notification = new mongoose.Schema({
-  reciveId: {
-    type: mongoose.Types.ObjectId,
-    ref: "user",
-  },
-  sendId: {
-    type: mongoose.Types.ObjectId,
-    ref: "user",
-  },
-
-  Object_Notifi: {
-    idConten: {
-      type: mongoose.Schema.Types.ObjectId, // Định nghĩa kiểu ObjectId cho idConten, tham chiếu tới một tài liệu khác
-      ref: "Content", // Tên model mà idConten sẽ tham chiếu đến
-      required: true,
+const Notification = new mongoose.Schema(
+  {
+    sendId: {
+      type: mongoose.Types.ObjectId,
+      ref: "user",
     },
-    typeScreen: {
+    reciveId: {
+      type: mongoose.Types.ObjectId,
+      ref: "user",
+    },
+    idOjectModel: {
+      type: mongoose.Types.ObjectId,
+    },
+    thumbnailObject: { type: String },
+    avatarSend: {
       type: String,
-      required: true,
+    },
+    isRead: {
+      type: Boolean,
+      default: false,
+    },
+    title: {
+      // tiltle nội dung gữi là gì
+      type: String,
+    },
+    messageNotifi: {
+      // thông tin gữi là gì
+      type: String,
+    },
+
+    createdAt: {
+      type: Date,
+      default: Date.now,
     },
   },
-  refParam: {
-    type: String,
-  },
-  isRead: {
-    type: Boolean,
-    default: false,
-  },
-  title: {
-    type: String,
-  },
-  body: {
-    type: String,
-  },
-
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+  Timestamp
+);
 
 export default mongoose.model("Notification", Notification);

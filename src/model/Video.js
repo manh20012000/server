@@ -28,6 +28,7 @@ const Video = new Schema(
     Thumbnail: {
       type:String
     },
+    
     SoluongTym: { type: Number, default: 0 },
     SoluongCmt: { type: Number, default: 0 },
     Like: [LikeVideo],

@@ -20,7 +20,9 @@ like.post("/tymPost", protectRoute, async (req, res) => {
     const numberLike = req.body.Soluong; // Lấy số lượng tym
     const isLiked = req.body.Trangthai; // Trạng thái like hay chưa like (true / false)
     const nameLike = req.body.nameLike;
-    const screen = req.body.screen;
+    const avatarSend = req.body.avatarSend;
+    const title = req.body.title;
+    const messagenotifi = req.body.messagenotifi;
     // console.log(idUser, idBaiPost, numberLike, isLiked, nameLike, screen);
     const baiViet = await baiviet.findById(idBaiPost);
     console.log(!!baiViet);
@@ -51,8 +53,8 @@ like.post("/tymPost", protectRoute, async (req, res) => {
         try {
           await handlerFunction(
             userAtical.fcmToken,
-            "thích bài viết ",
-            `${userAtical.Hoten || "Người dùng"} thích bài viết của bạn!`,
+            title,
+            `${nameLike || "Người dùng"} thích bài viết của bạn!`,
             {
               type: "thả tim video ",
               from: nameLike,
@@ -68,17 +70,16 @@ like.post("/tymPost", protectRoute, async (req, res) => {
         baiViet.SoluongTym = numberLike;
         await userAtical.userlikeAtical.push(idUser);
         await userAtical.save();
+
         const notification = await new Notification({
           reciveId: userAtical._id,
           sendId: idUser,
-          Object_Notifi: {
-            idConten: baiViet._id,
-            typeScreen: screen,
-          },
-          refParam: "baiViet",
           isRead: false,
-          title: "Thông báo mới",
-          body: `${nameLike} thích bài viết của bạn!`,
+          title: title,
+          idOjectModel: idBaiPost,
+          messageNotifi: messagenotifi,
+          thumbnailObject: baiViet.thumbnail ?? null, // Nếu baiViet.thumbnail là null hoặc undefined, trả về null
+          avatarSend: avatarSend,
         }).save();
       }
     }

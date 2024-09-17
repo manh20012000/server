@@ -28,6 +28,7 @@ const baiviet = new Schema(
     SoluongTym: { type: Number, default: 0 },
     SoluongCmt: { type: Number, default: 0 },
     Like: [Like],
+    thumbnail: { type: String },
   },
   {
     timestamps: true,

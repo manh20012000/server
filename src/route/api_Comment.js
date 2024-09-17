@@ -12,6 +12,7 @@ import Comment from "../model/Comment.js";
 import Like from "../model/Likecmt.js";
 import handlerFunction from "./api_functionNotification.js";
 import protectRoute from "../middlewere/protectRoute.js";
+import Notification from "../model/Notification.js";
 const binhluan = Router();
 
 binhluan.post("/selectDataCmt", async (req, res) => {
@@ -73,6 +74,9 @@ binhluan.post(
       const nameComemnt = req.body.nameComemnt;
       const parentIdString = req.body.parentId; // Lấy chuỗi từ FormData
       const IdComment = JSON.parse(parentIdString);
+      const title = req.body.title;
+      const avatarSend = req.body.avatarSend;
+      const messagenotifi = req.body.messagenotifi;
       // console.log(idBaiPost, IdComment, Noidung, " properties");
       let info = {
         protocol: req.protocol,
@@ -94,8 +98,8 @@ binhluan.post(
         try {
           await handlerFunction(
             userAtical.fcmToken,
-            "bình luận bài viết ",
-            `${userAtical.Hoten || "Người dùng"} bình luận bài viết!`,
+            title,
+            `${nameComemnt || "Người dùng"} comment bài viết `,
             {
               type: "thả tim video ",
               from: nameComemnt,
@@ -110,6 +114,7 @@ binhluan.post(
         if (IdComment) {
           // console.log("nhày vào đay đàu tiên11 ", IdComment, typeof IdComment);
           let DadyComment = await Comment.findById(IdComment);
+          console.log(req.body._id, "gía trị id mới là ");
           let childComment = await new Comment({
             _id: req.body._id,
             User: idUser,
@@ -132,7 +137,20 @@ binhluan.post(
             IdBaiviet: idBaiPost,
             idLike: [],
             Image: avatarUrl,
-          }).save();
+          });
+          console.log("nhày vào đay 2 ");
+          const notification = await new Notification({
+            reciveId: userAtical._id,
+            sendId: idUser,
+            isRead: false,
+            title: title,
+            idOjectModel: idBaiPost,
+            messageNotifi: messagenotifi,
+            thumbnailObject: baiViet.thumbnail ?? null, // Nếu baiViet.thumbnail là null hoặc undefined, trả về null
+            avatarSend: avatarSend,
+          });
+          await Promise.all([CommentDady.save(), notification.save()]);
+          console.log("nhày vào đay 3 ");
 
           return res.status(200).json({ status: 200, message: "oki." });
         }

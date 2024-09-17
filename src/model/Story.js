@@ -8,6 +8,10 @@ const LikeVideo = new Schema({
   Trangthai: {
     type: Boolean,
   },
+  Thumbnail: {
+    type: String,
+  },
+
   Emoj: {
     type: String,
   },
@@ -31,7 +35,7 @@ const Story = new Schema(
     SoluongCmt: { type: Number, default: 0 },
     Like: [LikeVideo],
     Thumbnail: {
-      type:String
+      type: String,
     },
     typeOr: { type: Boolean },
     resizeMode: {

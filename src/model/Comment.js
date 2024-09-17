@@ -18,11 +18,11 @@ const Comment = new Schema({
   SoluongThich: {
     type: Number,
   },
- 
-  idParentComment: { type: String, ref: 'Comment' },
-  comments: [{ type: String, ref: 'Comment' }], // Mảng chứa các comment con
-  IdBaiviet: { type: Schema.Types.ObjectId, ref: 'baiviet' },
-  idLike: [{ type: Schema.Types.ObjectId, ref: 'Likecmt' }],
+
+  idParentComment: { type: String, ref: "Comment" },
+  comments: [{ type: String, ref: "Comment" }], // Mảng chứa các comment con
+  IdBaiviet: { type: Schema.Types.ObjectId, ref: "baiviet" },
+  idLike: [{ type: Schema.Types.ObjectId, ref: "Likecmt" }],
   createdAt: {
     type: Date,
     default: Date.now,
