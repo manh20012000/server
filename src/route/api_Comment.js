@@ -67,6 +67,7 @@ binhluan.post(
     // binhluan.post("/SendComment", async (req, res) => {
 
     try {
+      const id = req.user._id;
       const idUser = req.body.UserCmt;
       const idBaiPost = req.body.idBaiviet;
       const soluongcmt = req.body.Soluongcmt;
@@ -139,17 +140,19 @@ binhluan.post(
             Image: avatarUrl,
           });
           console.log("nhày vào đay 2 ");
-          const notification = await new Notification({
-            reciveId: userAtical._id,
-            sendId: idUser,
-            isRead: false,
-            title: title,
-            idOjectModel: idBaiPost,
-            messageNotifi: messagenotifi,
-            thumbnailObject: baiViet.thumbnail ?? null, // Nếu baiViet.thumbnail là null hoặc undefined, trả về null
-            avatarSend: avatarSend,
-          });
-          await Promise.all([CommentDady.save(), notification.save()]);
+          if (id !== idUser) {
+            const notification = await new Notification({
+              reciveId: userAtical._id,
+              sendId: idUser,
+              isRead: false,
+              title: title,
+              idOjectModel: idBaiPost,
+              messageNotifi: messagenotifi,
+              thumbnailObject: baiViet.thumbnail ?? null, // Nếu baiViet.thumbnail là null hoặc undefined, trả về null
+              avatarSend: avatarSend,
+            }).sava();
+          }
+          await Promise.all([CommentDady.save()]);
           console.log("nhày vào đay 3 ");
 
           return res.status(200).json({ status: 200, message: "oki." });
@@ -169,7 +172,7 @@ binhluan.post("/deleteComment", async (req, res) => {
   try {
     const commentId = req.body.idComemnt;
     const idCmtChildrenInArr = req.body.idPerent;
-    
+
     if (req.body.DinhDanh == "Children") {
       const deletedChildrenComment = await Comment.findByIdAndRemove(commentId);
       const deletedParentComment = await Comment.findById(idCmtChildrenInArr);

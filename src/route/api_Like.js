@@ -15,6 +15,7 @@ const like = Router();
 like.post("/tymPost", protectRoute, async (req, res) => {
   try {
     // console.log("nhay vào tym ", req);
+    const id = req.user._id;
     const idUser = req.body.idUser; // Lấy id của người dùng like bài viết này
     const idBaiPost = req.body.idBaiPost; // Lấy id của bài viết
     const numberLike = req.body.Soluong; // Lấy số lượng tym
@@ -70,17 +71,18 @@ like.post("/tymPost", protectRoute, async (req, res) => {
         baiViet.SoluongTym = numberLike;
         await userAtical.userlikeAtical.push(idUser);
         await userAtical.save();
-
-        const notification = await new Notification({
-          reciveId: userAtical._id,
-          sendId: idUser,
-          isRead: false,
-          title: "Article",
-          idOjectModel: idBaiPost,
-          messageNotifi: messagenotifi,
-          thumbnailObject: baiViet.thumbnail ?? null, // Nếu baiViet.thumbnail là null hoặc undefined, trả về null
-          avatarSend: avatarSend,
-        }).save();
+        if (id !== idUser) {
+          const notification = await new Notification({
+            reciveId: userAtical._id,
+            sendId: idUser,
+            isRead: false,
+            title: "Article",
+            idOjectModel: idBaiPost,
+            messageNotifi: messagenotifi,
+            thumbnailObject: baiViet.thumbnail ?? null, // Nếu baiViet.thumbnail là null hoặc undefined, trả về null
+            avatarSend: avatarSend,
+          }).save();
+        }
       }
     }
     // Lưu thay đổi vào cơ sở dữ liệu
