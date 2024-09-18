@@ -169,8 +169,7 @@ binhluan.post("/deleteComment", async (req, res) => {
   try {
     const commentId = req.body.idComemnt;
     const idCmtChildrenInArr = req.body.idPerent;
-    console.log(req.body.idPerent, idCmtChildrenInArr, commentId);
-    console.log(req.body.DinhDanh + " dinhdanh");
+    
     if (req.body.DinhDanh == "Children") {
       const deletedChildrenComment = await Comment.findByIdAndRemove(commentId);
       const deletedParentComment = await Comment.findById(idCmtChildrenInArr);

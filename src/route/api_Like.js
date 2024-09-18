@@ -75,7 +75,7 @@ like.post("/tymPost", protectRoute, async (req, res) => {
           reciveId: userAtical._id,
           sendId: idUser,
           isRead: false,
-          title: title,
+          title: "Article",
           idOjectModel: idBaiPost,
           messageNotifi: messagenotifi,
           thumbnailObject: baiViet.thumbnail ?? null, // Nếu baiViet.thumbnail là null hoặc undefined, trả về null

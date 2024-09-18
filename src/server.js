@@ -17,7 +17,6 @@ import VideoPost from "./route/api_PostVideo.js";
 import VideoSelect from "./route/api_SlectVideo.js";
 import LikeVideo from "./route/api_LikeVideo.js";
 import api_CommentVideo from "./route/api_CommentVideo.js";
-import SendNotification from "./route/Notification.js";
 import StoryVideo from "./route/Story.js";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
@@ -26,6 +25,7 @@ import routerUser from "./route/user_router.js";
 import { app, server } from "./socket/socket.js";
 import AddFriend from "./route/api_AddFrrind.js";
 import bodyParser from "body-parser";
+import notifiCations from "./route/api_Notification.js";
 
 dotenv.config();
 const port = process.env.PORT || 3000;
@@ -51,11 +51,11 @@ app.use("/", VideoPost);
 app.use("/", VideoSelect);
 app.use("/", LikeVideo);
 app.use("/", api_CommentVideo);
-app.use("/", SendNotification);
 app.use("/", StoryVideo);
 app.use("/", MessageChat);
 app.use("/", routerUser);
 app.use("/", AddFriend);
+app.use("/", notifiCations);
 
 server.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
