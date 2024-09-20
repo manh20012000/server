@@ -17,8 +17,8 @@ const FriendRequestSchema = new Schema({
 
   status: {
     type: String,
-    enum: ["pending", "accepted", "rejected"],
-    default: "pending",
+    enum: ["Respons", "Friend", "Rejected", null, "Can't request"],
+    default: null,
   },
   createdAt: {
     type: Date,
@@ -39,6 +39,7 @@ const UserSchema = new Schema(
     Matkhau: { type: String },
     fcmToken: [{ type: String }],
     userFriends: [
+      // cai này co nghĩa la user này đã được thực hiện việc có
       {
         type: mongoose.Types.ObjectId,
         ref: "user",

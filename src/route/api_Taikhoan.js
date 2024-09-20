@@ -173,7 +173,7 @@ Taikhoan.post("/SearchMention", async (req, res) => {
     const searchResults = await user
       .find({ Hoten: { $regex: regexPattern } })
       .select(
-        "-Matkhau -fcmToken -userFriends -friendRequests -userFollowing -idVideoLike -Email -Phone "
+        "-Matkhau -fcmToken -userFrieds -friendRequests -userFollowing -idVideoLike -Email -Phone "
       );
     const formattedResults = searchResults.map((user) => ({
       id: user._id, // Hoặc thuộc tính nào đó để lấy ID

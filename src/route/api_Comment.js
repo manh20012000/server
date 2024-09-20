@@ -129,7 +129,7 @@ binhluan.post(
 
           return res.status(200).json({ status: 200, message: "oki." });
         } else {
-          console.log("nhày vào đay 1 ");
+        
           let CommentDady = await new Comment({
             _id: req.body._id,
             User: idUser,
@@ -139,7 +139,7 @@ binhluan.post(
             idLike: [],
             Image: avatarUrl,
           });
-          console.log("nhày vào đay 2 ");
+       
           if (id !== idUser) {
             const notification = await new Notification({
               reciveId: userAtical._id,

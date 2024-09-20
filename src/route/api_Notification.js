@@ -10,15 +10,17 @@ notifiCations.get("/getnotification/:id", protectRoute, async (req, res) => {
   const page = parseInt(req.query.page) || 1; // Số trang, mặc định là trang 1
   const limit = parseInt(req.query.limit) || 10; // Số lượng thông báo mỗi lần tải, mặc định là 10
   const skip = (page - 1) * limit;
-
+  console.log("Request Parameters:", req.params);
+  console.log("Query Parameters:", req.query);
   try {
     // Tìm các thông báo theo id người nhận, sắp xếp theo createdAt giảm dần, và giới hạn số lượng
     const notifications = await Notification.find({ reciveId: iduser })
       .sort({ createdAt: -1 }) // Sắp xếp giảm dần theo thời gian
       .skip(skip) // Bỏ qua các thông báo theo trang
       .limit(limit); // Giới hạn số lượng thông báo
-
+    // console.log(notifications);
     // Nếu không có thông báo nào
+    // console.log("nahur xuong dây ");
     if (!notifications || notifications.length === 0) {
       return res.status(404).json({ message: "No notifications found" });
     }

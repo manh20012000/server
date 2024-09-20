@@ -30,16 +30,16 @@ routerUser.get("/UserRouter", protectRoute, async (req, res) => {
       .populate("friendRequests.from", "Hoten Avatar");
     // Populate thông tin của người gửi lời mời với trường /**
     //"friendRequests": [
-      // {
-      //   "_id": "64f71d8b2e5d4a57f9b0e826",
-      //   "from": {
-      //     "_id": "64f71c5f2e5d4a57f9b0e823",
-      //     "Hoten": "Nguyen Van B",
-      //     "Avatar": "https://example.com/avatar2.jpg"
-      //   },
-      //   "status": "pending",
-      //   "createdAt": "2023-09-06T12:34:56.000Z"
-      // }, */
+    // {
+    //   "_id": "64f71d8b2e5d4a57f9b0e826",
+    //   "from": {
+    //     "_id": "64f71c5f2e5d4a57f9b0e823",
+    //     "Hoten": "Nguyen Van B",
+    //     "Avatar": "https://example.com/avatar2.jpg"
+    //   },
+    //   "status": "pending",
+    //   "createdAt": "2023-09-06T12:34:56.000Z"
+    // }, */
 
     const filteredConversations = conversations.map((conversation) => ({
       messages: conversation.messages.map((message) => ({
@@ -76,6 +76,21 @@ routerUser.get("/UserSelelectchat", protectRoute, async (req, res) => {
     res.status(200).json(filterUser);
   } catch (error) {
     res.status(500).json({ err: " inernal server error" });
+  }
+});
+routerUser.get("/userfriendReq/:id", protectRoute, async (req, res) => {
+  const iduser = req.params.id;
+
+  try {
+    const finuser = await user.findById(iduser);
+    if (finuser) {
+      return res.status(200).json({
+        data: finuser.friendRequests,
+      });
+    }
+    return res.status(404).json({ mess: "not found" });
+  } catch (err) {
+    res.status(404).json({ mess: err });
   }
 });
 export default routerUser;
