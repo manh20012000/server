@@ -5,9 +5,10 @@ import user from "../model/user.js";
 import converStation from "../model/converStationModel.js";
 import authenTokenMiddle from "../middlewere/MiddleRoute.js";
 const routerUser = Router();
-routerUser.get("/UserRouter", protectRoute, async (req, res) => {
+routerUser.get("/UserRouter/:id", protectRoute, async (req, res) => {
   try {
-    const loggerInUserId = req.user._id;
+    const loggerInUserId = req.params._id;
+    console.log(loggerInUserId, "UserRouter");
     const conversations = await converStation
       .find({
         participants: loggerInUserId,

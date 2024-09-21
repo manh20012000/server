@@ -61,13 +61,13 @@ const imageFilter = function (req, file, cb) {
 let upload = multer({ storage: storag, imageFilter: imageFilter });
 binhluan.post(
   "/SendCommentArticles",
-
+  protectRoute,
   upload.single("imageCmt"),
   async (req, res) => {
     // binhluan.post("/SendComment", async (req, res) => {
 
     try {
-      const id = req.user._id;
+      const id = req.body._id;
       const idUser = req.body.UserCmt;
       const idBaiPost = req.body.idBaiviet;
       const soluongcmt = req.body.Soluongcmt;
@@ -129,7 +129,6 @@ binhluan.post(
 
           return res.status(200).json({ status: 200, message: "oki." });
         } else {
-        
           let CommentDady = await new Comment({
             _id: req.body._id,
             User: idUser,
@@ -139,9 +138,9 @@ binhluan.post(
             idLike: [],
             Image: avatarUrl,
           });
-       
+
           if (id !== idUser) {
-            const notification = await new Notification({
+            await new Notification({
               reciveId: userAtical._id,
               sendId: idUser,
               isRead: false,
@@ -150,7 +149,7 @@ binhluan.post(
               messageNotifi: messagenotifi,
               thumbnailObject: baiViet.thumbnail ?? null, // Nếu baiViet.thumbnail là null hoặc undefined, trả về null
               avatarSend: avatarSend,
-            }).sava();
+            }).save();
           }
           await Promise.all([CommentDady.save()]);
           console.log("nhày vào đay 3 ");

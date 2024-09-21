@@ -40,7 +40,7 @@ AddFriend.post("/Addfriend", protectRoute, async (req, res) => {
       finduserSend.numberFriend += 1;
       handlerFunction(
         friendReciver.fcmToken,
-        "Lời mời kết bạn",
+        "Chấp nhận kết bạn",
         `${finduserSend.Hoten || "Người dùng"} chấp nhận lời mời kết bạn !`,
         {
           type: "SeeDetail",
@@ -131,7 +131,7 @@ AddFriend.post("/Addfriend", protectRoute, async (req, res) => {
         reciveId: toreciver,
         sendId: _idsend,
         isRead: false,
-        title: "SeeUserAfriend",
+        title: "SeeDeTail",
         idOjectModel: _idsend,
         messageNotifi: messagenotifi,
         thumbnailObject: avatarSend, // Nếu baiViet.thumbnail là null hoặc undefined, trả về null
@@ -166,15 +166,17 @@ AddFriend.put("/updateFriendReq/:id", protectRoute, async (req, res) => {
 
   try {
     // Tìm người nhận lời mời kết bạn
-    const friendReciver = await user.findById(reciveId);
-    const finduserSend = await user.findById(sendId);
+    const friendReciver = await user.findById(reciveId); // user ly
+    const finduserSend = await user.findById(sendId); // user trang
     if (!friendReciver) {
       return res.status(401).json({ message: "User not found" });
     }
     // thực hiện cho việc gữi thông báo
 
     const existingRequest = friendReciver.friendRequests.find(
-      (request) => request.to.toString() === sendId.toString()
+      (request) =>
+        request.to.toString() === sendId.toString() &&
+        request.from.toString() === reciveId.toString()
       // nguow gui gioong nhai
     );
 
@@ -182,7 +184,7 @@ AddFriend.put("/updateFriendReq/:id", protectRoute, async (req, res) => {
       if (onclickchange === "Accept") {
         // Tìm và cập nhật trạng thái của lời mời kết bạn thành "accepted"
         // friendReciver.friendRequests[existingRequest].status=="accepted"; bạn cũng có thể dùng như này để check  nó xem là đã được hay chua
-        existingRequest.status = "Accepted";
+        existingRequest.status = "Friend";
         await friendReciver.userFriends.push(sendId);
 
         await finduserSend.userFriends.push(reciveId);
@@ -218,7 +220,9 @@ AddFriend.put("/updateFriendReq/:id", protectRoute, async (req, res) => {
       } else if (onclickchange === "Decline") {
         // Tìm và xóa lời mời kết bạn đã bị hủy
         friendReciver.friendRequests = friendReciver.friendRequests.filter(
-          (request) => request.to.toString() !== sendId.toString()
+          (request) =>
+            request.to.toString() !== sendId.toString() &&
+            request.from.toString() !== reciveId.toString()
         );
         friendReciver.numberFriend = friendReciver.numberFriend - 1;
         await friendReciver.save();

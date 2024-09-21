@@ -14,6 +14,7 @@ import {
   genneratefreshTokenAndsetCookie,
 } from "../ultils/generateToke.js";
 import protectRoute from "../middlewere/protectRoute.js";
+import Notification from "../model/Notification.js";
 let Taikhoan = Router();
 const saltRounds = 10;
 //khai báo  giúp express hiểu khai báo đươcngf link trên web
@@ -204,6 +205,32 @@ Taikhoan.post("/userfind", protectRoute, async (req, res) => {
     // Sử dụng MongoDB để tìm kiếm dữ liệu gần đúng
     const searchResults = await user.findById({ _id: loggerInUserId });
     // console.log(searchResults);
+    res.status(200).json({ data: searchResults, msg: "OK", status: 200 });
+  } catch (error) {
+    res.status(500).json({ msg: "Internal Server Error", error: error });
+  }
+});
+
+Taikhoan.post("/userfindByid", protectRoute, async (req, res) => {
+  try {
+    // đoạn code này thục hiện với thông báo nha
+
+    const { isRead, notificationId, sendId } = req.body;
+    // Sử dụng MongoDB để tìm kiếm dữ liệu gần đúng
+    const isreadNotifi = isRead === "true";
+    console.log(isreadNotifi, typeof isreadNotifi, isRead, typeof isRead);
+    const searchResults = await user.findById({ _id: sendId });
+    console.log("hạhdjshdjshdjs");
+    const updateNotification = await Notification.findByIdAndUpdate(
+      notificationId,
+      {
+        isread: true,
+      },
+      {
+        new: true,
+      }
+    );
+    console.log("hạhdjshdjsh234567898765djs");
     res.status(200).json({ data: searchResults, msg: "OK", status: 200 });
   } catch (error) {
     res.status(500).json({ msg: "Internal Server Error", error: error });
