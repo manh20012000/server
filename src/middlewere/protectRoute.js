@@ -7,7 +7,7 @@ const protectRoute = async (req, res, next) => {
   const authHeader = req.headers["authorization"]; // tacks  lấy key object ra để thực hiện cho việc xác thực
   // const tokenAUTH = req.header("Authorization").replace("Bearer ", "");
   // console.log(token, "REP JWT", authHeader, "góídhfjsdjfibsdfjbv ", tokenAUTH);
-
+  console.log("vừa nhảy vào protected");
   try {
     const authorizationHeader = authHeader.replace("Bearer ", "");
 
@@ -26,7 +26,7 @@ const protectRoute = async (req, res, next) => {
     if (!users) {
       return res.status(404).json({ err: "user Notfound" });
     }
-    console.log("thành công");
+  
     req.user = users;
     next();
   } catch (error) {

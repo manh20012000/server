@@ -7,7 +7,7 @@ import authenTokenMiddle from "../middlewere/MiddleRoute.js";
 const routerUser = Router();
 routerUser.get("/UserRouter/:id", protectRoute, async (req, res) => {
   try {
-    const loggerInUserId = req.params._id;
+    const loggerInUserId = req.params.id;
     console.log(loggerInUserId, "UserRouter");
     const conversations = await converStation
       .find({
