@@ -20,21 +20,26 @@ const Video = new Schema(
     DatePost: { type: String },
     VideoConten: { type: String },
     MusicName: { type: String },
-    width: { type: Number,default:null},
-    height: { type: Number,default:null},
+    width: { type: Number, default: null },
+    height: { type: Number, default: null },
     Pemission: { type: String },
-    Loaction: { type: String },  
+    Loaction: { type: String },
     Video: { type: String },
     Thumbnail: {
-      type:String
+      type: String,
     },
-    
+
     SoluongTym: { type: Number, default: 0 },
     SoluongCmt: { type: Number, default: 0 },
-    Like: [LikeVideo],
+    Like: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "user",
+      },
+    ],
     resizeMode: {
-      type:Boolean,
-    }
+      type: Boolean,
+    },
   },
   {
     timestamps: true,

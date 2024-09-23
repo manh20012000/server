@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 const CommentVideo = new Schema({
   _id: {
-    type:String,
+    type: String,
   },
   User: {
     type: mongoose.Types.ObjectId,
@@ -21,6 +21,8 @@ const CommentVideo = new Schema({
   soluonglike: {
     type: Number,
   },
+  idParentComment: { type: String, ref: "Comment" },
+  comments: [{ type: String, ref: "Comment" }],
   SoluongCommentChildrent: {
     type: Number,
     default: 0,

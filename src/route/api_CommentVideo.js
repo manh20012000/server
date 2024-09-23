@@ -9,9 +9,11 @@ import uuid from "react-uuid";
 import appRoot from "app-root-path";
 import Video from "../model/Video.js";
 import CommentVideoChildrent from "../model/CommentVideoChildrent.js";
-
+import handlerFunction from "./api_functionNotification.js";
+import user from "../model/user.js";
+import protectRoute from "../middlewere/protectRoute.js";
 const api_CommentVideo = Router();
-
+import Notification from "../model/Notification.js";
 api_CommentVideo.post("/api_CommentVideoGet", async (req, res) => {
   try {
     const qualitySkip = req.body.Skips;
@@ -49,67 +51,106 @@ api_CommentVideo.get(
   }
 );
 // uploaf comment video
-api_CommentVideo.post("/api_CommentVideoPost", async (req, res) => {
-  try {
-    console.log("haiaja");
-    const idUser = req.body.UserCmt;
-    const idVideo = req.body.idVideo;
-    const soluongcmt = req.body.Soluongcmt;
-    const Noidung = req.body.Conten;
-    const IdComment = req.body.idParentComment;
-    const _id = req.body._id;
-    let video = await Video.findOne({ _id: idVideo });
-    if (video) {
-      video.SoluongCmt = soluongcmt;
-      await video.save();
-      // console.log("nhày vào đay đàu tiên ", IdComment, typeof IdComment);
-      if (IdComment) {
-    
-        let DadyComment = await CommentVideo.findById(IdComment);
-        let childComment = await new CommentVideoChildrent({
-          _id: _id,
-          User: idUser,
-          Content: Noidung,
-          idVideo: idVideo,
-          idParentComment: IdComment,
-          idLike: [],
-          soluonglike: 0,
-        }).save();
-        DadyComment.SoluongCommentChildrent += 1;
-        // console.log(DadyComment.SoluongCommentChildrent + "hahaha");
-        await DadyComment.save();
-     
-        let myComments = await CommentVideo.find({ idVideo: idVideo }).populate(
-          { path: "User" }
-        );
-        return res
-          .status(200)
-          .json({ data: myComments, status: 200, message: "oki." });
+api_CommentVideo.post(
+  "/api_CommentVideoPost",
+  protectRoute,
+  async (req, res) => {
+    try {
+      console.log("haiaja");
+      const idUser = req.body.UserCmt;
+      const idVideo = req.body.idVideo;
+      const soluongcmt = req.body.Soluongcmt;
+      const Noidung = req.body.Conten;
+      const IdComment = req.body.idParentComment;
+      const _id = req.body._id;
+      const nameComemnt = req.body.nameComemnt;
+      const title = req.body.title;
+      const avatarSend = req.body.avatarSend;
+      const messagenotifi = req.body.messagenotifi;
+      let video = await Video.findOne({ _id: idVideo });
+      if (video) {
+        video.SoluongCmt = soluongcmt;
+        // await video.save();
+        // console.log("nhày vào đay đàu tiên ", IdComment, typeof IdComment);
+        const userVideo = await user.findById(video.User);
+        if (!userVideo)
+          return res.status(403).json({ message: "bị lỗi với lấy usr" });
+        if (userVideo) {
+          let DadyComment = await CommentVideo.findById(IdComment);
+          await handlerFunction(
+            userVideo.fcmToken,
+            title,
+            `${nameComemnt || "Người dùng"} comment video `,
+            {
+              type: "comment ",
+              from: nameComemnt,
+              someData: "goes here",
+            }
+          );
+          console.log("L��i gửi thông báo: ");
+          if (IdComment) {
+            let DadyComment = await CommentVideo.findById(IdComment);
+            console.log(req.body._id, "gía trị id mới là ");
+            let childComment = await new CommentVideo({
+              _id: req.body._id,
+              User: idUser,
+              Content: Noidung,
+              idLike: [],
+              soluonglike: 0,
+            });
+            DadyComment.comments.push(req.body._id);
+            DadyComment.SoluongCommentChildrent += 1;
+            await Promise.all([DadyComment.save(), childComment.save()]);
+            return res.status(200).json({ status: 200, message: "oki." });
+          } else {
+            let CommentDady = await new CommentVideo({
+              _id: req.body._id,
+              User: idUser,
+              Content: Noidung,
+              comments: [],
+              IdBaiviet: idVideo,
+              idLike: [],
+            });
+
+            // console.log(DadyComment.SoluongCommentChildrent + "hahaha");
+
+            await Promise.all([video.save(), CommentDady.save()]);
+          }
+          console.log(req.user, typeof req.user);
+
+          await handlerFunction(
+            userVideo.fcmToken,
+            title,
+            `${nameComemnt || "Người dùng"} comment video `,
+            {
+              type: "comment ",
+              from: nameComemnt,
+              someData: "goes here",
+            }
+          );
+          console.log("L��i gửi thông báo: ");
+          await new Notification({
+            reciveId: userVideo._id,
+            sendId: idUser,
+            isRead: false,
+            title: title,
+            idOjectModel: idVideo,
+            messageNotifi: messagenotifi,
+            thumbnailObject: video.thumbnail ?? null, // Nếu baiViet.thumbnail là null hoặc undefined, trả về null
+            avatarSend: avatarSend,
+          }).save();
+
+          return res.status(200).json({ status: 200, message: "oki." });
+        }
       } else {
-        console.log("nhày vào đay 1 ");
-        let CommentDady = await new CommentVideo({
-          _id: _id,
-          User: idUser,
-          Content: Noidung,
-          idVideo: idVideo,
-          idLike: [],
-          soluonglike:0,
-        }).save();
-        let myComments = await CommentVideo.find({ idVideo: idVideo }).populate(
-          { path: "User" }
-        );
-        return res
-          .status(200)
-          .json({ data: myComments, status: 200, message: "oki." });
+        return res.status(500).json({ status: 500, message: "sever lỗi." });
       }
-    } else {
-      return res.status(500).json({ status: 500, message: "sever lỗi." });
+    } catch (err) {
+      console.log(err, "exception");
+      return res.status(500).json(err);
     }
-  } catch (err) {
-    console.log(err, "exception");
-    return res.status(500).json(err);
   }
-});
+);
 api_CommentVideo.delete(
   "/deleteCommentVideo/:commentId/:idVideo/:QualityComment",
   async (req, res) => {

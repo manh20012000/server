@@ -93,7 +93,7 @@ binhluan.post(
       }
       if (baiViet) {
         baiViet.SoluongCmt = soluongcmt;
-        await baiViet.save();
+        // await baiViet.save();
         const userAtical = await user.findById(baiViet.User);
         if (!userAtical) return res.status(403);
         try {
@@ -102,7 +102,7 @@ binhluan.post(
             title,
             `${nameComemnt || "Người dùng"} comment bài viết `,
             {
-              type: "thả tim video ",
+              type: "comment ",
               from: nameComemnt,
               someData: "goes here",
             }
@@ -139,7 +139,7 @@ binhluan.post(
             Image: avatarUrl,
           });
 
-          if (id !== idUser) {
+          if (req.user._id !== idUser) {
             await new Notification({
               reciveId: userAtical._id,
               sendId: idUser,
@@ -151,7 +151,7 @@ binhluan.post(
               avatarSend: avatarSend,
             }).save();
           }
-          await Promise.all([CommentDady.save()]);
+          await Promise.all([baiViet.save(), CommentDady.save()]);
           console.log("nhày vào đay 3 ");
 
           return res.status(200).json({ status: 200, message: "oki." });

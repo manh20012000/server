@@ -108,12 +108,7 @@ VideoPost.post(
             Thumbnail: `${req.protocol}://${req.get(
               "host"
             )}/thumbnails/${thumbnailFileName}`, // Đường dẫn đến thumbnail
-            Like: [
-              {
-                User: req.body.userId,
-                Trangthai: false,
-              },
-            ],
+            Like: [],
           };
 
           // Lưu dữ liệu video và thumbnail vào MongoDB
