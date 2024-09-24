@@ -17,13 +17,12 @@ import VideoPost from "./route/api_PostVideo.js";
 import VideoSelect from "./route/api_SlectVideo.js";
 import LikeVideo from "./route/api_LikeVideo.js";
 import api_CommentVideo from "./route/api_CommentVideo.js";
-// import http from "http";
-// import { Server } from "socket.io";
+
 import SendNotification from "./route/Notification.js";
 import StoryVideo from "./route/Story.js";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
-import MessageChat from "./route/api_Message.js";
+// import MessageChat from "./route/api_Message.js";
 import routerUser from "./route/user_router.js";
 import { app, server }from"./socket/socket.js"
 dotenv.config();
@@ -51,7 +50,7 @@ app.use("/", LikeVideo);
 app.use("/", api_CommentVideo);
 app.use("/", SendNotification);
 app.use("/", StoryVideo);
-app.use("/", MessageChat);
+// app.use("/", MessageChat);
 app.use("/", routerUser);
 
 
