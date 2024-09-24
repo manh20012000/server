@@ -7,7 +7,7 @@ import { getReciverSocketId } from "../socket/socket.js";
 let MessageChat = Router();
 MessageChat.post("/send/:id", protectRoute, async (req, res) => {
   try {
-    // console.log(req.params);
+
     const senderId = req.user._id;
     const { id: receiverId } = req.params;
 
@@ -22,7 +22,6 @@ MessageChat.post("/send/:id", protectRoute, async (req, res) => {
       });
     }
 
-    // console.log("hahah item2", req.params.userId, id);
     const newMessage = new messageShamec({
       senderId,
       receiverId,
@@ -34,19 +33,16 @@ MessageChat.post("/send/:id", protectRoute, async (req, res) => {
 
       converstation.messages.push(newMessage._id);
     }
-    // socket io funcition will go here
-    //   await converstation.save();
-
-    //   await newMessage.save();\
+  
     await Promise.all([converstation.save(), newMessage.save()]);
     const receiverSocketId = getReciverSocketId(receiverId);
     if (receiverSocketId) {
-      ///io.to(<socket_id></socket_id>).emit() used to send envernt to specific client
+
       io.to(receiverSocketId).emit("newMessage", newMessage);
     }
   
     res.status(200).json({ data: newMessage });
-    // console.log("hahah item", req.params.userId,);
+
   } catch (error) {
     console.log(error.message, "loi say ra");
     res.status(500).json({ message: error });
@@ -73,7 +69,7 @@ MessageChat.get("/getMessage/:id", protectRoute, async (req, res) => {
     }
 
     const messages = converstation.messages.map((message) =>
-      // console.log(message),
+
       ({
         _id: message._id,
         text: message.message,
@@ -82,7 +78,7 @@ MessageChat.get("/getMessage/:id", protectRoute, async (req, res) => {
           _id: message.senderId._id,
           name: message.senderId.Hoten,
           avatar: message.senderId.Avatar,
-          // Thêm các thông tin khác của user nếu cần
+       
         },
       })
     );
