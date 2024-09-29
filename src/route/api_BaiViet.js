@@ -7,10 +7,12 @@ import user from "../model/user.js";
 import protectRoute from "../middlewere/protectRoute.js";
 import Notification from "../model/Notification.js";
 const Baiviet = Router();
-Baiviet.get("/selectBaiViet", async (req, res) => {
+Baiviet.post("/selectBaiViet", protectRoute, async (req, res) => {
   try {
     const allPosts = await baiviet
       .find({})
+      .limit(10)
+      .skip(req.body.skip)
       .sort({ createdAt: -1 })
       .populate({ path: "User" });
     // .populate({ path: "Comment", populate: { path: "User" } });

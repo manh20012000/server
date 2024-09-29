@@ -47,7 +47,7 @@ const uploadsVideo = multer({
 
 VideoPost.post(
   "/uploadVideo",
-  protectRoute,
+  // protectRoute,
   uploadsVideo.single("Video"),
   async (req, res) => {
     const filePath = req.file.filename;

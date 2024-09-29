@@ -2,14 +2,14 @@ import express from "express";
 import { Router, query } from "express";
 import protectRoute from "../middlewere/protectRoute.js";
 import user from "../model/user.js";
-import converStation from "../model/converStationModel.js";
+import converStationModel from "../model/converStationModel.js";
 import authenTokenMiddle from "../middlewere/MiddleRoute.js";
 const routerUser = Router();
 routerUser.get("/UserRouter/:id", protectRoute, async (req, res) => {
   try {
     const loggerInUserId = req.params.id;
     console.log(loggerInUserId, "UserRouter");
-    const conversations = await converStation
+    const conversations = await converStationModel
       .find({
         participants: loggerInUserId,
       })
@@ -27,21 +27,9 @@ routerUser.get("/UserRouter/:id", protectRoute, async (req, res) => {
           path: "senderId",
           model: "user",
         },
-      })
-      .populate("friendRequests.from", "Hoten Avatar");
-    // Populate thông tin của người gửi lời mời với trường /**
-    //"friendRequests": [
-    // {
-    //   "_id": "64f71d8b2e5d4a57f9b0e826",
-    //   "from": {
-    //     "_id": "64f71c5f2e5d4a57f9b0e823",
-    //     "Hoten": "Nguyen Van B",
-    //     "Avatar": "https://example.com/avatar2.jpg"
-    //   },
-    //   "status": "pending",
-    //   "createdAt": "2023-09-06T12:34:56.000Z"
-    // }, */
-
+      });
+    // .populate("friendRequests", "Hoten Avatar");
+    console.log(conversations, "dhsjhj");
     const filteredConversations = conversations.map((conversation) => ({
       messages: conversation.messages.map((message) => ({
         _id: message._id,
@@ -60,9 +48,10 @@ routerUser.get("/UserRouter/:id", protectRoute, async (req, res) => {
         (participant) => participant._id.toString() !== loggerInUserId
       ),
     }));
-
-    res.status(200).json(filteredConversations);
+    console.log(filteredConversations);
+    return res.status(200).json(filteredConversations);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ err: " internal server error" });
   }
 });

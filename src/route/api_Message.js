@@ -417,7 +417,7 @@ MessageChat.get("/getMessage/:id", protectRoute, async (req, res) => {
       })
     );
 
-    res.status(200).json(messages);
+    res.status(200).json({ data: messages });
   } catch (error) {
     console.log(error.message, "loi say ra nhan tin nhan");
     res.status(500).json({ message: error });

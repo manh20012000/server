@@ -21,8 +21,8 @@ const CommentVideo = new Schema({
   soluonglike: {
     type: Number,
   },
-  idParentComment: { type: String, ref: "Comment" },
-  comments: [{ type: String, ref: "Comment" }],
+  idParentComment: { type: String, ref: "CommnetVideo" },
+  comments: [{ type: String, ref: "CommnetVideo" }],
   SoluongCommentChildrent: {
     type: Number,
     default: 0,

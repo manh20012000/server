@@ -14,23 +14,33 @@ import user from "../model/user.js";
 import protectRoute from "../middlewere/protectRoute.js";
 const api_CommentVideo = Router();
 import Notification from "../model/Notification.js";
-api_CommentVideo.post("/api_CommentVideoGet", async (req, res) => {
-  try {
-    const qualitySkip = req.body.Skips;
-    const comments = await CommentVideo.find({
-      idVideo: req.body.idVideo,
-    })
-      .limit(8)
-      .skip(qualitySkip)
-      .populate({ path: "User" });
+api_CommentVideo.post(
+  "/api_CommentVideoGet",
+  protectRoute,
+  async (req, res) => {
+    try {
+      console.log("hahjdjcbdhbdwchn");
+      console.log(req.body.idVideo, req.body.Skips);
+      const qualitySkip = req.body.Skips;
+      const comments = await CommentVideo.find({
+        idVideo: req.body.idVideo,
+      })
+        .populate({
+          path: "comments",
+          populate: { path: "User" }, // Populate toàn bộ object của comment con
+        })
+        .populate({ path: "User" })
+        .limit(15)
+        .skip(qualitySkip);
 
-    return res
-      .status(200)
-      .json({ data: comments, status: 200, message: "oki." });
-  } catch (err) {
-    return res.status(500).json(err);
+      return res
+        .status(200)
+        .json({ data: comments, status: 200, message: "oki." });
+    } catch (err) {
+      return res.status(500).json(err);
+    }
   }
-});
+);
 api_CommentVideo.get(
   "/api_CommentVideoGetChildrent/:parentId/:qualitySkip",
   async (req, res) => {
@@ -69,8 +79,9 @@ api_CommentVideo.post(
       const messagenotifi = req.body.messagenotifi;
       let video = await Video.findOne({ _id: idVideo });
       if (video) {
+        console.log(soluongcmt, "sjdhjsjdjfnj");
         video.SoluongCmt = soluongcmt;
-        // await video.save();
+        await video.save();
         // console.log("nhày vào đay đàu tiên ", IdComment, typeof IdComment);
         const userVideo = await user.findById(video.User);
         if (!userVideo)
@@ -87,28 +98,29 @@ api_CommentVideo.post(
               someData: "goes here",
             }
           );
-          console.log("L��i gửi thông báo: ");
+          console.log("L  i gửi thông báo: ");
           if (IdComment) {
             let DadyComment = await CommentVideo.findById(IdComment);
             console.log(req.body._id, "gía trị id mới là ");
             let childComment = await new CommentVideo({
-              _id: req.body._id,
+              _id: _id,
               User: idUser,
               Content: Noidung,
               idLike: [],
               soluonglike: 0,
+              idVideo: idVideo,
+              idParentComment: IdComment,
             });
             DadyComment.comments.push(req.body._id);
-            DadyComment.SoluongCommentChildrent += 1;
             await Promise.all([DadyComment.save(), childComment.save()]);
             return res.status(200).json({ status: 200, message: "oki." });
           } else {
             let CommentDady = await new CommentVideo({
-              _id: req.body._id,
+              _id: _id,
               User: idUser,
               Content: Noidung,
               comments: [],
-              IdBaiviet: idVideo,
+              idVideo: idVideo,
               idLike: [],
             });
 
@@ -128,7 +140,7 @@ api_CommentVideo.post(
               someData: "goes here",
             }
           );
-          console.log("L��i gửi thông báo: ");
+          console.log("L  i gửi thông báo: ");
           await new Notification({
             reciveId: userVideo._id,
             sendId: idUser,
