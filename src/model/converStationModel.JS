@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const converStationModel = new mongoose.Schema(
+const ConverStationModel = new mongoose.Schema(
   {
     participants: [
       {
@@ -20,4 +20,4 @@ const converStationModel = new mongoose.Schema(
     timestamps: true,
   }
 );
-export default mongoose.model("converStationModel", converStationModel);
+export default mongoose.model("ConverStationModel", ConverStationModel);

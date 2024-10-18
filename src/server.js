@@ -35,11 +35,12 @@ db.connect();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
+app.use(bodyParser.json()); // for JSON data
+app.use(bodyParser.urlencoded({ extended: true }));
 app.get("/", (req, res) => {
   res.send("server is running");
 });
-app.use(bodyParser.json()); // for JSON data
-app.use(bodyParser.urlencoded({ extended: true }));
+
 // tao co sơ dũ liêu với login
 app.use("/", Taikhoan);
 app.use("/", file);

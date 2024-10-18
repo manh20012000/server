@@ -2,17 +2,16 @@ import express from "express";
 import { Router, query } from "express";
 import protectRoute from "../middlewere/protectRoute.js";
 import user from "../model/user.js";
-import converStationModel from "../model/converStationModel.js";
+import ConverStationModel from "../model/ConverStationModel.js";
 import authenTokenMiddle from "../middlewere/MiddleRoute.js";
 const routerUser = Router();
 routerUser.get("/UserRouter/:id", protectRoute, async (req, res) => {
   try {
     const loggerInUserId = req.params.id;
     console.log(loggerInUserId, "UserRouter");
-    const conversations = await converStationModel
-      .find({
-        participants: loggerInUserId,
-      })
+    const conversations = await ConverStationModel.find({
+      participants: loggerInUserId,
+    })
       .populate({
         path: "participants",
         model: "user",
@@ -30,7 +29,7 @@ routerUser.get("/UserRouter/:id", protectRoute, async (req, res) => {
       });
     // .populate("friendRequests", "Hoten Avatar");
     console.log(conversations, "dhsjhj");
-    const filteredConversations = conversations.map((conversation) => ({
+    const filteredConversations = ConverStationModel.map((conversation) => ({
       messages: conversation.messages.map((message) => ({
         _id: message._id,
         text: message.text,
@@ -83,6 +82,32 @@ routerUser.get("/userfriendReq/:id", protectRoute, async (req, res) => {
     res.status(404).json({ mess: err });
   }
 });
+routerUser.get(
+  "/getfriend/:id",
+  // protectRoute,
+  async (req, res) => {
+    const iduser = req.params.id;
+    console.log(iduser, "hajaaj");
+    try {
+      const finuser = await user
+        .findById(iduser)
+        .select("userFriends")
+        .populate({
+          path: "userFriends",
+          select: "_id Hoten Gender Email Avatar",
+        });
+      // với populate không được dùng dấu - với select bên trong nha
+      if (finuser) {
+        return res.status(200).json({
+          data: finuser,
+        });
+      }
+      return res.status(404).json({ mess: "not found friend user" });
+    } catch (err) {
+      res.status(404).json({ mess: err });
+    }
+  }
+);
 export default routerUser;
 /*import express from "express";
 import { Router, query } from "express";

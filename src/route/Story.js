@@ -49,6 +49,7 @@ const uploadsVideo = multer({
 StoryVideo.post(
   "/uploadStory",
   protectRoute,
+
   uploadsVideo.single("Story"),
   async (req, res) => {
     const filePath = req.file.filename;
@@ -137,20 +138,20 @@ StoryVideo.post(
         .run();
     } else if (isImage === "video/mp4") {
       console.log("nhảy đây với video");
-       const thumbnailFileName = `${path2}_thumbnail.png`;
+      const thumbnailFileName = `${path2}_thumbnail.png`;
       const fullThumbnailPath = path.join(thumbnailPath, thumbnailFileName);
-     await new Promise((resolve, reject) => {
-       ffmpeg(fullVideoPath)
-         .screenshot({
-           count: 1, // Chỉ chụp 1 khung hình
-           folder: thumbnailPath, // Nơi lưu thumbnail
-           filename: thumbnailFileName, // Tên file thumbnail
-           size: "320x240", // Kích thước của thumbnail (có thể điều chỉnh)
-           timemarks: ["00:00:01.000"], // Chụp tại thời điểm 1 giây
-         })
-         .on("end", resolve)
-         .on("error", reject);
-     });
+      await new Promise((resolve, reject) => {
+        ffmpeg(fullVideoPath)
+          .screenshot({
+            count: 1, // Chỉ chụp 1 khung hình
+            folder: thumbnailPath, // Nơi lưu thumbnail
+            filename: thumbnailFileName, // Tên file thumbnail
+            size: "320x240", // Kích thước của thumbnail (có thể điều chỉnh)
+            timemarks: ["00:00:01.000"], // Chụp tại thời điểm 1 giây
+          })
+          .on("end", resolve)
+          .on("error", reject);
+      });
       await ffmpeg(fullVideoPath)
         .inputFormat("mp4")
         .outputFormat("hls")
@@ -179,7 +180,7 @@ StoryVideo.post(
               "host"
             )}/hls/${path2}.m3u8`,
             resizeMode: req.body.resizeMode,
-           Thumbnail: `${req.protocol}://${req.get(
+            Thumbnail: `${req.protocol}://${req.get(
               "host"
             )}/thumbnails/${thumbnailFileName}`, // Đường dẫn đến thumbnail
             Like: [

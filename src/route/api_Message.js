@@ -1,13 +1,13 @@
 import express from "express";
 import { Router, query } from "express";
 import protectRoute from "../middlewere/protectRoute.js";
-import converStationModel from "../model/converStationModel.js";
 import messageShamec from "../model/messageShamec.js";
 import { getReciverSocketId } from "../socket/socket.js";
 import { io } from "../socket/socket.js";
 import fs from "fs";
+import ConverStationModel from "../model/ConverStationModel.js";
 import ffmpeg from "fluent-ffmpeg";
-import HLS from "hls-server";
+// import HLS from "hls-server";
 import path from "path";
 import multer from "multer";
 import uuid from "react-uuid";
@@ -19,11 +19,11 @@ MessageChat.post("/send/:_id", protectRoute, async (req, res) => {
     const { _id: receiverId } = req.params;
     const { message } = req.body;
     // console.log(message);
-    let converStation = await converStationModel.findOne({
+    let converStation = await ConverStationModel.findOne({
       participants: { $all: [senderId, receiverId] },
     });
     if (!converStation) {
-      converStation = await converStationModel.create({
+      converStation = await ConverStationModel.create({
         participants: [senderId, receiverId],
       });
     }
@@ -154,11 +154,11 @@ MessageChat.post(
           const { _id: receiverId } = req.params;
           const { video, text, username, userId, avatar, createdAt } = req.body;
 
-          let converStation = await converStationModel.findOne({
+          let converStation = await ConverStationModel.findOne({
             participants: { $all: [senderId, receiverId] },
           });
           if (!converStation) {
-            converstation = await converStationModel.create({
+            converstation = await ConverStationModel.create({
               participants: [senderId, receiverId],
             });
           }
@@ -303,11 +303,11 @@ MessageChat.post(
         avatar,
         "immgae tr+ddiwpck trar ra "
       );
-      let converstation = await converStationModel.findOne({
+      let converstation = await ConverStationModel.findOne({
         participants: { $all: [senderId, receiverId] },
       });
       if (!converstation) {
-        converstation = await converStationModel.create({
+        converstation = await ConverStationModel.create({
           participants: [senderId, receiverId],
         });
       }
@@ -384,10 +384,9 @@ MessageChat.get("/getMessage/:id", protectRoute, async (req, res) => {
     console.log(userToChatId);
     const senderId = req.user._id;
 
-    const converstation = await converStationModel
-      .findOne({
-        participants: { $all: [senderId, userToChatId] },
-      })
+    const converstation = await ConverStationModel.findOne({
+      participants: { $all: [senderId, userToChatId] },
+    })
       .populate({
         path: "messages",
         options: { sort: { createdAt: -1 } }, // Sắp xếp theo thời gian tạo tăng dần (1) hoặc giảm dần (-1)
