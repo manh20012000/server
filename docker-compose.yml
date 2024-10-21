@@ -1,15 +1,15 @@
 # phiên bản ổn định trong docker compose 
-version: '3' 
+version: '3'
 # Trong Docker Compose, services là một khái niệm để chỉ các thành phần hoặc
 # container khác nhau mà ứng dụng của bạn cần để hoạt động. Mỗi service đại diện cho một container Docker.
 services:
-      web:
-        build: .
-        # Điều này sẽ ánh xạ cổng 8080 trên máy của bạn với cổng 8080 của container, 
-        #mà không cần phải khai báo EXPOSE trong Dockerfile.
-        ports:
-          - "8080:8080"
-        environment:
-          - PORT=8080
-          - JWT_SECRET=Oqt4bNIst9DIeIKmNEzACmGHczglimkI6EfEvwxlLpI=
-          - NODE_ENV=developement
+  web:
+    build: .
+    # Điều này sẽ ánh xạ cổng 8080 trên máy của bạn với cổng 8080 của container, 
+    #mà không cần phải khai báo EXPOSE trong Dockerfile.
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - JWT_SECRET=Oqt4bNIst9DIeIKmNEzACmGHczglimkI6EfEvwxlLpI=
+      - NODE_ENV=developement

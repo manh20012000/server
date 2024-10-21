@@ -77,6 +77,7 @@ api_CommentVideo.post(
       const title = req.body.title;
       const avatarSend = req.body.avatarSend;
       const messagenotifi = req.body.messagenotifi;
+      console.log(messagenotifi, 'gsudhaifjlkaiyjga')
       let video = await Video.findOne({ _id: idVideo });
       if (video) {
         console.log(soluongcmt, "sjdhjsjdjfnj");
@@ -141,6 +142,7 @@ api_CommentVideo.post(
             }
           );
           console.log("L  i gửi thông báo: ");
+          console.log(messagenotifi, 'gsudhaifjlkaiyjga2345678')
           await new Notification({
             reciveId: userVideo._id,
             sendId: idUser,

@@ -7,11 +7,11 @@ import mysql from 'mysql2/promise';
 
 // dung pool ddeer ko phair loaf lieen tuwch 
 const pool = mysql.createPool({
-  host: 'containers-us-west-142.railway.app',
-  user: 'root',
-  port:'5830',
-  password:'nAyvwubgCLGvwNVFECoM',
-  database: 'renApp'
+    host: 'containers-us-west-142.railway.app',
+    user: 'root',
+    port: '5830',
+    password: 'nAyvwubgCLGvwNVFECoM',
+    database: 'renApp'
 });
 export default pool;
 // simple query
@@ -24,4 +24,3 @@ export default pool;
 //     // console.log(fields); // fields contains extra meta data about results, if available
 //   }
 // );
-
