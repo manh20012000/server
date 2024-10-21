@@ -2,13 +2,15 @@ import express from "express";
 import configViewEngine from "./config/viewEngine.mjs";
 import connection from "./config/connectBD.js";
 import initAPIRoute from "./route/api_Taikhoan.js";
+import { app, server } from "./socket/socket.js";
+import multer from "multer";
 import file from "./controller/files.controller.js";
 import uploadAnh from "./route/uploadsAnh.js";
 import cors from "cors";
 import db from "./config/MongoDb.js";
 import Taikhoan from "./route/api_Taikhoan.js";
 import path from "path";
-import multer from "multer";
+
 import Baiviet from "./route/api_BaiViet.js";
 import baiviet from "./model/baiviet.js";
 import like from "./route/api_Like.js";
@@ -22,7 +24,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import MessageChat from "./route/api_Message.js";
 import routerUser from "./route/user_router.js";
-import { app, server } from "./socket/socket.js";
+
 import AddFriend from "./route/api_AddFrrind.js";
 import bodyParser from "body-parser";
 import notifiCations from "./route/api_Notification.js";
