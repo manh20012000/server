@@ -29,7 +29,7 @@ routerUser.get("/UserRouter/:id", protectRoute, async (req, res) => {
       });
     // .populate("friendRequests", "Hoten Avatar");
     console.log(conversations, "dhsjhj");
-    const filteredConversations = ConverStationModel.map((conversation) => ({
+    const filteredConversations = conversations.map((conversation) => ({
       messages: conversation.messages.map((message) => ({
         _id: message._id,
         text: message.text,

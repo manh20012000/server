@@ -55,12 +55,7 @@ uploadAnh.post(
       Pemission: req.body.permission,
       Loaction: req.body.vitri,
       User: req.body.idLogin,
-      Like: [
-        {
-          User: req.body.idLogin,
-          Trangthai: false,
-        },
-      ],
+    
       Image: imagePaths,
     };
     try {

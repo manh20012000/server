@@ -20,10 +20,12 @@ const saltRounds = 10;
 //khai báo  giúp express hiểu khai báo đươcngf link trên web
 Taikhoan.post("/login", async (req, res) => {
   try {
-    console.log("vào login");
+
 
     const User = await user.findOne({ Taikhoan: req.body.taikhoan });
+  
     if (User) {
+
       console.log(User.Hoten, "usrtname");
       const match = await bcrypt.compare(req.body.matkhau, User.Matkhau);
       let token = "";
@@ -119,9 +121,9 @@ const storag = multer.diskStorage({
     cb(
       null,
       file.fieldname +
-        "-" +
-        uuid().substring(0, 8) +
-        path.extname(file.originalname)
+      "-" +
+      uuid().substring(0, 8) +
+      path.extname(file.originalname)
     );
   },
 });
@@ -163,7 +165,7 @@ Taikhoan.post("/logout", async (req, res) => {
   try {
     req.cookie("jwt", "", { maxAge: 0 });
     res.status(200).json({ message: "logout success" });
-  } catch (error) {}
+  } catch (error) { }
 });
 Taikhoan.post("/SearchMention", async (req, res) => {
   try {

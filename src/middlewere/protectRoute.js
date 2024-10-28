@@ -7,7 +7,7 @@ const protectRoute = async (req, res, next) => {
   const authHeader = req.headers["authorization"]; // tacks  lấy key object ra để thực hiện cho việc xác thực
   // const tokenAUTH = req.header("Authorization").replace("Bearer ", "");
   // console.log(token, "REP JWT", authHeader, "góídhfjsdjfibsdfjbv ", tokenAUTH);
-  console.log("vừa nhảy vào protected");
+  // console.log("vừa nhảy vào protected");
   try {
     const authorizationHeader = authHeader.replace("Bearer ", "");
 
@@ -16,7 +16,7 @@ const protectRoute = async (req, res, next) => {
       return res.status(401).json({ err: "authorized no token provided" });
     }
     const decoded = jwt.verify(authorizationHeader, process.env.JWT_SECRET);
-    console.log(decoded, "kết quả của decor");
+    // console.log(decoded, "kết quả của decor");
     if (!decoded) {
       return res.status(404).json({ err: "authorized- invalid Token" });
     }

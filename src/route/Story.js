@@ -22,9 +22,9 @@ const storage = multer.diskStorage({
     cb(
       null,
       file.fieldname +
-        "-" +
-        uuid().substring(0, 8) +
-        path.extname(file.originalname)
+      "-" +
+      uuid().substring(0, 8) +
+      path.extname(file.originalname)
     );
   },
 });
@@ -139,12 +139,12 @@ StoryVideo.post(
     } else if (isImage === "video/mp4") {
       console.log("nhảy đây với video");
       const thumbnailFileName = `${path2}_thumbnail.png`;
-      const fullThumbnailPath = path.join(thumbnailPath, thumbnailFileName);
+      const fullThumbnailPath = path.join('public/thumbnails', thumbnailFileName);
       await new Promise((resolve, reject) => {
         ffmpeg(fullVideoPath)
           .screenshot({
             count: 1, // Chỉ chụp 1 khung hình
-            folder: thumbnailPath, // Nơi lưu thumbnail
+            folder: fullThumbnailPath, // Nơi lưu thumbnail
             filename: thumbnailFileName, // Tên file thumbnail
             size: "320x240", // Kích thước của thumbnail (có thể điều chỉnh)
             timemarks: ["00:00:01.000"], // Chụp tại thời điểm 1 giây

@@ -64,6 +64,7 @@ api_CommentVideo.get(
 api_CommentVideo.post(
   "/api_CommentVideoPost",
   protectRoute,
+  
   async (req, res) => {
     try {
       console.log("haiaja");
