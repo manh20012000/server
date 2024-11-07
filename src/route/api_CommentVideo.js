@@ -96,6 +96,8 @@ api_CommentVideo.post(
             `${nameComemnt || "Người dùng"} comment video `,
             {
               type: "comment ",
+              screen: "Videodetail",
+              id: idVideo,
               from: nameComemnt,
               someData: "goes here",
             }

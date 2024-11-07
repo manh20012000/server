@@ -44,9 +44,9 @@ const storag = multer.diskStorage({
     cb(
       null,
       file.fieldname +
-        "-" +
-        uuid().substring(0, 8) +
-        path.extname(file.originalname)
+      "-" +
+      uuid().substring(0, 8) +
+      path.extname(file.originalname)
     );
   },
 });
@@ -102,6 +102,8 @@ binhluan.post(
             title,
             `${nameComemnt || "Người dùng"} comment bài viết `,
             {
+              screen: "Article",
+              id: idBaiPost,
               type: "comment ",
               from: nameComemnt,
               someData: "goes here",

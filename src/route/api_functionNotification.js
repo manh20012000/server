@@ -1,12 +1,8 @@
 const handlerFunction = async (fcmToken, title, body, dataConten) => {
   try {
-    console.log(fcmToken, "hahhahhh");
+   
     if (fcmToken && fcmToken.length > 0) {
-      console.log("Token hợp lệ:", fcmToken);
-      console.log("Tiêu đề:", title);
-      console.log("Nội dung:", body);
-      console.log("Dữ liệu thêm:", dataConten);
-
+  
       const notifications = fcmToken.map((itemtoken) => {
         const message = {
           to: itemtoken,
