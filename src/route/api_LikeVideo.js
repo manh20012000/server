@@ -40,18 +40,9 @@ LikeVideo.post("/LikeVideo", protectRoute, async (req, res) => {
       pVideo.Like = pVideo.Like.filter((idlike) => !idlike.equals(idUser));
     } else {
       pVideo.Like.push(idUser);
-      await handlerFunction(
-        userVideo.fcmToken,
-        title,
-        `${nameComemnt || "Người dùng"} comment video `,
-        {
-          type: "comment ",
-          from: nameComemnt,
-          someData: "goes here",
-        }
-      );
+
       console.log("L��i gửi thông báo: ");
-      await new Notification({
+      const notification = await new Notification({
         reciveId: userVideo._id,
         sendId: idUser,
         isRead: false,
@@ -61,6 +52,21 @@ LikeVideo.post("/LikeVideo", protectRoute, async (req, res) => {
         thumbnailObject: pVideo.thumbnail ?? null, // Nếu baiViet.thumbnail là null hoặc undefined, trả về null
         avatarSend: avatarSend,
       }).save();
+      await handlerFunction(
+        userVideo.fcmToken,
+        title,
+        `${nameComemnt || "Người dùng"} comment video `,
+        {
+
+          idOjectModel: IdVideo,
+          _id: notification._id,
+          isRead: false,
+          screen: "Videodetail",
+          type: "comment ",
+          from: nameComemnt,
+          someData: "goes here",
+        }
+      );
     }
 
     // Cập nhật số lượng like dựa trên độ dài mảng Like

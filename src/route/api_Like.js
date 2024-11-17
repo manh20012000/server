@@ -51,20 +51,7 @@ like.post("/tymPost", protectRoute, async (req, res) => {
       // Nếu user chưa like và bây giờ like (isLiked === true), thêm vào danh sá
       if (isLiked) {
         console.log("bắt đầu gữi thông báo  ", nameLike);
-        try {
-          await handlerFunction(
-            userAtical.fcmToken,
-            title,
-            `${nameLike || "Người dùng"} thích bài viết của bạn!`,
-            {
-              type: "thả tim video ",
-              from: nameLike,
-              someData: "goes here",
-            }
-          );
-        } catch (e) {
-          console.error("L��i gửi thông báo: ", e);
-        }
+
         console.log("gữi thông báo thành công với đoạn mã này ");
 
         baiViet.Like.push({ User: idUser, Trangthai: isLiked });
@@ -82,6 +69,24 @@ like.post("/tymPost", protectRoute, async (req, res) => {
             thumbnailObject: baiViet.thumbnail ?? null, // Nếu baiViet.thumbnail là null hoặc undefined, trả về null
             avatarSend: avatarSend,
           }).save();
+          try {
+            await handlerFunction(
+              userAtical.fcmToken,
+              title,
+              `${nameLike || "Người dùng"} thích bài viết của bạn!`,
+              {
+                screen: "Article",
+                idOjectModel: idBaiPost,
+                _id: notification._id,
+                isRead: false,
+                type: "thả tim video ",
+                from: nameLike,
+                someData: "goes here",
+              }
+            );
+          } catch (e) {
+            console.error("L��i gửi thông báo: ", e);
+          }
         }
       }
     }

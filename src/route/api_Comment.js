@@ -96,23 +96,8 @@ binhluan.post(
         // await baiViet.save();
         const userAtical = await user.findById(baiViet.User);
         if (!userAtical) return res.status(403);
-        try {
-          await handlerFunction(
-            userAtical.fcmToken,
-            title,
-            `${nameComemnt || "Người dùng"} comment bài viết `,
-            {
-              screen: "Article",
-              id: idBaiPost,
-              type: "comment ",
-              from: nameComemnt,
-              someData: "goes here",
-            }
-          );
-        } catch (e) {
-          console.error("L��i gửi thông báo: ", e);
-        }
-        console.log("gữi thông báo thành công với đoạn mã này ");
+
+
         // console.log("nhày vào đay đàu tiên ", IdComment, typeof IdComment);
         if (IdComment) {
           // console.log("nhày vào đay đàu tiên11 ", IdComment, typeof IdComment);
@@ -125,6 +110,7 @@ binhluan.post(
             idLike: [],
             Image: avatarUrl,
           }).save();
+
           DadyComment.comments.push(req.body._id);
           await DadyComment.save();
           console.log("da nbab");
@@ -142,7 +128,7 @@ binhluan.post(
           });
 
           if (req.user._id !== idUser) {
-            await new Notification({
+            const notification = await new Notification({
               reciveId: userAtical._id,
               sendId: idUser,
               isRead: false,
@@ -152,7 +138,26 @@ binhluan.post(
               thumbnailObject: baiViet.thumbnail ?? null, // Nếu baiViet.thumbnail là null hoặc undefined, trả về null
               avatarSend: avatarSend,
             }).save();
+            try {
+              await handlerFunction(
+                userAtical.fcmToken,
+                title,
+                `${nameComemnt || "Người dùng"} comment bài viết `,
+                {
+                  screen: "Article",
+                  _id: notification._id,
+                  idOjectModel: idBaiPost,
+                  isRead: false,
+                  type: "comment ",
+                  from: nameComemnt,
+                  someData: "goes here",
+                }
+              );
+            } catch (e) {
+              console.error("L��i gửi thông báo: ", e);
+            }
           }
+
           await Promise.all([baiViet.save(), CommentDady.save()]);
           console.log("nhày vào đay 3 ");
 

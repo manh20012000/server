@@ -144,7 +144,7 @@ api_CommentVideo.post(
               someData: "goes here",
             }
           );
-          console.log("L  i gửi thông báo: ");
+         
           console.log(messagenotifi, 'gsudhaifjlkaiyjga2345678')
           await new Notification({
             reciveId: userVideo._id,
