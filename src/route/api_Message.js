@@ -14,11 +14,11 @@ import uuid from "react-uuid";
 let MessageChat = Router();
 MessageChat.post("/send/:_id", protectRoute, async (req, res) => {
   try {
-    // console.log(req.params);
+
     const senderId = req.user._id;
     const { _id: receiverId } = req.params;
     const { message } = req.body;
-    // console.log(message);
+
     let converStation = await ConverStationModel.findOne({
       participants: { $all: [senderId, receiverId] },
     });
@@ -64,11 +64,11 @@ MessageChat.post("/send/:_id", protectRoute, async (req, res) => {
             Hoten: message.user.name,
           },
         };
-        // console.log("scpketIs", nesMess);
+
         io.to(socketId).emit("newMessage", nesMess);
       });
     }
-    // console.log(senderSocketId, "sockey ngyowi giư");
+
     io.to(senderSocketId).emit("newMessage", {
       messages: {
         _id: newMessage._id,
@@ -84,8 +84,9 @@ MessageChat.post("/send/:_id", protectRoute, async (req, res) => {
         Hoten: message.user.name,
       },
     });
+
     res.status(200).json({ data: newMessage });
-    // console.log("hahah item", req.params._id);
+
   } catch (error) {
     console.log(error.message, "loi say ra");
     res.status(500).json({ message: error });
@@ -102,9 +103,9 @@ const strongeVideo = multer.diskStorage({
     cb(
       null,
       file.fieldname +
-        "-" +
-        uuid().substring(0, 8) +
-        path.extname(file.originalname)
+      "-" +
+      uuid().substring(0, 8) +
+      path.extname(file.originalname)
     );
   },
 });
@@ -198,11 +199,11 @@ MessageChat.post(
                   Hoten: username,
                 },
               };
-              // console.log("scpketIs", nesMess);
+
               io.to(socketId).emit("newMessage", nesMess);
             });
           }
-          // console.log(senderSocketId, "sockey ngyowi giư");
+
           io.to(senderSocketId).emit("newMessage", {
             messages: {
               _id: newMessage._id,
@@ -258,9 +259,9 @@ const storageImage = multer.diskStorage({
     cb(
       null,
       file.fieldname +
-        "-" +
-        uuid().substring(0, 8) +
-        path.extname(file.originalname)
+      "-" +
+      uuid().substring(0, 8) +
+      path.extname(file.originalname)
     );
   },
 });
@@ -282,27 +283,19 @@ MessageChat.post(
       protocol: req.protocol,
       host: req.get("host"),
     };
-
+    console.log('hahahah')
     const imagePaths = await req.files.map((file) => {
       let link;
-      return `${info.protocol}://${info.host}` + "/uploads/" + file.filename;
+      return `${info.protocol}` + "/uploads/" + file.filename;
     });
 
     try {
-      // console.log(req.params);
+
       const senderId = req.user._id;
       const { _id: receiverId } = req.params;
 
       const { video, text, username, userId, avatar, createdAt } = req.body;
-      console.log(
-        video,
-        createdAt,
-        text,
-        username,
-        userId,
-        avatar,
-        "immgae tr+ddiwpck trar ra "
-      );
+
       let converstation = await ConverStationModel.findOne({
         participants: { $all: [senderId, receiverId] },
       });
@@ -311,7 +304,7 @@ MessageChat.post(
           participants: [senderId, receiverId],
         });
       }
-      // console.log("hahah item2", req.params.userId, id);
+
       const newMessage = new messageShamec({
         senderId,
         receiverId,
@@ -347,11 +340,11 @@ MessageChat.post(
               Hoten: username,
             },
           };
-          // console.log("scpketIs", nesMess);
+
           io.to(socketId).emit("newMessage", nesMess);
         });
       }
-      console.log(senderSocketId, "sockey ngyowi giư");
+
       io.to(senderSocketId).emit("newMessage", {
         messages: {
           _id: newMessage._id,
@@ -370,7 +363,7 @@ MessageChat.post(
         },
       });
       res.status(200).json({ data: newMessage });
-      // console.log("hahah item", req.params._id);
+
     } catch (error) {
       console.log(error.message, "loi say ra");
       res.status(500).json({ message: error });
@@ -381,7 +374,7 @@ MessageChat.post(
 MessageChat.get("/getMessage/:id", protectRoute, async (req, res) => {
   try {
     const { id: userToChatId } = req.params;
-    console.log(userToChatId);
+
     const senderId = req.user._id;
 
     const converstation = await ConverStationModel.findOne({
@@ -402,18 +395,18 @@ MessageChat.get("/getMessage/:id", protectRoute, async (req, res) => {
     }
 
     const messages = converstation.messages.map((message) =>
-      // console.log(message),
-      ({
-        _id: message._id,
-        text: message.message,
-        createdAt: message.createdAt,
-        user: {
-          _id: message.senderId._id,
-          name: message.senderId.Hoten,
-          avatar: message.senderId.Avatar,
-          // Thêm các thông tin khác của user nếu cần
-        },
-      })
+    // console.log(message),
+    ({
+      _id: message._id,
+      text: message.message,
+      createdAt: message.createdAt,
+      user: {
+        _id: message.senderId._id,
+        name: message.senderId.Hoten,
+        avatar: message.senderId.Avatar,
+        // Thêm các thông tin khác của user nếu cần
+      },
+    })
     );
 
     res.status(200).json({ data: messages });

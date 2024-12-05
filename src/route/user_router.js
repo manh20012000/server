@@ -8,7 +8,7 @@ const routerUser = Router();
 routerUser.get("/UserRouter/:id", protectRoute, async (req, res) => {
   try {
     const loggerInUserId = req.params.id;
-    console.log(loggerInUserId, "UserRouter");
+
     const conversations = await ConverStationModel.find({
       participants: loggerInUserId,
     })
@@ -27,8 +27,7 @@ routerUser.get("/UserRouter/:id", protectRoute, async (req, res) => {
           model: "user",
         },
       });
-    // .populate("friendRequests", "Hoten Avatar");
-    console.log(conversations, "dhsjhj");
+    // .populate("friendRequests", "Hoten Avatar")
     const filteredConversations = conversations.map((conversation) => ({
       messages: conversation.messages.map((message) => ({
         _id: message._id,
@@ -47,7 +46,7 @@ routerUser.get("/UserRouter/:id", protectRoute, async (req, res) => {
         (participant) => participant._id.toString() !== loggerInUserId
       ),
     }));
-    console.log(filteredConversations);
+
     return res.status(200).json(filteredConversations);
   } catch (error) {
     console.log(error);

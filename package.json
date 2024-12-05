@@ -7,7 +7,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon src/server.js",
-    "start": "nodemon src/server.js"
+    "start": "nodemon src/server.js",
+    "start-8000": "set PORT=8000 && nodemon src/server.js",
+    "start-8001": "set PORT=8001 && nodemon src/server.js",
+    "start-8002": "set PORT=8002 && nodemon src/server.js"
   },
   "author": "",
   "license": "ISC",

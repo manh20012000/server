@@ -58,10 +58,10 @@ Baiviet.get("/get_Article_Getone/:id", protectRoute, async (req, res) => {
   const fileId = req.query.id; //id của cái thông báo
 
   const isreadNotifi = req.query.iread === "true"; //chuyển đổi ở dạng stribg boolean sang dạng boolean
-  console.log(fileId, "thông báo đã xem" + isreadNotifi, req.params.id, 'hahahahahah');
+  
   try {
     if (isreadNotifi === false) {
-      console.log("ngyar vào đây để dược câoasj nhât+>>>3333 ", isreadNotifi);
+    
       const notification = await Notification.findByIdAndUpdate(
         fileId,
         { isRead: true },

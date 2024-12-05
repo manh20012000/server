@@ -23,7 +23,7 @@ Taikhoan.post("/login", async (req, res) => {
 
 
     const User = await user.findOne({ Taikhoan: req.body.taikhoan });
-  
+    console.log('hahahah')
     if (User) {
 
       console.log(User.Hoten, "usrtname");

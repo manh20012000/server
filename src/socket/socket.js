@@ -25,7 +25,7 @@ let clients = {};
 export const getReciverSocketId = (receiverId) => {
   return clients[receiverId];
 };
-const userSocketMap = {}; // {userId:socketId}
+
 
 io.use((socket, next) => {
   const token = socket.handshake.auth.token;
